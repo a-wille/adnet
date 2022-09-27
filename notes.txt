@@ -1,0 +1,4 @@
+9.27.2022
+- initialized git repo
+- set up VM with minimal security policy
+
