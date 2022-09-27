@@ -1,0 +1,4 @@
+Reach out to more researchers
+Reresearch studies with whole genome sequencing done (NOT just GWAS)
+set up django server for project development
+Research life cycle you want to follow and start documentation of that and expectations
