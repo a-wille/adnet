@@ -1,0 +1,25 @@
+<html>
+<div id="donate">
+    {% if perms.nonprofit.can_donate %}
+        <div id="unrestricted_window" style="display:none"></div>
+        <div id="restricted_window" style="display:none"></div>
+        <div id="donation_headers">
+        <div><h1 class="k-h4">Make an  <button id="ud" class="k-button-primary">Unrestricted Donation</button></h1></div>
+        <div><h1 class="k-h4">or...</h1></div>
+        <div><h1 class="k-h4">Make an event donation</h1></div>
+        </div>
+        <div id="donation_grid"></div>
+        <br>
+        <h3>My Donation History</h3>
+        <div id="my_donation_grid"></div>
+        <h2>
+        {% load static %}
+            <script src="{% static 'donate.js' %}"></script>
+        </h2>
+    {% else %}
+        <div><h2>Please sign in or create account to donate!</h2></div>
+    {% endif %}
+</div>
+</html>
+
+{% csrf_token %}

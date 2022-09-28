@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>API</title>
+    <meta charset="utf-8">
+    <link href="../content/shared/styles/examples-offline.css" rel="stylesheet">
+    <link href="../../styles/kendo.common.min.css" rel="stylesheet">
+    <link href="../../styles/kendo.rtl.min.css" rel="stylesheet">
+    <link href="../../styles/kendo.default.min.css" rel="stylesheet">
+    <link href="../../styles/kendo.default.mobile.min.css" rel="stylesheet">
+    <script src="../../js/jquery.min.js"></script>
+    <script src="../../js/jszip.min.js"></script>
+    <script src="../../js/kendo.all.min.js"></script>
+    <script src="../content/shared/js/console.js"></script>
+    <script>
+        
+    </script>
+    
+    
+</head>
+<body>
+    
+        <a class="offline-button" href="../index.html">Back</a>
+    
+    <div id="example">
+    <div class="configurator">
+        <div class="header">Configurator</div>
+        <div class="box-col">
+            <h4>Validation</h4>
+            <ul class="options">
+                <li>
+                    <button id="validate" class="k-button">Validate</button>
+                </li>
+            </ul>
+        </div>
+        <div class="box-col">
+            <h4>Enable/Disable/Readonly</h4>
+            <ul class="options">
+                <li>
+                    <button id="enable" class="k-button">Enable/Disable</button>
+                </li>
+                <li>
+                    <button id="readonly" class="k-button">Readonly</button>
+                </li>
+            </ul>
+        </div>
+        <div class="box-col">
+            <h4>Audio</h4>
+            <button id="audio" class="k-button">Audio</button>
+        </div>
+        <div class="box-col">
+            <h4>Get Captcha ID</h4>
+            <button id="getId" class="k-button">Captcha ID</button>
+        </div>
+        <div class="box-col">
+            <h4>Reset Captcha</h4>
+            <button id="reset" class="k-button">Reset</button>
+        </div>
+    </div>
+    <div id="captcha-wrapper">
+        <input id="captcha" name="captcha" placeholder="Enter captcha" />
+    </div>
+        
+    <script>
+        var enabled = true;
+        var readonly = false;
+        var captcha = $("#captcha").kendoCaptcha({
+            handler: "./reset",
+            audioHandler: function (args) {
+                args.success("./audio?captchaId=" + args.data.captchaId);
+            },
+            validationHandler: "./validate",
+            error: function (data) {
+                console.log(data);
+            }
+        }).data("kendoCaptcha");
+        $("#form").kendoValidator();
+
+        $("#validate").click(function () {
+            captcha.validate().done(function (data) {
+                kendo.alert("Server response: " + captcha.isValid());
+            });;
+        });
+
+        $("#enable").click(function () {
+            captcha.enable(!enabled);
+            enabled = !enabled;
+        })
+        $("#readonly").click(function () {
+            captcha.readonly(!readonly);
+            readonly = !readonly;
+        })
+        $("#audio").click(function () {
+            captcha.speak();
+        })
+        $("#getId").click(function () {
+            kendo.alert("Captcha Id: " + captcha.getCaptchaId());
+        })
+        $("#reset").click(function () {
+            captcha.reset();
+        })
+    </script>
+    <style>
+        #captcha-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 405px;
+        }
+
+        .k-captcha {
+            margin: auto;
+            max-width: 280px;
+        }
+
+        .k-captcha-image, .k-captcha > img {
+            width: 100%;
+        }
+
+        .k-captcha-image-controls {
+            height: inherit;
+        }
+
+        .k-captcha-image, .k-captcha-image > img {
+            width: 100%;
+        }
+
+        .k-captcha-image-controls > button {
+            height: 50% !important;
+        }
+    </style>
+</div>
+
+
+    
+</body>
+</html>

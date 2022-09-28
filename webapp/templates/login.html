@@ -1,0 +1,75 @@
+{% load static %}
+<head>
+    <head>
+        <link rel="stylesheet" href="{% static 'styles/kendo.common.min.css' %}" />
+        <link rel="stylesheet" href="{% static 'styles/kendo.material-main-dark.min.css' %}" />
+        <link rel="stylesheet" href="{% static 'styles/todo.css' %}"/>
+        <script src="{% static 'js/jquery.min.js' %}"></script>
+        <script src="{% static 'js/kendo.all.min.js' %}"></script>
+    </head>
+</head>
+
+<div id="content-main">
+
+<form id="login-form">
+</form>
+    {% csrf_token %}
+    <script>
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+        const csrftoken = getCookie('csrftoken');
+        $("#login-form").kendoForm({
+        orientation: "vertical",
+        items: [{
+            type: "group",
+            label: "Login",
+            items: [
+                {field: "username", label: "Username", validation: {required: true}},
+                {field: "password", label: "Password", validation: {required: true},
+                    editor: function(container, options) {
+                        container.append($("<input type='password' class='k-textbox k-valid' id='password' name='Password' title='Password' required='required' autocomplete='off' aria-labelledby='Password-form-label' data-bind='value:password'>"));
+                     }
+                }
+            ]
+        }],
+        validateField: function(e) {
+        },
+        submit: function(e) {
+            e.preventDefault();
+            var $user = $('#username');
+            var $pass = $('#password');
+            var vals = {
+                'user': $user.val(),
+                'pass': $pass.val()
+            };
+            $.ajax({
+                type: "POST",
+                url: "/client/check_login/",
+                headers: {'X-CSRFToken': csrftoken},
+                data: vals,
+                contentType: "application/x-www-form-urlencoded",
+                success: function(response) {
+                    location.reload();
+                }
+            });
+            return false;
+        },
+        clear: function(ev) {
+        }
+     });
+    </script>
+
+</div>

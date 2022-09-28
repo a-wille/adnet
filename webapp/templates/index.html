@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+{% load static %}
+<head>
+    <head>
+    <!--base href="http://demos.telerik.com/kendo-ui/grid/remote-data-binding"-->
+    <style>html { font-size: 14px; font-family: Arial, Helvetica, sans-serif; }</style>
+    <title></title>
+    <link rel="stylesheet" href="{% static 'styles/kendo.common.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'styles/kendo.material-main-dark.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'styles/todo.css' %}"/>
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+    <script src="{% static 'js/kendo.all.min.js' %}"></script>
+
+    </head>
+</head>
+<body class="k-content">
+    <div>
+        <header id="header" class="k-primary">Ghirardelli please sponsor me...    <button id="user_manual" class="k-button-primary">User Manual</button></header>
+
+        {% if user.is_authenticated %}
+            <header id="account">Welcome {{ username }}</header>
+            <header id="account"><button id="account_logout" class="k-button-primary">Log Out</button></header>
+        {% else %}
+            <header id="account" ><button id="account_signin" class="k-button-primary">Sign In</button></header>
+            <header id="account2" ><button id="account_creation" class="k-button">Create Account</button></header>
+        {% endif %}
+    </div>
+    <div id="tabstrip">
+        <ul>
+            <li>
+                Home
+            </li>
+            <li>
+                Events
+            </li>
+            <li>
+                Donate
+            </li>
+            <li>
+                Volunteer
+            </li>
+            {% if perms.nonprofit.can_admin %}
+            <li id="all_events">
+                All Events
+            </li>
+            <li id="all_volunteers">
+                All Users
+            </li>
+            {% endif %}
+        </ul>
+    </div>
+    <div id="login_window" style="display:none"></div>
+    <div id="account_window" style="display:none"></div>
+    </div>
+
+</body>
+{% load static %}
+{% csrf_token %}
+<script src="{% static 'app.js' %}"></script>

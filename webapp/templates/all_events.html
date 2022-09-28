@@ -1,0 +1,12 @@
+<html><div id="all_events">
+    <h2>All Events</h2>
+    <div id="event_grid"></div>
+    <h2>Cancelled Events</h2>
+    <div id="cancel_grid"></div>
+    <h2>
+        {% load static %}
+            <script src="{% static 'all_events.js' %}"></script>
+    </h2>
+</div>
+</html>
+{% csrf_token %}

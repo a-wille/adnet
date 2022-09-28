@@ -1,0 +1,58 @@
+{% load static %}
+<head>
+    <head>
+        <link rel="stylesheet" href="{% static 'styles/kendo.common.min.css' %}" />
+        <link rel="stylesheet" href="{% static 'styles/kendo.material-main-dark.min.css' %}" />
+        <link rel="stylesheet" href="{% static 'styles/todo.css' %}"/>
+        <script src="{% static 'js/jquery.min.js' %}"></script>
+        <script src="{% static 'js/kendo.all.min.js' %}"></script>
+
+    </head>
+</head>
+
+<div id="content-main">
+    <h3 class="k-primary">Name: {{ name }}</h3>
+    <h3 class="k-primary">Email: {{ user_id }}</h3>
+    <h3 class="k-primary">Permissions: {{ permissions }}</h3>
+{#    {{ user_id|json_script:"user_id" }}#}
+    <div class="k-card-group">
+        <div id="total_hours" class="k-card" style="width: 350px; padding: 20px;">
+        <div class="k-card-header">
+            <h5 class="k-card-title">Total Volunteer Hours</h5>
+        </div>
+        <div class="k-card-body">
+        <p>{{ name }} has volunteered {{ volunteer_hours }} hours!</p>
+        </div>
+    </div>
+    <br>
+    <div id="total_donations" class="k-card" style="width: 350px; padding: 20px;">
+        <div class="k-card-header">
+            <h5 class="k-card-title">Total $ Amount Donated</h5>
+        </div>
+        <div class="k-card-body">
+        <p>{{ name }} has donated ${{ donations }}!</p>
+        </div>
+    </div>
+    </div>
+
+    <div class="k-card-group">
+        <div id="past_events" class="k-card" style="width: 350px; padding: 20px;">
+        <div class="k-card-header">
+            <h5 class="k-card-title">All Events</h5>
+        </div>
+        <div class="k-card-body">
+        <pre>{{ past_events }}</pre>
+        </div>
+    </div>
+    <br>
+    <div id="past_donations" class="k-card" style="width: 350px; padding: 20px;">
+        <div class="k-card-header">
+            <h5 class="k-card-title">Past Donations</h5>
+        </div>
+        <div class="k-card-body">
+        <pre>{{ past_donations }}</pre>
+        </div>
+    </div>
+    </div>
+    {% csrf_token %}
+</div>

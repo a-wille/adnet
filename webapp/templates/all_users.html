@@ -1,0 +1,32 @@
+<html>
+{% load static %}
+<head>
+    <head>
+        <link rel="stylesheet" href="{% static 'styles/kendo.common.min.css' %}" />
+        <link rel="stylesheet" href="{% static 'styles/kendo.material-main-dark.min.css' %}" />
+        <link rel="stylesheet" href="{% static 'styles/todo.css' %}"/>
+        <script src="{% static 'js/jquery.min.js' %}"></script>
+        <script src="{% static 'js/kendo.all.min.js' %}"></script>
+    </head>
+</head>
+<div id="all_users">
+    <div id="report_window" style="display:none"></div>
+    <div id="horizontal2">
+        <div id="left-pane2">
+            <div class="pane-content">
+                <h3>Active Users</h3>
+                <div id="active_grid"></div>
+            </div>
+        </div>
+        <div id="right-pane2">
+            <div class="pane-content">
+                <h3>Deactivated Users</h3>
+                <div id="delete_grid"></div>
+            </div>
+        </div>
+    </div>
+        {% load static %}
+            <script src="{% static 'all_users.js' %}"></script>
+</div>
+</html>
+{% csrf_token %}

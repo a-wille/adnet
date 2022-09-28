@@ -1,0 +1,26 @@
+.sidebyside {
+    display: inline-block;
+    float: left;
+    padding: 20px;
+    /*width: 40%;*/
+}
+
+#grid {
+    text-align: left;
+}
+
+#listview {
+    /*width: 20%;*/
+    float: left;
+    padding: 10px;
+}
+
+#listview {
+    /*width: 60%;*/
+    float: left;
+    padding: 10px;
+}
+
+.k-content {
+    display: inline-block;
+}
