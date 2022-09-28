@@ -1,4 +1,7 @@
 9.27.2022
 - initialized git repo
 - set up VM with minimal security policy
+9.28.2022
+- worked on requirements gathering and assumptions
+- decided on mongo for design
 
