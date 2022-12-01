@@ -17,6 +17,7 @@ function getCookie(name) {
 
 const csrftoken = getCookie('csrftoken');
 
+
 $(document).ready(function() {
     const csrftoken = getCookie('csrftoken');
 
@@ -28,7 +29,7 @@ $(document).ready(function() {
         dataSource: {
             transport: {
                 read: {
-                    url: "/SNPSearch/GetAllSNPs/",
+                    url: "/SNPSearch/GetAllSNPNames/",
                     dataType: "json",
                     type: "GET"
                 }
@@ -83,26 +84,48 @@ $(document).ready(function() {
                     }
                 },
             pageSize: 20,
-            serverPaging: true,
-            serverFiltering: true,
-            serverSorting: true
+            resizable: true,
+            // serverPaging: true,
+            // serverFiltering: true,
+            // serverSorting: true
         },
         height: 550,
+        filterable: true,
         sortable: true,
+        resizable: true,
         pageable: true,
         columns: [
-            {field:"snp_name", title:"Name"},
-            {field:"region", title: "Region"},
-            {field:"chr", title: "Chromosome"},
-            {field:"chr_pos", title: "Chr. Index"},
-            {field:"functional_class", title: "Class"},
-            {field:"is_intergenic", title:"Intergenic"},
-            {field:"genes", title:"Genes", template: '{{ dataItem.genes.join(", ") }}'},
-            {field:"most_severe_consequence", title: "Potential Effect"},
-            {field:"risk_level", title:"Risk Level"},
-            "MAF",
-            {field:"minor_allele", title: "Minor Allele"},
-            {field:"values", title:"Allele Values"},
+            {field:"snp_name", title:"Name", width:"150px"},
+            // {field:"region", title: "Region"},
+            {field:"chr", title: "Chr", width:"100px"},
+            {field:"chr_pos", title: "Chr. Index", width:"150px"},
+            {field:"functional_class", title: "Class", width:"150px"},
+            {field:"is_intergenic", title:"Intergenic", width:"150px"},
+            // {field:"most_severe_consequence", title: "Potential Effect", width:"200px"},
+            {field:"risk_level", title:"Risk Level", width:"150px"},
+            {field:"genes", title:"Genes", template: "#= genes.join(', ') #"},
+            {
+                command:[{
+                    name: "More Details ",
+                    width: "150px",
+                    click: function(e) {
+                        var id = e.currentTarget.closest("tr").cells[0].textContent;
+                        console.log(id)
+                    }
+                }],
+                title: "More Information ",
+                template: '<input type="button" class="k-button info" name="info" value="Details" />',
+            filterable: false, sortable: false, width: "150px"}
+
+            // "MAF",
+            // {field:"minor_allele", title: "Minor Allele"},
+            // {field:"values", title:"Allele Values"},
         ]
     });
+    // var row = $(this).closest("tr");
+    // var item = grid.dataItem(row);
+    // console.log("Selected item is:" + JSON.stringify(item))
+// }
+
+
 });

@@ -4,7 +4,6 @@ from pymongo.errors import ServerSelectionTimeoutError
 
 from webapp.extra.view_helper import get_mongo
 from multiprocessing import Pool
-from timeit import default_timer as timer
 from itertools import islice
 import requests
 
@@ -165,6 +164,8 @@ class SNPDaemon:
                 doc['region'] = snp_info['locations'][0]['region']['name']
             doc['functional_class'] = snp_info['functionalClass']
             doc['snp_name'] = snp
+            print(self.risk_levels[doc['functional_class']])
+            print(doc['functional_class'])
             doc['risk_level'] = self.risk_levels[doc['functional_class']]
             if 'error' not in ensemble_info.keys():
                 doc['MAF'] = ensemble_info['MAF']
@@ -224,5 +225,5 @@ class SNPDaemon:
         f.close()
 
 
-s = SNPDaemon('snp_data.json')
+s = SNPDaemon()
 s.pull_snp_data(10)

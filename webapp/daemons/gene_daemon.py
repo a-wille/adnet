@@ -334,9 +334,14 @@ class GeneDaemon:
                         print("What")
         except ValueError as e:
             print("oopsies")
+            print(snp['snp_name'])
             print(common_list)
             print(e)
             num = 0
+        except TypeError as et:
+            print(snp['snp_name'])
+            print(index)
+            print()
 
         affected_features = []
 

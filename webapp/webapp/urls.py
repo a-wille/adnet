@@ -23,7 +23,7 @@ urlpatterns = [
     path('client/', include('webapp.client.urls')),
     path('accounts/', include('django.contrib.auth.urls')),
     path('Glossary/', include('webapp.Glossary.urls')),
-    # path('GeneSearch/', include('webapp.GeneSearch.urls')),
+    path('GeneSearch/', include('webapp.GeneSearch.urls')),
     path('SNPSearch/', include('webapp.SNPSearch.urls')),
     path('', views.index)
 ]

@@ -55,5 +55,57 @@ $(document).ready(function() {
             })
         },
     });
+    $("#genegrid").kendoGrid({
+        dataSource: {
+            transport: {
+                read: {
+                    url: "/GeneSearch/GetAllGenes/",
+                    dataType: "json",
+                    type: "GET"
+                }
+            },
+            schema: {
+                model: {
+                    fields: {
+                        name: {type:"string"},
+                        chromosome: { type: "string" },
+                        type: { type: "string" },
+                        description: { type: "string" }
+                        }
+                    }
+                },
+            pageSize: 20,
+            resizable: true,
+        },
+        height: 550,
+        filterable: true,
+        sortable: true,
+        resizable: true,
+        pageable: true,
+        columns: [
+            {field:"name", title:"Name", width:"150px"},
+            {field:"chromosome", title: "Chr", width:"100px"},
+            {field:"range", title: "Chr. Range", width:"225px", template:"#=range.begin# - #=range.end#"},
+            {field:"range", title: "Orientation", width: "150px", template:"#=range.orientation#"},
+            {field:"type", title: "Type", width:"225px"},
+            {field:"description", title:"Description"},
+            {
+                command:[{
+                    name: "More Details ",
+                    width: "150px",
+                    click: function(e) {
+                        var id = e.currentTarget.closest("tr").cells[0].textContent;
+                        console.log(id)
+                    }
+                }],
+                title: "More Information ",
+                template: '<input type="button" class="k-button info" name="info" value="Details" />',
+            filterable: false, sortable: false, width: "150px"}
+
+            // "MAF",
+            // {field:"minor_allele", title: "Minor Allele"},
+            // {field:"values", title:"Allele Values"},
+        ]
+    });
 
 });
