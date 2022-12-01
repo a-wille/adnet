@@ -1,15 +1,8 @@
 #tabstrip {
 
-    font-size: 20px;
+    font-size: 30px;
     min-height: 100%;
     min-width: 100%;
-}
-
-#brownie {
-    width: 300px;
-    height: 450px;
-    float: left;
-    padding: 20px;
 }
 
 #desc {
@@ -21,8 +14,10 @@
     align: center;
     text-align: center;
     vertical-align: center;
-    padding-top: 100px;
-
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+    padding-top: 40px;
+    padding-bottom: 40px;
+    padding-left: 40px;
 }
 
 #tabstrip ul {
@@ -36,15 +31,13 @@
 
 #header {
     display: inline-block;
-    min-height: 100%;
-    text-align: left;
-    font-size: 30px;
-    min-width: 80%;
     padding-top: 40px;
     padding-bottom: 40px;
     padding-left: 40px;
     position: relative;
-
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+    font-size: 60px;
+    color: inherit;
 }
 
 #account {
@@ -75,14 +68,7 @@
     top: 30px;
     width: 70px;
 }
-#user_manual {
-    text-align: center;
-    align: right;
-    alignment: right;
-    font-size: 15px;
-    font-color: black;
-    width: 120px;
-}
+
 
 #login_window {
     align: center;

@@ -1,0 +1,34 @@
+{% load static %}
+<head>
+    <head>
+    <!--base href="http://demos.telerik.com/kendo-ui/grid/remote-data-binding"-->
+    <link rel="stylesheet" href="{% static 'styles/style3.css' %}" />
+        <script src="{% static 'js/jquery.min.js' %}"></script>
+    <script src="{% static 'js/kendo.all.min.js' %}"></script>
+    </head>
+
+    <header class="intro">Explore SNPs!</header>
+</head>
+<body>
+    <div class="k-d-flex k-justify-content-center" style="padding-top: 54px;">
+        <div class="k-w-300">
+            <label for="snps">Search by name...</label>
+            <input id="snps" style="width: 100%;" />
+{#            <div class="demo-hint">Hint: type "che"</div>#}
+        </div>
+    </div>
+    <div id="searchSNPs" class=".k-listview" style="padding-left: 40px; padding-right: 40px"></div>
+    <span></span>
+    <div class="intro">
+        Or explore different SNPs using the grid below!
+    </div>
+    <div id="snpgrid"></div>
+</body>
+{% load static %}
+    <script src="{% static 'snp_search.js' %}"></script>
+{% csrf_token %}
+<style>
+    .intro {
+        text-align: center;
+    }
+</style>

@@ -1,0 +1,33 @@
+{% load static %}
+<head>
+    <head>
+    <!--base href="http://demos.telerik.com/kendo-ui/grid/remote-data-binding"-->
+    <link rel="stylesheet" href="{% static 'styles/style3.css' %}" />
+        <script src="{% static 'js/jquery.min.js' %}"></script>
+    <script src="{% static 'js/kendo.all.min.js' %}"></script>
+    </head>
+
+    <header class="intro">Explore genes!</header>
+</head>
+<body>
+    <div class="k-d-flex k-justify-content-center" style="padding-top: 54px;">
+        <div class="k-w-300">
+            <label for="genes">Search by name...</label>
+            <input id="genes" style="width: 100%;" />
+        </div>
+    </div>
+    <div id="geneData" class=".k-listview" style="padding-left: 40px; padding-right: 40px"></div>
+    <span></span>
+    <span></span>
+    <div class="intro">
+        Or explore different genes using the grid below!
+    </div>
+</body>
+{% load static %}
+    <script src="{% static 'gene_search.js' %}"></script>
+{% csrf_token %}
+<style>
+    .intro {
+        text-align: center;
+    }
+</style>

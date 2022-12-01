@@ -115,11 +115,11 @@ $(document).ready(function() {
                     },
                     contentUrls: [
                         'home',
-                        'events',
-                        'donate',
-                        'volunteer',
-                        'all_events',
-                        "all_volunteers"
+                        'glossary',
+                        'gene_search',
+                        'snp_search',
+                        'build',
+                        "configurations"
                     ]
                 }).data("kendoTabStrip");
                 tabStrip.select(0);
@@ -132,10 +132,9 @@ $(document).ready(function() {
                     },
                     contentUrls: [
                         'home',
-                        'events',
-                        'donate',
-                        'volunteer',
-                        'about'
+                        'glossary',
+                        'gene_search',
+                        'snp_search'
                     ]
                 }).data("kendoTabStrip");
                 tabStrip.select(0);

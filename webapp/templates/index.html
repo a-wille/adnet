@@ -3,10 +3,9 @@
 <head>
     <head>
     <!--base href="http://demos.telerik.com/kendo-ui/grid/remote-data-binding"-->
-    <style>html { font-size: 14px; font-family: Arial, Helvetica, sans-serif; }</style>
     <title></title>
-    <link rel="stylesheet" href="{% static 'styles/kendo.common.min.css' %}" />
-    <link rel="stylesheet" href="{% static 'styles/kendo.material-main-dark.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'styles/style3.css' %}" />
+    <link rel="stylesheet" href="{% static 'styles/style3.css' %}" />
     <link rel="stylesheet" href="{% static 'styles/todo.css' %}"/>
     <script src="{% static 'js/jquery.min.js' %}"></script>
     <script src="{% static 'js/kendo.all.min.js' %}"></script>
@@ -15,7 +14,7 @@
 </head>
 <body class="k-content">
     <div>
-        <header id="header" class="k-primary">Ghirardelli please sponsor me...    <button id="user_manual" class="k-button-primary">User Manual</button></header>
+        <header id="header">ADNet   </header>
 
         {% if user.is_authenticated %}
             <header id="account">Welcome {{ username }}</header>
@@ -31,20 +30,20 @@
                 Home
             </li>
             <li>
-                Events
+                Glossary
             </li>
             <li>
-                Donate
+                Gene Search
             </li>
             <li>
-                Volunteer
+                SNP Search
             </li>
             {% if perms.nonprofit.can_admin %}
             <li id="all_events">
-                All Events
+                Build Neural Net
             </li>
             <li id="all_volunteers">
-                All Users
+                Run Information
             </li>
             {% endif %}
         </ul>

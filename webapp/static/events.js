@@ -27,7 +27,7 @@ $(document).ready(function() {
         height: 400,
         views: [
             "week",
-            "month",
+            "month",F
             "year",
             { type: "agenda", selected: true, eventHeight: 100},
             { type: "timeline", eventHeight: 50}

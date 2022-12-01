@@ -22,10 +22,9 @@ from webapp import views
 urlpatterns = [
     path('client/', include('webapp.client.urls')),
     path('accounts/', include('django.contrib.auth.urls')),
-    path('admin/', admin.site.urls),
-    path('Events/', include('webapp.Events.urls')),
-    path('Volunteer/', include('webapp.Volunteer.urls')),
-    path('Donate/', include('webapp.Donate.urls')),
+    path('Glossary/', include('webapp.Glossary.urls')),
+    # path('GeneSearch/', include('webapp.GeneSearch.urls')),
+    path('SNPSearch/', include('webapp.SNPSearch.urls')),
     path('', views.index)
 ]
 

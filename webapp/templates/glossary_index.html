@@ -1,0 +1,52 @@
+{% load static %}
+<head>
+    <head>
+    <link rel="stylesheet" href="{% static 'styles/style3.css' %}" />
+        <script src="{% static 'js/jquery.min.js' %}"></script>
+    <script src="{% static 'js/kendo.all.min.js' %}"></script>
+    </head>
+
+    <header class="intro" style="padding: 40px">Confused? Try searching for your term below, or click on the topic you want to explore!</header>
+</head>
+<body>
+
+    <div class="k-d-flex k-justify-content-center">
+        <div class="k-w-300">
+            <label for="terms">Search...</label>
+            <input id="terms" style="width: 100%;" />
+        </div>
+    </div>
+    <div id="searchDefinition" class=".k-listview" style="padding-left: 40px; padding-right: 40px"></div>
+    <span></span>
+    <div class="buttongroup" style="padding: 50px">
+        <ul id="select-type">
+            <li id="text" style="padding: 8px">
+                All
+            </li>
+            <li style="padding: 8px" >
+                Genetics
+            </li>
+            <li style="padding: 8px">
+                Machine Learning
+            </li>
+        </ul>
+    </div>
+    <div>
+        <ul id="listView"></ul>
+    </div>
+</body>
+{% load static %}
+    <script src="{% static 'glossary.js' %}"></script>
+{% csrf_token %}
+<style>
+    .intro {
+        text-align: center;
+    }
+    .buttongroup {
+        text-align: center;
+    }
+
+    k-popup {
+        font-size: 24px;
+    }
+</style>
