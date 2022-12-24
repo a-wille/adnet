@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, re_path, include
 from . import views
 
 urlpatterns = [
@@ -8,6 +8,7 @@ urlpatterns = [
 	path('gene_search', views.gene_search),
 	path('snp_search', views.snp_search),
 	path('login', views.login),
+	re_path(r'get_information/.*$', views.get_gene_details),
 	path('create', views.account_view),
 	path('check_login/', views.check_login),
 	path('create_account/', views.create_account),

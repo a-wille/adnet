@@ -1,3 +1,5 @@
+import json
+
 from django.shortcuts import render
 from django.contrib.auth.models import Group
 from django.contrib.auth import authenticate, logout
@@ -23,6 +25,10 @@ def snp_search(request):
 def login(request):
 	#returns html content for a window that you can log in with
 	return render(request, 'login.html')
+
+def get_gene_details(request):
+	gene_id = remove_substring_from_string(request.path, '/client/get_information/')
+	return render(request, 'gene_information.html', {'content': gene_id})
 
 def home(request):
 	#returns home tab

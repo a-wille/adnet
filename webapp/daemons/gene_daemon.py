@@ -321,23 +321,18 @@ class GeneDaemon:
             else:
                 common_list[item] += 1
         try:
-            index = max(common_list, key=common_list.get)
-            num = int(re.findall(r'\d+', index)[0]) - 1
-            orig_acid = index.split(str(num + 1))[0]
-            if orig_acid != gene['sequence'][num]:
-                if orig_acid == gene['sequence'][num - 1]:
-                    num -= 1
-                else:
+            if len(common_list.keys()) != 0 and 'nan' not in common_list.keys():
+                index = max(common_list, key=common_list.get)
+                num = int(re.findall(r'\d+', index)[0]) - 1
+                orig_acid = index.split(str(num + 1))[0]
+                if orig_acid != gene['sequence'][num]:
                     if orig_acid == gene['sequence'][num - 1]:
                         num -= 1
                     else:
-                        print("What")
-        except ValueError as e:
-            print("oopsies")
-            print(snp['snp_name'])
-            print(common_list)
-            print(e)
-            num = 0
+                        if orig_acid == gene['sequence'][num - 1]:
+                            num -= 1
+                        else:
+                            print("What")
         except TypeError as et:
             print(snp['snp_name'])
             print(index)
@@ -405,8 +400,7 @@ class GeneDaemon:
             )
         except ServerSelectionTimeoutError as e:
             print("What")
-        except Exception as f:
-            print("confused")
+        except Exception as f:            print("confused")
 
     def divide_gene_list(self, n):
         it = iter(self.genes)

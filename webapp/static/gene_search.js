@@ -15,13 +15,38 @@ function getCookie(name) {
     return cookieValue;
 }
 
+function more_information(gene) {
+    var info = $("#information_window").data("kendoWindow");
+    if (info == null) {
+        info = $('#information_window').kendoWindow({
+            modal: true,
+            visible: false,
+            width: 700,
+            height: 900,
+        }).data("kendoWindow");
+    }
+    info.title('Gene: ' + gene);
+    info.refresh({
+        url: 'get_information/' + gene
+    }).open();
+    info.center();
+}
+
+
 const csrftoken = getCookie('csrftoken');
 
 $(document).ready(function() {
     const csrftoken = getCookie('csrftoken');
 
+    $("#information_window").kendoWindow({
+        modal: true,
+        visible: false,
+        width: 900,
+        height: 750,
+    });
+
     $("#genes").kendoAutoComplete({
-        dataTextField: "gene",
+        dataTextField: "name",
         filter: "contains",
         autoWidth: true,
         minLength: 1,
@@ -39,20 +64,7 @@ $(document).ready(function() {
             var text = item.text();
             console.log(text)
             $('#geneData').empty();
-            $.ajax({
-                type: 'POST',
-                url: '/GeneSearch/GetGeneData/',
-                headers: {'X-CSRFToken': csrftoken},
-                dataType: 'json',
-                data: {'name': text},
-                success: function(result){
-                    console.log(result)
-                    // $('#searchDefinition').append(
-                    //     '<h3 style="font-size: 24px;">' + result['term'] + '</h3>\n<p style="font-size: 20px;">' +
-                    //     result['definition'] + '</p>'
-                    // ).hide().fadeIn(1000);
-                }
-            })
+            more_information(text)
         },
     });
     $("#genegrid").kendoGrid({
@@ -94,17 +106,14 @@ $(document).ready(function() {
                     name: "More Details ",
                     width: "150px",
                     click: function(e) {
-                        var id = e.currentTarget.closest("tr").cells[0].textContent;
-                        console.log(id)
+                        e.preventDefault();
+                        var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
+                        more_information(dataItem.name)
                     }
                 }],
                 title: "More Information ",
                 template: '<input type="button" class="k-button info" name="info" value="Details" />',
             filterable: false, sortable: false, width: "150px"}
-
-            // "MAF",
-            // {field:"minor_allele", title: "Minor Allele"},
-            // {field:"values", title:"Allele Values"},
         ]
     });
 

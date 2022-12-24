@@ -1,0 +1,126 @@
+{% load static %}
+<head>
+    <head>
+    <!--base href="http://demos.telerik.com/kendo-ui/grid/remote-data-binding"-->
+{#    <link rel="stylesheet" href= "{% static 'styles/kendo.common-ocean-blue.min.css' %}" />#}
+    <link rel="stylesheet" href="{% static 'styles/style3.css' %}" />
+{#    <link rel="stylesheet" href="{% static 'styles/kendo.nova.mobile.min.css' %}" />#}
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+    <script src="{% static 'js/kendo.all.min.js' %}"></script>
+    </head>
+</head>
+<body>
+{% block content %}
+    <p hidden id="gene">{{ content }}</p>
+{% endblock %}
+<div class="k-content">
+    <h4 class="k-h5">General Information</h4>
+    <table id="gentable">
+        <tr style="background: rgba(147,211,255,0.14);">
+            <th>Description</th>
+            <td id="description"></td>
+        </tr>
+        <tr style="background: rgba(221,240,255,0.14);">
+            <th>Type</th>
+            <td id="type"></td>
+        </tr>
+        <tr style="background: rgba(147,211,255,0.14);">
+            <th>Chromosome</th>
+            <td id="chr"></td>
+        </tr>
+        <tr style="background: rgba(221,240,255,0.14);">
+            <th>Nucleotide Range</th>
+            <td id="range"></td>
+        </tr>
+        <tr style="background: rgba(147,211,255,0.14);">
+            <th>Orientation</th>
+            <td id="orientation"></td>
+        </tr>
+
+    </table>
+    <br>
+    <h4 class="k-h5">Alzheimer's Associated SNPs</h4>
+    <ul id="snpbar"></ul>
+    <br>
+    <div id="chart"></div>
+    <br>
+    <ul id="panelbar"></ul>
+    <br>
+
+</div>
+</body>
+{% load static %}
+    <script src="{% static 'gene_information.js' %}"></script>
+{% csrf_token %}
+<style>
+#gentable {
+  width: 100%;
+  display: table;
+  border: none;
+    border-collapse: collapse;
+    font-size: 15px;
+}
+
+th {
+  text-align: left;
+  width: 47%;
+  padding: 5px;
+  border: none;
+}
+td {
+  text-align: left;
+  width: 47%;
+  padding: 5px;
+  border: none;
+  display: table-cell;
+}
+
+.k-panelbar > .k-item > .k-link,
+.k-panelbar > .k-panelbar-header > .k-link {
+    color: #0277bd;
+    background-color: white;
+}
+
+.k-panelbar > .k-item > .k-link.k-state-selected,
+.k-panelbar > .k-panelbar-header > .k-link.k-state-selected {
+    color: white;
+    background-color: #0277bd;
+}
+
+.k-panelbar .k-group > .k-item > .k-link.k-state-selected,
+.k-panelbar .k-group > .k-panelbar-item > .k-link.k-state-selected,
+.k-panelbar .k-panelbar-group > .k-item > .k-link.k-state-selected,
+.k-panelbar .k-panelbar-group > .k-panelbar-item > .k-link.k-state-selected {
+    color: white;
+    background-color: #0277bd;
+}
+
+#panelbar.k-panelbar>.k-item>.k-link,
+#panelbar.k-panelbar>.k-item>.k-link .k-icon,
+#panelbar.k-panelbar>.k-item>.k-link:hover
+    {
+        color: #0a0a0a;
+        size: 20px;
+        user-select: unset;
+    }
+
+#panelbar .k-group
+{
+    overflow-wrap: anywhere;
+    overflow-y: auto;
+    user-select: text;
+    -moz-user-select: text;
+    -khtml-user-select: text;
+    -webkit-user-select: text;
+    -ms-user-select: text;
+}
+
+span { /* Hide horizontal scrollbar */
+    max-height: 200px;
+    -moz-user-select: text;
+    -khtml-user-select: text;
+    -webkit-user-select: text;
+    -ms-user-select: text;
+}
+
+</style>
