@@ -19,7 +19,7 @@ class SNPDaemon:
         'chr_pos': None,
         'region': None,
         'functional_class': None,
-        'snp_name': None,
+        '_id': None,
         'MAF': None,
         'most_severe_consequence': None,
         'minor_allele': None,
@@ -87,7 +87,6 @@ class SNPDaemon:
                             self.snp_data[snp['rsId']]['strongest_risk_alleles'] += doc['strongest_risk_alleles']
                 self.snp_data[snp['rsId']] = doc
 
-
     def pull_snps(self, l):
         docs = []
         for snp in l:
@@ -106,13 +105,13 @@ class SNPDaemon:
         #if no record, inserts new doc
         upsert = True
         conn = get_mongo()
-        doc = conn.AdNet.SNPs.find_one({'snp_name': new_data['snp_name']})
+        doc = conn.AdNet.SNPs.find_one({'_id': new_data['_id']})
         if doc:
             upsert = False
         try:
 
             conn.AdNet.SNPs.find_one_and_update(
-                {'snp_name': new_data['snp_name'],
+                {'_id': new_data['_id'],
                 '$or': [
                     {'chr': {'$ne': new_data['chr']}},
                     {'chr_pos': {'$ne': new_data['chr_pos']}},
@@ -163,7 +162,7 @@ class SNPDaemon:
                 doc['chr_pos'] = snp_info['locations'][0]['chromosomePosition']
                 doc['region'] = snp_info['locations'][0]['region']['name']
             doc['functional_class'] = snp_info['functionalClass']
-            doc['snp_name'] = snp
+            doc['_id'] = snp
             print(self.risk_levels[doc['functional_class']])
             print(doc['functional_class'])
             doc['risk_level'] = self.risk_levels[doc['functional_class']]

@@ -11,23 +11,16 @@ def index(request):
 	return render(request, 'index.html')
 
 def get_all_genes(request):
-	"Get all names of SNPS for search bar"
-	data = []
 	conn = get_mongo()
-	docs = conn.AdNet.Genes.find({})
-	for doc in docs[0:10]:
-		del(doc['_id'])
-		data.append(doc)
-	return HttpResponse(json.dumps(data))
+	docs = conn.AdNet.Genes.find({}, {'name': 1, 'chromosome': 1, 'type': 1, 'range': 1,
+									  'description': 1, 'mod_len': 1, 'nm_len': 1})
+	return HttpResponse(json.dumps(list(docs)))
+
 
 def get_all_names(request):
-	"Get all names of SNPS for search bar"
-	data = []
 	conn = get_mongo()
-	docs = conn.AdNet.Genes.find({})
-	for doc in docs:
-		data.append({'gene': doc['name']})
-	return HttpResponse(json.dumps(data))
+	docs = conn.AdNet.Genes.find({}, {'name': 1})
+	return HttpResponse(json.dumps(list(docs)))
 
 
 def get_gene_data(request):
@@ -36,14 +29,12 @@ def get_gene_data(request):
 		return HttpResponse(json.dumps({}))
 	conn = get_mongo()
 	doc = conn.AdNet.Genes.find_one({'snp_name': post['name']})
-	del doc['_id']
 	return HttpResponse(json.dumps(doc))
 
 def get_gene_info(request):
 	gene_id = remove_substring_from_string(request.path, '/GeneSearch/GetGeneInfo/')
 	conn = get_mongo()
 	doc = conn.AdNet.Genes.find_one({'name': gene_id})
-	del(doc['_id'])
 	validated_data = {}
 	for feature in doc.keys():
 		if doc[feature] != None and doc[feature] != [] and doc[feature] != {}:
@@ -54,7 +45,36 @@ def get_gene_info(request):
 		validated_data['rna_sequences'] = format_sequences(validated_data)
 	validated_data['mod'] = format_snps(validated_data, 'mod')
 	validated_data['nonmod'] = format_snps(validated_data, 'nonmod')
+	validated_data['locations'] = format_list(validated_data, 'locations')
+	validated_data['cofactors'] = format_list(validated_data, 'cofactors')
+	validated_data['catalytic_activity'] = format_list(validated_data, 'catalytic_activity')
+	for item in validated_data['snp_effects']:
+		f = item['affected_features']
+		item['affected_features'] = '{} ({}-{})'.format(f['type'], f['location']['start']['value'],
+															  f['location']['end']['value'])
+		if f['description'] != '':
+			item['affected_features'] += ', ' + f['description']
 	return HttpResponse(json.dumps(validated_data))
+
+
+def format_list(data, arg):
+
+	convert_str = ''
+	if arg in data.keys():
+		data[arg] = sorted(set(data[arg]), key=len)
+		data[arg].reverse()
+		i = 0
+		for item in data[arg]:
+			if item not in convert_str:
+				if i != 0:
+					convert_str += ', {}'.format(item)
+				else:
+					convert_str += item
+					i = 1
+	else:
+		convert_str = 'Unknown'
+	return convert_str
+
 
 def format_snps(data, arg):
 	new_snps = []
