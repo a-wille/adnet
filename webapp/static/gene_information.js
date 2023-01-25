@@ -169,9 +169,8 @@ function fill_effect_grid(effects) {
 $(document).ready(function() {
     const csrftoken = getCookie('csrftoken');
     var geneId = document.getElementById("gene").textContent
-    var url = "/GeneSearch/GetGeneInfo/" + geneId.toString()
     $.ajax({
-        url: url,
+        url: "/GeneSearch/GetGeneInfo/" + geneId.toString(),
         type: "GET",
         success: function (data) {
             data = JSON.parse(data)

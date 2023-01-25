@@ -5,7 +5,7 @@ import pytz
 from django.core.serializers.json import DjangoJSONEncoder
 from django.shortcuts import render
 from django.http import HttpResponse
-from webapp.extra.view_helper import get_mongo
+from webapp.view_helpers import get_mongo
 
 
 def get_all(request):

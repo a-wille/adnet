@@ -5,7 +5,7 @@ from django.contrib.auth.models import Group
 from django.contrib.auth import authenticate, logout
 from webapp.models import User
 from django.contrib.auth import login as login_django
-from webapp.extra.view_helper import get_mongo
+from webapp.view_helpers import get_mongo
 from django.http import HttpResponse
 
 
@@ -26,10 +26,6 @@ def login(request):
 	#returns html content for a window that you can log in with
 	return render(request, 'login.html')
 
-def get_gene_details(request):
-	gene_id = remove_substring_from_string(request.path, '/client/get_information/')
-	return render(request, 'gene_information.html', {'content': gene_id})
-
 def home(request):
 	#returns home tab
 	return render(request, 'home.html')
@@ -37,17 +33,6 @@ def home(request):
 def account_view(request):
 	#returns html content for a window that you can make an account from
 	return render(request, 'account_creation.html')
-
-def remove_substring_from_string(s, substr):
-	"""helper function for parsing url for a particular string"""
-	i = 0
-	while i < len(s) - len(substr) + 1:
-		if s[i:i + len(substr)] == substr:
-			break
-		i += 1
-	else:
-		return s
-	return s[:i] + s[i + len(substr):]
 
 def create_account(request):
 	"""creates an account for a user"""

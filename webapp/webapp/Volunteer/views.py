@@ -1,6 +1,6 @@
 import datetime
 import pytz
-from webapp.extra.view_helper import get_mongo
+from webapp.view_helpers import get_mongo
 from django.core.serializers.json import DjangoJSONEncoder
 from django.http import HttpResponse
 import json

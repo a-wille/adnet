@@ -2,7 +2,7 @@ import json
 
 from pymongo.errors import ServerSelectionTimeoutError
 
-from webapp.extra.view_helper import get_mongo
+from webapp.view_helpers import get_mongo
 from multiprocessing import Pool
 from itertools import islice
 import requests
@@ -22,15 +22,13 @@ class SNPDaemon:
         '_id': None,
         'MAF': None,
         'most_severe_consequence': None,
-        'minor_allele': None,
-        'allele_string': None,
-        'strand': None,
         'location': None,
         'values': None,
         'genes': [],
         'strongest_risk_alleles': None,
         'is_intergenic': True,
-        'risk_level': None
+        'risk_level': None,
+        'p-value': None
     }
 
     risk_levels = {
@@ -81,6 +79,7 @@ class SNPDaemon:
                             print(e)
                 #sometimes double reported values from different experiments on an SNP so fuck that
                 doc['strongest_risk_alleles'] = risk_list
+                doc['pvalue'] = association['pvalue']
                 if snp['rsId'] in self.snp_data:
                     for item in doc['strongest_risk_alleles']:
                         if item not in self.snp_data[snp['rsId']]['strongest_risk_alleles']:
@@ -120,14 +119,13 @@ class SNPDaemon:
                     {'MAF': {'$ne': new_data['MAF']}},
                     {'most_severe_consequence': {'$ne': new_data['most_severe_consequence']}},
                     {'minor_allele': {'$ne': new_data['minor_allele']}},
-                    {'allele_string': {'$ne': new_data['allele_string']}},
-                    {'strand': {'$ne': new_data['strand']}},
                     {'location': {'$ne': new_data['location']}},
                     {'values': {'$ne': new_data['values']}},
                     {'strongest_risk_alleles': {'$ne': new_data['strongest_risk_alleles']}},
                     {'genes': {'$ne': new_data['genes']}},
                     {'is_intergenic': {'$ne': new_data['is_intergenic']}},
-                    {'risk_level': {'$ne': new_data['risk_level']}}
+                    {'risk_level': {'$ne': new_data['risk_level']}},
+                    {'pvalue': {'$ne': new_data['pvalue']}}
                 ]},
                 {'$set': {
                     'chr': new_data['chr'],
@@ -137,14 +135,13 @@ class SNPDaemon:
                     'MAF': new_data['MAF'],
                     'most_severe_consequence': new_data['most_severe_consequence'],
                     'minor_allele': new_data['minor_allele'],
-                    'allele_string': new_data['allele_string'],
-                    'strand': new_data['strand'],
                     'location': new_data['location'],
                     'values': new_data['values'],
                     'strongest_risk_alleles': new_data['strongest_risk_alleles'],
                     'genes': new_data['genes'],
                     'is_intergenic': new_data['is_intergenic'],
-                    'risk_level': new_data['risk_level']
+                    'risk_level': new_data['risk_level'],
+                    'pvalue': new_data['pvalue']
                 }}, upsert=upsert
             )
         except ServerSelectionTimeoutError as e:
@@ -161,6 +158,7 @@ class SNPDaemon:
                 doc['chr'] = snp_info['locations'][0]['chromosomeName']
                 doc['chr_pos'] = snp_info['locations'][0]['chromosomePosition']
                 doc['region'] = snp_info['locations'][0]['region']['name']
+                doc['location'] = '{}:{}'.format(doc['chr'], doc['chr_pos'])
             doc['functional_class'] = snp_info['functionalClass']
             doc['_id'] = snp
             print(self.risk_levels[doc['functional_class']])
@@ -168,12 +166,11 @@ class SNPDaemon:
             doc['risk_level'] = self.risk_levels[doc['functional_class']]
             if 'error' not in ensemble_info.keys():
                 doc['MAF'] = ensemble_info['MAF']
-                doc['most_severe_consequence'] = ensemble_info['most_severe_consequence']
                 doc['minor_allele'] = ensemble_info['minor_allele']
-                doc['allele_string'] = ensemble_info['mappings'][0]['allele_string']
-                doc['strand'] = ensemble_info['mappings'][0]['strand']
-                doc['location'] = ensemble_info['mappings'][0]['location']
+                doc['most_severe_consequence'] = ensemble_info['most_severe_consequence']
                 doc['values'] = ensemble_info['mappings'][0]['allele_string'].split('/')
+                if doc['location'] == None:
+                    doc['location'] = ensemble_info['mappings'][0]['location']
             genes = self.find_genes_by_snp(snp_info)
             if genes[0] == 0:
                 doc['is_intergenic'] = False

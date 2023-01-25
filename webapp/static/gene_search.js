@@ -27,7 +27,7 @@ function more_information(gene) {
     }
     info.title('Gene: ' + gene);
     info.refresh({
-        url: 'get_information/' + gene
+        url: '/GeneSearch/get_information/' + gene
     }).open();
     info.center();
 }

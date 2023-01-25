@@ -11,7 +11,7 @@ import os, sys, subprocess
 from Bio import SeqIO
 import xmltodict
 from pymongo.errors import ServerSelectionTimeoutError
-from webapp.extra.view_helper import get_mongo
+from webapp.view_helpers import get_mongo
 
 
 class GeneDaemon:

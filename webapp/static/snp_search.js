@@ -15,6 +15,24 @@ function getCookie(name) {
     return cookieValue;
 }
 
+function more_details(snp) {
+
+    var details = $("#details_window").data("kendoWindow");
+    if (details == null) {
+        details = $('#details_window').kendoWindow({
+            modal: true,
+            visible: false,
+            width: 700,
+            height: 650,
+        }).data("kendoWindow");
+    }
+    details.title('Details: ' + snp);
+    details.refresh({
+        url: '/SNPSearch/get_details/' + snp
+    }).open();
+    details.center();
+}
+
 const csrftoken = getCookie('csrftoken');
 
 
@@ -85,9 +103,6 @@ $(document).ready(function() {
                 },
             pageSize: 20,
             resizable: true,
-            // serverPaging: true,
-            // serverFiltering: true,
-            // serverSorting: true
         },
         height: 550,
         filterable: true,
@@ -109,23 +124,16 @@ $(document).ready(function() {
                     name: "More Details ",
                     width: "150px",
                     click: function(e) {
+                        e.preventDefault();
                         var id = e.currentTarget.closest("tr").cells[0].textContent;
-                        console.log(id)
+                        more_details(id);
                     }
                 }],
                 title: "More Information ",
                 template: '<input type="button" class="k-button info" name="info" value="Details" />',
             filterable: false, sortable: false, width: "150px"}
-
-            // "MAF",
-            // {field:"minor_allele", title: "Minor Allele"},
-            // {field:"values", title:"Allele Values"},
         ]
     });
-    // var row = $(this).closest("tr");
-    // var item = grid.dataItem(row);
-    // console.log("Selected item is:" + JSON.stringify(item))
-// }
 
 
 });

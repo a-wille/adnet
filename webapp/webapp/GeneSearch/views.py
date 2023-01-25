@@ -2,13 +2,18 @@ import json
 from django.http import HttpResponse
 from django.shortcuts import render
 
-from webapp.client.views import remove_substring_from_string
+from webapp.view_helpers import remove_substring_from_string
 from webapp.view_helpers import get_mongo
 
 
 def index(request):
 	"""returns home page"""
 	return render(request, 'index.html')
+
+def get_gene_details(request):
+	gene_id = remove_substring_from_string(request.path, '/GeneSearch/get_information/')
+	return render(request, 'gene_information.html', {'content': gene_id})
+
 
 def get_all_genes(request):
 	conn = get_mongo()

@@ -6,5 +6,6 @@ urlpatterns = [
 	path('GetAllGenes/', views.get_all_genes),
 	path('GetAllGeneNames/', views.get_all_names),
 	path('GetGeneData/', views.get_gene_data),
-	re_path('GetGeneInfo/.*$', views.get_gene_info)
+	re_path('GetGeneInfo/.*$', views.get_gene_info),
+	re_path(r'get_information/.*$', views.get_gene_details),
 ]
