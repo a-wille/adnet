@@ -149,19 +149,26 @@ function fill_feature_grid(features){
     });
 }
 
+function renderCol(model) {
+    var text = model.affected_features;
+    text = text.replace(new RegExp("\n", 'g'), "<br>");
+    return text;
+}
+
 function fill_effect_grid(effects) {
      $("#effectgrid").kendoGrid({
          dataSource: {
-             data: effects
+             data: effects,
+             pageSize: 10,
          },
          filterable: true,
          sortable: true,
          resizable: true,
          pageable: true,
          columns: [
-             {field: "snp", title: "SNP", width: "225px"},
-             {field: "amino_acid_index", title: "Amino Acid Index"},
-             {field: "affected_features", title: "Affected Features"},
+             {field: "snp", title: "SNP", width:"200px"},
+             {field: "amino_acid", title: "Amino Acid Index", width:"200px"},
+             {field: "affected_features", title: "Affected Features", template: renderCol, width:"400px"},
          ]
      });
 }
@@ -181,11 +188,19 @@ $(document).ready(function() {
             document.getElementById("type").innerHTML = data.type
             document.getElementById("authority").innerHTML = "<a href='https://www.genenames.org/data/gene-symbol-report/#!/hgnc_id/" + data.identifier + "'>" + data.authority + "</a>"
             createSNPPanel(data.mod, data.nonmod)
-            createChart(data.expression)
+            if (data.expression) {
+                document.getElementById("expression-header").removeAttribute("hidden")
+                document.getElementById("chart").removeAttribute("hidden")
+                createChart(data.expression)
+            }
 
             if(data.type == "PROTEIN_CODING"){
+                if (data.nm_len != 0) {
+                    document.getElementById("snp-effects-header").removeAttribute("hidden")
+                }
                 document.getElementById("protein-header").removeAttribute("hidden")
                 document.getElementById("protein-features-header").removeAttribute("hidden")
+
                 document.getElementById("protable").style.visibility="visible"
                 document.getElementById("p_description").innerHTML = data.protein_description
                 document.getElementById("p_sequence").innerHTML = data.sequence

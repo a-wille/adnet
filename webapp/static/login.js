@@ -26,7 +26,7 @@ const csrftoken = getCookie('csrftoken');
             type: "group",
             label: "Login",
             items: [
-                {field: "username", label: "Username", validation: {required: true}},
+                {field: "username", label: "Email", validation: {required: true}},
                 {field: "password", label: "Password", validation: {required: true},
                     hint: "Hint: enter alphanumeric characters only.",
                     editor: function(container, options) {

@@ -1,9 +1,7 @@
 {% load static %}
 <head>
     <head>
-        <link rel="stylesheet" href="{% static 'styles/kendo.common.min.css' %}" />
-        <link rel="stylesheet" href="{% static 'styles/kendo.material-main-dark.min.css' %}" />
-        <link rel="stylesheet" href="{% static 'styles/todo.css' %}"/>
+        <link rel="stylesheet" href="{% static 'styles/style3.css' %}" />
         <script src="{% static 'js/jquery.min.js' %}"></script>
         <script src="{% static 'js/kendo.all.min.js' %}"></script>
     </head>
@@ -37,7 +35,7 @@
             type: "group",
             label: "Login",
             items: [
-                {field: "username", label: "Username", validation: {required: true}},
+                {field: "username", label: "Email", validation: {required: true}},
                 {field: "password", label: "Password", validation: {required: true},
                     editor: function(container, options) {
                         container.append($("<input type='password' class='k-textbox k-valid' id='password' name='Password' title='Password' required='required' autocomplete='off' aria-labelledby='Password-form-label' data-bind='value:password'>"));
@@ -62,8 +60,13 @@
                 data: vals,
                 contentType: "application/x-www-form-urlencoded",
                 success: function(response) {
-                    location.reload();
+                    if (response == 'error') {
+                        alert("Sorry, an account with this email and password does not exist.")
+                    } else {
+                        location.reload();
+                    }
                 }
+
             });
             return false;
         },

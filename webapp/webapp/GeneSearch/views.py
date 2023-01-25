@@ -53,12 +53,20 @@ def get_gene_info(request):
 	validated_data['locations'] = format_list(validated_data, 'locations')
 	validated_data['cofactors'] = format_list(validated_data, 'cofactors')
 	validated_data['catalytic_activity'] = format_list(validated_data, 'catalytic_activity')
-	for item in validated_data['snp_effects']:
-		f = item['affected_features']
-		item['affected_features'] = '{} ({}-{})'.format(f['type'], f['location']['start']['value'],
-															  f['location']['end']['value'])
-		if f['description'] != '':
-			item['affected_features'] += ', ' + f['description']
+	if 'snp_effects' in validated_data.keys():
+		for item in validated_data['snp_effects']:
+			i = item['affected_features']
+			new_str = ''
+			if i != 'Unknown':
+				for f in i:
+
+					new_str += '{} ({}-{})'.format(f['type'], f['location']['start']['value'],
+																	  f['location']['end']['value'])
+					if f['description'] != '':
+						new_str += ', ' + f['description']
+					new_str += '\n'
+				item['affected_features'] = new_str
+
 	return HttpResponse(json.dumps(validated_data))
 
 

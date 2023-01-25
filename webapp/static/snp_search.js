@@ -110,7 +110,7 @@ $(document).ready(function() {
         resizable: true,
         pageable: true,
         columns: [
-            {field:"snp_name", title:"Name", width:"150px"},
+            {field:"_id", title:"Name", width:"150px"},
             // {field:"region", title: "Region"},
             {field:"chr", title: "Chr", width:"100px"},
             {field:"chr_pos", title: "Chr. Index", width:"150px"},
