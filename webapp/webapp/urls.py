@@ -23,6 +23,7 @@ from webapp import views
 
 urlpatterns = [
     path('client/', include('webapp.client.urls')),
+    path('admin/', admin.site.urls),
     path('accounts/', include('django.contrib.auth.urls')),
     path('Glossary/', include('webapp.Glossary.urls')),
     path('GeneSearch/', include('webapp.GeneSearch.urls')),
