@@ -34,6 +34,12 @@ def account_view(request):
 	#returns html content for a window that you can make an account from
 	return render(request, 'account_creation.html')
 
+def build(request):
+	return render(request, 'build_page.html')
+
+def run(request):
+	return render(request, 'run_page'.html)
+
 def create_account(request):
 	"""creates an account for a user"""
 	conn = get_mongo()
@@ -77,7 +83,7 @@ def check_login(request):
 	if user:
 		doc = conn.AdNet.users.find_one({'id': email})
 		if doc['status'] == 'verified':
-			research_group = Group.objects.get(name='Research User')
+			research_group = Group.objects.get(name='ResearchUser')
 			research_group.user_set.add(user)
 		login_django(request, user)
 		return HttpResponse({'success': True})

@@ -119,7 +119,7 @@ $(document).ready(function() {
                         'gene_search',
                         'snp_search',
                         'build',
-                        "configurations"
+                        'run'
                     ]
                 }).data("kendoTabStrip");
                 tabStrip.select(0);
@@ -134,7 +134,9 @@ $(document).ready(function() {
                         'home',
                         'glossary',
                         'gene_search',
-                        'snp_search'
+                        'snp_search',
+                        'build',
+                        'run'
                     ]
                 }).data("kendoTabStrip");
                 tabStrip.select(0);

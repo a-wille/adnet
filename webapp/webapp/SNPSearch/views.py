@@ -22,12 +22,9 @@ def get_all_snps(request):
 
 def get_all_names(request):
 	"Get all names of SNPS for search bar"
-	data = []
 	conn = get_mongo()
-	docs = conn.AdNet.SNPs.find({})
-	for doc in docs:
-		data.append({'snp': doc['snp_name']})
-	return HttpResponse(json.dumps(data))
+	docs = conn.AdNet.SNPs.find({}, {'_id': 1})
+	return HttpResponse(json.dumps(list(docs)))
 
 def get_snp_details(request):
 	snp_id = remove_substring_from_string(request.path, '/SNPSearch/get_details/')

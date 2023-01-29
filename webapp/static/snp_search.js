@@ -63,7 +63,7 @@ $(document).ready(function() {
                 url: '/SNPSearch/GetSNPData/',
                 headers: {'X-CSRFToken': csrftoken},
                 dataType: 'json',
-                data: {'name': text},
+                data: {'_id': text},
                 success: function(result){
                     console.log(result)
                     // $('#searchSNPs').append(

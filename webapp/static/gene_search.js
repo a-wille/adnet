@@ -46,7 +46,7 @@ $(document).ready(function() {
     });
 
     $("#genes").kendoAutoComplete({
-        dataTextField: "name",
+        dataTextField: "_id",
         filter: "contains",
         autoWidth: true,
         minLength:1,

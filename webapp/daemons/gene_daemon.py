@@ -1,9 +1,6 @@
 from itertools import islice
-
-import pandas
 import requests
 import json
-import re
 import collections
 from multiprocessing import Pool
 from timeit import default_timer as timer
@@ -18,7 +15,7 @@ class GeneDaemon:
     api_key = "baf3baa6f018c25575f11632ceea1257e808"
     headers = {'Accept': 'application/json'}
     sample_gene_doc = {
-        'name': None,
+        'id': None,
         '_id': None,
         'description': None,
         'chromosome': None,
@@ -217,8 +214,8 @@ class GeneDaemon:
                 type = g['type']
             except KeyError:
                 type = ''
-            doc['name'] = g['symbol']
-            doc['_id'] = int(gene)
+            doc['id'] = int(gene)
+            doc['_id'] = g['symbol']
             doc['description'] = g['description']
             doc['chromosome'] = g['chromosomes'][0]
             doc['expression'] = self.get_expression_vals(gene)
@@ -334,9 +331,9 @@ class GeneDaemon:
     def annotate_snp_data(self, doc):
         doc['snp_list'] = {'modifying': [], 'non_modifying': []}
         mc = get_mongo()
-        total_genes = [doc['name']]
-        if doc['_id'] in self.syns.keys():
-            total_genes += self.syns[doc['_id']]
+        total_genes = [doc['_id']]
+        if doc['id'] in self.syns.keys():
+            total_genes += self.syns[doc['id']]
         for gene in total_genes:
             snps = mc.AdNet.SNPs.find({'genes': '{}'.format(gene)})
             for snp in snps:
@@ -409,14 +406,14 @@ class GeneDaemon:
         #if no record, inserts new doc
         upsert = True
         conn = get_mongo()
-        doc = conn.AdNet.Genes.find_one({'name': new_data['name']})
+        doc = conn.AdNet.Genes.find_one({'_id': new_data['_id']})
         if doc:
             upsert = False
         try:
             conn.AdNet.Genes.find_one_and_update(
-                {'name': new_data['name'],
+                {'_id': new_data['_id'],
                 '$or': [
-                    {'_id': {'$ne': new_data['_id']}},
+                    {'id': {'$ne': new_data['id']}},
                     {'description': {'$ne': new_data['description']}},
                     {'chromosome': {'$ne': new_data['chromosome']}},
                     {'type': {'$ne': new_data['type']}},
@@ -436,7 +433,7 @@ class GeneDaemon:
                     {'nm_len': {'$ne': new_data['nm_len']}},
                 ]},
                 {'$set': {
-                    '_id': new_data['_id'],
+                    'id': new_data['id'],
                     'description': new_data['description'],
                     'chromosome': new_data['chromosome'],
                     'expression': new_data['expression'],

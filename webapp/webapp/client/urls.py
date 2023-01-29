@@ -7,6 +7,8 @@ urlpatterns = [
 	path('home', views.home),
 	path('gene_search', views.gene_search),
 	path('snp_search', views.snp_search),
+	path('build', views.build),
+	path('run', views.run),
 	path('login', views.login),
 	path('create', views.account_view),
 	path('check_login/', views.check_login),

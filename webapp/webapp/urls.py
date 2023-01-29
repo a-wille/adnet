@@ -28,6 +28,7 @@ urlpatterns = [
     path('Glossary/', include('webapp.Glossary.urls')),
     path('GeneSearch/', include('webapp.GeneSearch.urls')),
     path('SNPSearch/', include('webapp.SNPSearch.urls')),
+    path('JobConfigurations/', include('webapp.JobConfigurations.urls')),
     path('', views.index)
 ]
 
