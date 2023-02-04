@@ -17,14 +17,14 @@ def get_gene_details(request):
 
 def get_all_genes(request):
 	conn = get_mongo()
-	docs = conn.AdNet.Genes.find({}, {'name': 1, 'chromosome': 1, 'type': 1, 'range': 1,
+	docs = conn.AdNet.Genes.find({}, {'_id': 1, 'chromosome': 1, 'type': 1, 'range': 1,
 									  'description': 1, 'mod_len': 1, 'nm_len': 1})
 	return HttpResponse(json.dumps(list(docs)))
 
 
 def get_all_names(request):
 	conn = get_mongo()
-	docs = conn.AdNet.Genes.find({}, {'name': 1})
+	docs = conn.AdNet.Genes.find({}, {'_id': 1})
 	return HttpResponse(json.dumps(list(docs)))
 
 
@@ -33,13 +33,13 @@ def get_gene_data(request):
 	if post == {}:
 		return HttpResponse(json.dumps({}))
 	conn = get_mongo()
-	doc = conn.AdNet.Genes.find_one({'snp_name': post['name']})
+	doc = conn.AdNet.Genes.find_one({'snp_name': post['_id']})
 	return HttpResponse(json.dumps(doc))
 
 def get_gene_info(request):
 	gene_id = remove_substring_from_string(request.path, '/GeneSearch/GetGeneInfo/')
 	conn = get_mongo()
-	doc = conn.AdNet.Genes.find_one({'name': gene_id})
+	doc = conn.AdNet.Genes.find_one({'_id': gene_id})
 	validated_data = {}
 	for feature in doc.keys():
 		if doc[feature] != None and doc[feature] != [] and doc[feature] != {}:

@@ -49,6 +49,7 @@ def create_account(request):
 			return HttpResponse({'non-educational email'})
 	except:
 		pass
+	doc = conn.AdNet.users.find_one({'id': request.POST.get('email')})
 	try:
 		user = User.objects.create(firstname=request.POST.get('first'),
 							   		lastname=request.POST.get('last'),
@@ -63,7 +64,27 @@ def create_account(request):
 		base_group.user_set.add(user)
 	except IntegrityError as e:
 		user = User.objects.get(email=request.POST.get('email'))
-		return HttpResponse({'duplicate_email'})
+		if user and not doc:
+			user.delete()
+			user = User.objects.create(firstname=request.POST.get('first'),
+									   lastname=request.POST.get('last'),
+									   institution=request.POST.get('institution'),
+									   email=request.POST.get('email'),
+									   password=request.POST.get('pass'),
+									   username=request.POST.get('email'),
+									   )
+			user.set_password(user.password)
+			user.save()
+			base_group = Group.objects.get(name='BaseUser')
+			base_group.user_set.add(user)
+			doc = {'firstname': user.firstname, 'lastname': user.lastname, 'password': user.password, 'id': user.email,
+				   'institution': user.institution, 'status': 'unverified', 'email_sent': False, 'jobs': [],
+				   'configs': []}
+			conn.AdNet.users.insert_one(doc)
+			login_django(request, user)
+			return HttpResponse({'success': True})
+		else:
+			return HttpResponse({'duplicate_email'})
 	except Exception as e:
 		return HttpResponse({'error'})
 
@@ -80,13 +101,15 @@ def check_login(request):
 	password = request.POST.get('pass')
 	user = authenticate(username=email, password=password)
 
-	if user:
+	if user and user.email == request.POST.get('user'):
 		doc = conn.AdNet.users.find_one({'id': email})
 		if doc['status'] == 'verified':
 			research_group = Group.objects.get(name='ResearchUser')
 			research_group.user_set.add(user)
 		login_django(request, user)
 		return HttpResponse({'success': True})
+	elif user:
+		logout(request)
 	return HttpResponse({'error': False})
 
 def my_logout(request):

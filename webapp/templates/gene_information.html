@@ -82,6 +82,12 @@
         <h4 class="k-h5" id="snp-effects-header" hidden="hidden">SNP Effects</h4>
         <div id="effectgrid"></div>
     <br>
+        {% if perms.webapp.can_create_jobs %}
+            <div>
+                <h3 id="whatever" style="text-align:center">Add gene to job configurations</h3>
+            <div id="addtojobgrid"></div>
+            </div>
+        {% endif %}
     </div>
     <br>
 

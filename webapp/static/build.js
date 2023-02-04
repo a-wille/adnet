@@ -114,15 +114,24 @@ $(document).ready(function() {
                 update: {
                     url: "/JobConfigurations/Edit/",
                     dataType: "jsonp",
+                    complete: function(e) {
+			            $("#jobgrid").data("kendoGrid").dataSource.read();
+		            }
                     // data: {og_name: editedItem},
                 },
                 destroy: {
                     url: "/JobConfigurations/Delete/",
-                    dataType: "jsonp"
+                    dataType: "jsonp",
+                    complete: function(e) {
+			            $("#jobgrid").data("kendoGrid").dataSource.read();
+		            }
                 },
                 create: {
                     url: "/JobConfigurations/Create/",
-                    dataType: "jsonp"
+                    dataType: "jsonp",
+                    complete: function(e) {
+			            $("#jobgrid").data("kendoGrid").dataSource.read();
+		            }
                 },
                 parameterMap:
                     function(options, operation) {
@@ -133,9 +142,8 @@ $(document).ready(function() {
                         return options;
                     }
             },
-            requestEnd: function(e) {
-                $("#jobgrid").data("kendoGrid").refresh();
-            },
+            //     $("#jobgrid").data("kendoGrid").refresh();
+            // },
             schema: {
                 model: {
                     id: "name",
@@ -213,7 +221,7 @@ $(document).ready(function() {
                             }
                             }},
                         five: {type: "string", validation: {
-                            onevalidation: function (input) {
+                            fivevalidation: function (input) {
                                 if (input.is("[name='five']") && input.val() != ""){
                                     items = optionsDataSource.data()
                                     item_ids = []
@@ -273,6 +281,9 @@ $(document).ready(function() {
             mode: "inline",
             confirmDelete: "Yes"
         },
+        cancel: function(e) {
+            $("#jobgrid").data("kendoGrid").refresh();
+        },
         columns: [
             {field: "name", title: "Name", width: "250px"},
             {field:"one", title:"1", width: "150px", sortable: false, editor: oneGeneAutoCompleteEditor},
@@ -294,9 +305,9 @@ $(document).ready(function() {
 
                 title: "ML Configurations",
                 template: '<input type="button" class="k-button  k-rounded-md" name="details" value="Details" />',
-            filterable: false, sortable: false, width: "200px"
+            filterable: false, sortable: false, width: "160px"
             },
-            { command: "edit", width: "200px"},
+            { command: "edit", width: "120px"},
             { command: "destroy", width: "150px"}
         ],
         beforeEdit: function(e) {

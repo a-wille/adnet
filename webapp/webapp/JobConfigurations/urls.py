@@ -6,6 +6,8 @@ urlpatterns = [
 	path('GetAllOptions/', views.get_all_options),
 	path('Create/', views.create),
 	path('Edit/', views.edit),
-	path('Delete/', views.delete)
+	path('Delete/', views.delete),
+	path('AddToConfig/', views.add_item),
+	path('GetAddJobs/', views.get_add_jobs)
 ]
 

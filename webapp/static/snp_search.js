@@ -40,7 +40,7 @@ $(document).ready(function() {
     const csrftoken = getCookie('csrftoken');
 
     $("#snps").kendoAutoComplete({
-        dataTextField: "snp",
+        dataTextField: "_id",
         filter: "contains",
         autoWidth: true,
         minLength: 3,
@@ -56,22 +56,9 @@ $(document).ready(function() {
         select: function (e) {
             var item = e.item;
             var text = item.text();
-            console.log(text)
+            console.log(text);
             $('#searchSNPs').empty();
-            $.ajax({
-                type: 'POST',
-                url: '/SNPSearch/GetSNPData/',
-                headers: {'X-CSRFToken': csrftoken},
-                dataType: 'json',
-                data: {'_id': text},
-                success: function(result){
-                    console.log(result)
-                    // $('#searchSNPs').append(
-                    //     '<h3 style="font-size: 24px;">' + result['term'] + '</h3>\n<p style="font-size: 20px;">' +
-                    //     result['definition'] + '</p>'
-                    // ).hide().fadeIn(1000);
-                }
-            })
+            more_details(text);
         },
     });
 
@@ -101,10 +88,10 @@ $(document).ready(function() {
                         }
                     }
                 },
-            pageSize: 20,
+            pageSize: 15,
             resizable: true,
         },
-        height: 550,
+        // height: 550,
         filterable: true,
         sortable: true,
         resizable: true,
@@ -114,14 +101,14 @@ $(document).ready(function() {
             // {field:"region", title: "Region"},
             {field:"chr", title: "Chr", width:"100px"},
             {field:"chr_pos", title: "Chr. Index", width:"150px"},
-            {field:"functional_class", title: "Class", width:"150px"},
+            {field:"functional_class", title: "Class", width:"225px"},
             {field:"is_intergenic", title:"Intergenic", width:"150px"},
             // {field:"most_severe_consequence", title: "Potential Effect", width:"200px"},
             {field:"risk_level", title:"Risk Level", width:"150px"},
             {field:"genes", title:"Genes", template: "#= genes.join(', ') #"},
             {
                 command:[{
-                    name: "More Details ",
+                    name: "Details ",
                     width: "150px",
                     click: function(e) {
                         e.preventDefault();
@@ -131,9 +118,8 @@ $(document).ready(function() {
                 }],
                 title: "More Information ",
                 template: '<input type="button" class="k-button info" name="info" value="Details" />',
-            filterable: false, sortable: false, width: "150px"}
+                filterable: false, sortable: false, width: "150px"
+            }
         ]
     });
-
-
 });

@@ -64,6 +64,13 @@
     <div>
         <div id="allele_grid"></div>
     </div>
+    <br>
+        {% if perms.webapp.can_create_jobs %}
+            <div>
+                <h3 id="whatever" style="text-align:center">Add SNP to job configurations</h3>
+            <div id="addtojobgrid"></div>
+            </div>
+        {% endif %}
 </div>
 
 {% load static %}

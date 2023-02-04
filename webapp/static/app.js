@@ -24,7 +24,7 @@ function sign_in() {
                 content: {
                     url: 'login'
                 },
-                width: 300,
+                // width: 300,
                 height: 400,
             });
             var win = $("#login_window").data("kendoWindow");
@@ -32,10 +32,6 @@ function sign_in() {
             win.center();
 };
 
-function redirect() {
-    //redirects a user to the user manual on event click
-    window.location.replace('http://127.0.0.1:8000/client/user_manual/');
-}
 
 function create_account() {
     //creates a populates a window that a user can create an account in
@@ -43,7 +39,7 @@ function create_account() {
         content: {
             url: 'create'
         },
-        width: 300,
+        // width: 300,
         height: 600,
     });
     var win = $("#account_window").data("kendoWindow");
@@ -88,59 +84,26 @@ $(document).ready(function() {
             sign_in();
         }
     });
-    $('#user_manual').kendoButton({
-        click: function(e) {
-            e.preventDefault();
-            redirect();
-        }
-    });
 
     $('#account_logout').kendoButton({
         click: logout
     })
 
     //load content for frontend tabs based on user permissions
-    $.ajax({
-        type: "POST",
-        url: "/client/check_admin/",
-        headers: {'X-CSRFToken': csrftoken},
-        contentType: "application/x-www-form-urlencoded",
-        success: function(response) {
-            if(response == "success"){
-                var tabStrip = $("#tabstrip").kendoTabStrip({
-                    animation:  {
-                        open: {
-                            effects: "fadeIn"
-                        }
-                    },
-                    contentUrls: [
-                        'home',
-                        'glossary',
-                        'gene_search',
-                        'snp_search',
-                        'build',
-                        'run'
-                    ]
-                }).data("kendoTabStrip");
-                tabStrip.select(0);
-            } else {
-                var tabStrip = $("#tabstrip").kendoTabStrip({
-                    animation:  {
-                        open: {
-                            effects: "fadeIn"
-                        }
-                    },
-                    contentUrls: [
-                        'home',
-                        'glossary',
-                        'gene_search',
-                        'snp_search',
-                        'build',
-                        'run'
-                    ]
-                }).data("kendoTabStrip");
-                tabStrip.select(0);
+    var tabStrip = $("#tabstrip").kendoTabStrip({
+        animation:  {
+            open: {
+                effects: "fadeIn"
             }
-        }
-    });
+        },
+        contentUrls: [
+            'home',
+            'glossary',
+            'gene_search',
+            'snp_search',
+            'build',
+            'run'
+        ]
+    }).data("kendoTabStrip");
+    tabStrip.select(0);
 });

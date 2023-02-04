@@ -79,7 +79,7 @@ $(document).ready(function() {
             schema: {
                 model: {
                     fields: {
-                        name: {type:"string"},
+                        _id: {type:"string"},
                         chromosome: { type: "string" },
                         type: { type: "string" },
                         description: { type: "string" },
@@ -88,17 +88,16 @@ $(document).ready(function() {
                         }
                     }
                 },
-            pageSize: 20,
+            pageSize: 10,
             resizable: true,
             serverSorting: false,
         },
-        height: 550,
         filterable: true,
         sortable: true,
         resizable: true,
         pageable: true,
         columns: [
-            {field:"name", title:"Name", width:"150px"},
+            {field:"_id", title:"Name", width:"150px"},
             {field:"chromosome", title: "Location", width:"250px", template:"#=chromosome#:#=range.begin# - #=range.end#",
                 sortable: {
                     compare: function naturalSort (a, b) {
@@ -157,17 +156,17 @@ $(document).ready(function() {
             {field:"nm_len", title: "Non-modifying SNPs", width:"200px"},
             {
                 command:[{
-                    name: "More Details ",
-                    width: "150px",
+                    name: "Details ",
+                    width: "160px",
                     click: function(e) {
                         e.preventDefault();
                         var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
-                        more_information(dataItem.name)
+                        more_information(dataItem._id)
                     }
                 }],
                 title: "More Information ",
                 template: '<input type="button" class="k-button info" name="info" value="Details" />',
-            filterable: false, sortable: false, width: "150px"}
+            filterable: false, sortable: false, width: "160px"}
         ]
     });
 });

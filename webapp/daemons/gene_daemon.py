@@ -54,13 +54,10 @@ class GeneDaemon:
         relative_path = '../'
         os.chdir(os.path.join(os.path.abspath(sys.path[0]), relative_path))
         if args[0] == 's':
-            # this means that we are loading in the string name id file, nothing else is generated
-            self.read_in_names(f)
-            #default file name genes.txt
+            self.read_in_names()
             self.convert_names_to_ids(10)
             #default file name gene_id_list.txt
             args = ('i', None)
-            f = 'daemons/gene_id_list.txt'
         if args[0] == 'i':
             # this means that we are loading in the number id file
             self.download_dataset(f)
@@ -69,16 +66,19 @@ class GeneDaemon:
         if args[0] == 'j':
             # this means we have json data hurrah
             # third arg is num of processes
-            self.read_in_names('daemons/gene_name_list.txt')
+            self.read_in_names()
             self.get_syns_and_data(10)
             self.get_genes(f)
             self.pull_gene_data_process(int(args[2]))
 
 
-    def read_in_names(self, f):
-        f = open(f, 'r')
-        self.genes = f.read().split("\n")
-        f.close()
+    def read_in_names(self):
+        conn = get_mongo()
+        docs = conn.AdNet.GeneIds.find({})
+        genes = []
+        for doc in docs:
+            genes.append(doc['_id'])
+        self.genes = genes
 
     def divide_data(self, n):
         for i in range(0, len(self.genes), n):
@@ -214,12 +214,15 @@ class GeneDaemon:
                 type = g['type']
             except KeyError:
                 type = ''
-            doc['id'] = int(gene)
-            doc['_id'] = g['symbol']
-            doc['description'] = g['description']
-            doc['chromosome'] = g['chromosomes'][0]
-            doc['expression'] = self.get_expression_vals(gene)
-            doc['type'] = type
+            try:
+                doc['id'] = int(gene)
+                doc['_id'] = g['symbol']
+                doc['description'] = g['description']
+                doc['chromosome'] = g['chromosomes'][0]
+                doc['expression'] = self.get_expression_vals(gene)
+                doc['type'] = type
+            except Exception as e:
+                print("whatnow")
             try:
                 doc['authority'] = g['nomenclatureAuthority']['authority']
                 doc['identifier']= g['nomenclatureAuthority']['identifier']
@@ -237,7 +240,10 @@ class GeneDaemon:
                 doc['range'] = {'begin': None, 'end': None, 'orientation': None}
             if doc['type'] == 'PROTEIN_CODING':
                 doc = self.try_protein_info(doc)
-            doc = self.annotate_snp_data(doc)
+            try:
+                doc = self.annotate_snp_data(doc)
+            except Exception as e:
+                print("oh boy")
             self.update_mongo_doc(doc)
             docs.append(doc)
         return docs
@@ -330,6 +336,7 @@ class GeneDaemon:
 
     def annotate_snp_data(self, doc):
         doc['snp_list'] = {'modifying': [], 'non_modifying': []}
+        doc['snp_effects'] = []
         mc = get_mongo()
         total_genes = [doc['_id']]
         if doc['id'] in self.syns.keys():
@@ -384,10 +391,10 @@ class GeneDaemon:
 
     def pull_amino_acid_index(self, snp, gene):
         url = 'https://www.alliancegenome.org/api/variant/{}'.format(snp['_id'])
-        content = json.loads(requests.get(url).content.decode('utf8'))
-        num = self.find_correct_consequence(content['transcriptLevelConsequence'], snp)
-        affected_features = []
         try:
+            content = json.loads(requests.get(url).content.decode('utf8'))
+            num = self.find_correct_consequence(content['transcriptLevelConsequence'], snp)
+            affected_features = []
             if num != 0:
                 for feature in gene['protein_features']:
                     start = feature['location']['start']['value']

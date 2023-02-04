@@ -21,6 +21,7 @@ class SNPDaemon:
         'functional_class': None,
         '_id': None,
         'MAF': None,
+        'minor_allele': None,
         'most_severe_consequence': None,
         'location': None,
         'values': None,
@@ -200,6 +201,17 @@ class SNPDaemon:
         for i in range(0, len(self.snp_data), n):
             yield {k: self.snp_data[k] for k in islice(it, n)}
 
+    def write_gene_ids(self, gene_list):
+        upsert = True
+        conn = get_mongo()
+        for gene in gene_list:
+            doc = conn.AdNet.GeneIds.find_one({'_id': gene})
+            if not doc:
+                upsert = False
+            conn.AdNet.GeneIds.insert_one(
+                {'_id': gene}
+            )
+
     def pull_snp_data(self, n):
         #needs to be called outside of constructor since this is an expensive operation
         # even with multiprocessing
@@ -214,12 +226,8 @@ class SNPDaemon:
                 for gene in item['genes']:
                     gene_list.append(gene)
         gene_list = set(gene_list)
-
-        f = open('gene_name_list.txt', 'w')
-        for item in gene_list:
-            f.write(item + '\n')
-        f.close()
+        self.write_gene_ids(gene_list)
 
 
-s = SNPDaemon()
+s = SNPDaemon('snp_data.json')
 s.pull_snp_data(10)
