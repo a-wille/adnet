@@ -35,7 +35,6 @@ TIME_ZONE = "America/Chicago"
 
 INSTALLED_APPS = [
     'webapp',
-    'webapp.client',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -52,7 +51,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'webapp.extra.middleware.myMiddleware'
 ]
 
 ROOT_URLCONF = 'webapp.urls'
@@ -68,7 +66,6 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'webapp.extra.context_processors.my_context',
             ],
         },
     },

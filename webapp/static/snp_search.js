@@ -22,7 +22,7 @@ function more_details(snp) {
         details = $('#details_window').kendoWindow({
             modal: true,
             visible: false,
-            width: 700,
+            width: 950,
             height: 650,
         }).data("kendoWindow");
     }

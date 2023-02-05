@@ -45,7 +45,7 @@ const csrftoken = getCookie('csrftoken');
             var pass = e.password
             $.ajax({
                 type: "POST",
-                url: "/client/check_login/",
+                url: "/check_login/",
                 data: "{username: " + user + ", password: " + pass + "}",
                 contentType: "application/json:",
                 success: function(result) {

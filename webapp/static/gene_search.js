@@ -21,7 +21,7 @@ function more_information(gene) {
         info = $('#information_window').kendoWindow({
             modal: true,
             visible: false,
-            width: 700,
+            width: 950,
             height: 900,
         }).data("kendoWindow");
     }

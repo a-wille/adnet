@@ -51,7 +51,7 @@ function logout() {
     //logs out the user
     $.ajax({
         type: "POST",
-        url: "/client/logout/",
+        url: "/logout/",
         headers: {'X-CSRFToken': csrftoken},
         contentType: "application/x-www-form-urlencoded",
         success: function(response) {

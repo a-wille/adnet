@@ -58,7 +58,7 @@ $(document).ready(function() {
             console.log(`Error ${error}`);
         }
     });
-    $("#addtojobgrid").kendoGrid({
+    $("#addsnptojobgrid").kendoGrid({
         dataSource: {
             transport: {
                 read: {
@@ -83,7 +83,6 @@ $(document).ready(function() {
             pageSize: 20,
             resizable: true,
         },
-        filterable: true,
         resizable: true,
         pageable: true,
         columns: [
@@ -105,17 +104,17 @@ $(document).ready(function() {
                             dataType: 'json',
                             data: {'name': id, 'item': document.getElementById("snp").textContent},
                             success: function(result){
-                                $("#addtojobgrid").data("kendoGrid").dataSource.read();
-                                $("#addtojobgrid").data("kendoGrid").refresh();
+                                $("#addsnptojobgrid").data("kendoGrid").dataSource.read();
+                                $("#addsnptojobgrid").data("kendoGrid").refresh();
                             },
                             error: function(result) {
-                                $("#addtojobgrid").data("kendoGrid").dataSource.read();
-                                $("#addtojobgrid").data("kendoGrid").refresh();
+                                $("#addsnptojobgrid").data("kendoGrid").dataSource.read();
+                                $("#addsnptojobgrid").data("kendoGrid").refresh();
                             }
                         });
 
                         },
-			    name:"view-alert" }, title: " ", width: "70px" }
+			    name:"view-snp" }, title: " ", width: "70px" }
         ]
-    }).data("kendoGrid");
+    });
 });
