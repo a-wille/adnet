@@ -30,7 +30,7 @@ function sign_in() {
             var win = $("#login_window").data("kendoWindow");
             win.open();
             win.center();
-};
+}
 
 
 function create_account() {
@@ -45,7 +45,7 @@ function create_account() {
     var win = $("#account_window").data("kendoWindow");
     win.open();
     win.center();
-};
+}
 
 function logout() {
     //logs out the user
