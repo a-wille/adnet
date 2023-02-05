@@ -67,7 +67,8 @@
     <br>
         {% if perms.webapp.can_create_jobs %}
             <div>
-                <h3 id="whatever" style="text-align:center">Add SNP to job configurations</h3>
+                <h2 id="whatever" style="text-align:center">Add SNP to job configurations*</h2>
+                <p style="text-align:center">*job configurations that are full, or configurations that already have the current SNP in them will NOT be displayed in the grid below</p>
             <div id="addsnptojobgrid"></div>
             </div>
         {% endif %}
