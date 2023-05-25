@@ -18,7 +18,7 @@ var optionsDataSource;
 var editedItem;
 
     function oneGeneAutoCompleteEditor(container, options) {
-        $('<input name="one" validationMessage="Enter a valid gene or SNP" data-bind="value:' + options.field + '"/>')
+        $('<input name="one" validationMessage="Enter a valid SNP" data-bind="value:' + options.field + '"/>')
             .appendTo(container)
             .kendoAutoComplete({
                 dataTextField: "_id",
@@ -85,7 +85,7 @@ $(document).ready(function() {
     optionsDataSource = new kendo.data.DataSource.create({
         transport: {
             read: {
-                url: "/JobConfigurations/GetAllOptions/",
+                url: "/SNPSearch/GetAllSNPNames/",
                 dataType: "json",
                 type: "GET"
             }
@@ -117,7 +117,6 @@ $(document).ready(function() {
                     complete: function(e) {
 			            $("#jobgrid").data("kendoGrid").dataSource.read();
 		            }
-                    // data: {og_name: editedItem},
                 },
                 destroy: {
                     url: "/JobConfigurations/Delete/",
@@ -142,8 +141,7 @@ $(document).ready(function() {
                         return options;
                     }
             },
-            //     $("#jobgrid").data("kendoGrid").refresh();
-            // },
+
             schema: {
                 model: {
                     id: "name",

@@ -1,7 +1,5 @@
 import json
-
 from pymongo.errors import ServerSelectionTimeoutError
-
 from webapp.view_helpers import get_mongo
 from multiprocessing import Pool
 from itertools import islice

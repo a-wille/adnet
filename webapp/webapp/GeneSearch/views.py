@@ -8,7 +8,10 @@ from webapp.view_helpers import get_mongo
 
 def index(request):
 	"""returns home page"""
-	return render(request, 'index.html')
+	return render(request, 'index.html', {'active_tab':2})
+
+def gene_page(request):
+	return render(request, 'gene_search_index.html')
 
 def get_gene_details(request):
 	gene_id = remove_substring_from_string(request.path, '/GeneSearch/get_information/')
@@ -56,6 +59,7 @@ def get_gene_info(request):
 	if 'snp_effects' in validated_data.keys():
 		for item in validated_data['snp_effects']:
 			i = item['affected_features']
+			item['risk_level'] = conn.AdNet.SNPs.find_one({'_id': item['snp']}, {'risk_level': 1})['risk_level']
 			new_str = ''
 			if i != 'Unknown':
 				for f in i:

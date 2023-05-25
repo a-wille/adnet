@@ -8,12 +8,6 @@ def get_all_jobs(request):
     doc = conn.AdNet.users.find_one({'id': email})
     return HttpResponse(json.dumps(doc['jobs']))
 
-def get_all_options(request):
-    conn = get_mongo()
-    gene_docs = list(conn.AdNet.Genes.find({}, {'_id': 1}))
-    snp_docs = list(conn.AdNet.SNPs.find({}, {'_id': 1}))
-    return HttpResponse(json.dumps(gene_docs+snp_docs))
-
 
 def create(request):
     info = request.GET.dict()

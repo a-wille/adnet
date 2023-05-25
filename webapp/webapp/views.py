@@ -13,7 +13,7 @@ from django.contrib.auth.models import Group
 
 def index(request):
 	# returns index page
-	return render(request, 'index.html')
+	return render(request, 'index.html', {'active_tab': 0})
 
 def glossary(request):
 	return render(request, 'glossary_index.html')
@@ -40,7 +40,7 @@ def build(request):
 	return render(request, 'build_page.html')
 
 def run(request):
-	return render(request, 'run_page'.html)
+	return render(request, 'run_page.html')
 
 def create_account(request):
 	"""creates an account for a user"""

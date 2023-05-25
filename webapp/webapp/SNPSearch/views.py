@@ -9,7 +9,10 @@ from webapp.view_helpers import remove_substring_from_string
 
 def index(request):
 	"""returns home page"""
-	return render(request, 'index.html')
+	return render(request, 'index.html', {'active_tab':3})
+
+def snp_page(request):
+	return render(request, 'snp_search_index.html')
 
 def get_all_snps(request):
 	"Get all names of SNPS for search bar"
@@ -24,7 +27,8 @@ def get_all_names(request):
 	"Get all names of SNPS for search bar"
 	conn = get_mongo()
 	docs = conn.AdNet.SNPs.find({}, {'_id': 1})
-	return HttpResponse(json.dumps(list(docs)))
+	docs2 = conn.AdNet.Genes.find({}, {'_id': 1})
+	return HttpResponse(json.dumps(list(docs) + list(docs2)))
 
 def get_snp_details(request):
 	snp_id = remove_substring_from_string(request.path, '/SNPSearch/get_details/')

@@ -15,23 +15,6 @@ function getCookie(name) {
     return cookieValue;
 }
 
-function more_information(gene) {
-    var info = $("#information_window").data("kendoWindow");
-    if (info == null) {
-        info = $('#information_window').kendoWindow({
-            modal: true,
-            visible: false,
-            width: 950,
-            height: 900,
-        }).data("kendoWindow");
-    }
-    info.title('Gene: ' + gene);
-    info.refresh({
-        url: '/GeneSearch/get_information/' + gene
-    }).open();
-    info.center();
-}
-
 
 const csrftoken = getCookie('csrftoken');
 
@@ -61,12 +44,22 @@ $(document).ready(function() {
         },
         select: function (e) {
             var item = e.item;
-            var text = item.text();
-            console.log(text)
+            var gene = item.text();
             $('#geneData').empty();
-            more_information(text)
+            info.title('Gene: ' + gene);
+            info.refresh({
+                url: '/GeneSearch/get_information/' + gene
+            });
+            info.center().open();
         },
     });
+
+    info = $('#information_window').kendoWindow({
+            modal: true,
+            visible: false,
+            width: 950,
+            height: 900,
+        }).data("kendoWindow");
     $("#genegrid").kendoGrid({
         dataSource: {
             transport: {
@@ -161,11 +154,17 @@ $(document).ready(function() {
                     click: function(e) {
                         e.preventDefault();
                         var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
-                        more_information(dataItem._id)
+                        gene = dataItem._id;
+                        info.title('Gene: ' + gene);
+                        info.refresh({
+                            url: '/GeneSearch/get_information/' + gene
+                        });
+                        info.center().open();
                     }
                 }],
                 title: "More Information ",
                 template: '<input type="button" class="k-button info" name="info" value="Details" />',
+
             filterable: false, sortable: false, width: "160px"}
         ]
     });

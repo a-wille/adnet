@@ -12,6 +12,7 @@
     </head>
 </head>
 <body class="k-content">
+    <div hidden="true" id="tabthatisactive">{{ active_tab }}</div>
     <div>
         <header id="header">ADNet   </header>
 
@@ -28,7 +29,7 @@
             <li>
                 Home
             </li>
-            <li>
+            <li class ="glossary_tab {% if active_tab == 'glossary_tab' %} k-state-active{% endif %}">
                 Glossary
             </li>
             <li>

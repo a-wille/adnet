@@ -72,6 +72,7 @@ $(window).resize(function () {
 
 $(document).ready(function() {
     //sets up buttons for particular actions on click events
+
     $('#account_creation').kendoButton({
         click: function(e) {
             e.preventDefault();
@@ -103,7 +104,7 @@ $(document).ready(function() {
             'snp_search',
             'build',
             'run'
-        ]
+        ],
     }).data("kendoTabStrip");
-    tabStrip.select(0);
+    tabStrip.select(parseInt(document.getElementById("tabthatisactive").textContent));
 });

@@ -11,6 +11,7 @@
     <p hidden id="gene">{{ content }}</p>
 {% endblock %}
 <div class="k-content">
+    <div id="snpdetails_window" style="display:none"></div>
     <div>
         <h4 class="k-h4">General Information</h4>
         <table id="gentable">
@@ -84,8 +85,8 @@
     <br>
         {% if perms.webapp.can_create_jobs %}
             <div>
-                <h2 id="whatever" style="text-align:center">Add gene to job configurations*</h2>
-                <p style="text-align:center">*job configurations that are full, or configurations that already have the current gene in them will NOT be displayed in the grid below</p>
+                <h2 id="whatever" style="text-align:center">Add Gene to job configurations*</h2>
+                <p style="text-align:center">*job configurations that are full, or configurations that already have the current Gene in them will NOT be displayed in the grid below</p>
             <div id="addgenetojobgrid"></div>
             </div>
         {% endif %}
@@ -132,46 +133,6 @@ td {
     height: 25px;
   border: none;
   display: table-cell;
-}
-
-.k-panelbar > .k-item > .k-link,
-.k-panelbar > .k-panelbar-header > .k-link {
-    color: #0277bd;
-    background-color: white;
-}
-
-.k-panelbar > .k-item > .k-link.k-state-selected,
-.k-panelbar > .k-panelbar-header > .k-link.k-state-selected {
-    color: white;
-    background-color: #0277bd;
-}
-
-.k-panelbar .k-group > .k-item > .k-link.k-state-selected,
-.k-panelbar .k-group > .k-panelbar-item > .k-link.k-state-selected,
-.k-panelbar .k-panelbar-group > .k-item > .k-link.k-state-selected,
-.k-panelbar .k-panelbar-group > .k-panelbar-item > .k-link.k-state-selected {
-    color: white;
-    background-color: #0277bd;
-}
-
-#panelbar.k-panelbar>.k-item>.k-link,
-#panelbar.k-panelbar>.k-item>.k-link .k-icon,
-#panelbar.k-panelbar>.k-item>.k-link:hover
-    {
-        color: #0a0a0a;
-        size: 20px;
-        user-select: unset;
-    }
-
-#panelbar .k-group
-{
-    overflow-wrap: anywhere;
-    overflow-y: auto;
-    user-select: text;
-    -moz-user-select: text;
-    -khtml-user-select: text;
-    -webkit-user-select: text;
-    -ms-user-select: text;
 }
 
 span { /* Hide horizontal scrollbar */

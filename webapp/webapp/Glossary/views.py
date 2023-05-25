@@ -6,7 +6,10 @@ from webapp.view_helpers import get_mongo
 
 def index(request):
 	"""returns home page"""
-	return render(request, 'index.html')
+	return render(request, 'index.html', {'active_tab':1})
+
+def glossary_page(request):
+	return render(request, 'glossary_index.html')
 
 def get_all_terms(request):
 	"""returns a list of all currently occurring and future events to volunteers and donors"""

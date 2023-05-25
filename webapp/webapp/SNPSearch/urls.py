@@ -7,8 +7,6 @@ urlpatterns = [
 	path('GetAllSNPNames/', views.get_all_names),
 	re_path('GetSNPInfo/.*$', views.get_snp_data),
 	re_path(r'get_details/.*$', views.get_snp_details),
-
-
-
+	re_path(r'.*$', views.snp_page)
 
 ]

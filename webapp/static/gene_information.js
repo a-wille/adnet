@@ -16,16 +16,53 @@ function getCookie(name) {
 }
 
 function createSNPPanel(mod, nonmod) {
-    var inlineDefault = new kendo.data.HierarchicalDataSource({
-            data: [
-                { text: "Modifying SNPs", items: mod},
-                { text: "Non-modifying SNPs", items: nonmod }
-            ]
-        });
+
+    var onSelect = function(e) {
+        // access the selected item via e.item (HTMLElement)
+		console.log("hit");
+        // detach select event handler via unbind()
+
+    };
+
+    function customCollapse(e) {
+        console.log("expandcollapse hit");
+        $("#snpbar").data("kendoPanelBar").collapse($("li.k-state-active"));
+
+    }
+
+
     $("#snpbar").kendoPanelBar({
         // template: "<h1> #= item.text # </h1>",
-        dataSource: inlineDefault
+        dataSource: [
+            { text: "Modifying SNPs", items: mod},
+            { text: "Non-modifying SNPs", items: nonmod }
+        ],
+        // collapse: customCollapse,
+        // select: onSelect,
+        select: function(e) {
+            var snp = e.item.innerText;
+            if (snp != "Modifying SNPs" && snp != "Non-modifying SNPs" && snp.startsWith("rs")){
+
+                var details = $('#snpdetails_window').kendoWindow({
+                    modal: false,
+                    visible: false,
+                    width: 950,
+                    height: 650,
+                }).data("kendoWindow");
+
+                details.title('Details: ' + snp);
+                details.refresh({
+                    url: '/SNPSearch/get_details/' + snp
+                }).open();
+                details.center();
+            } else if (snp != "Modifying SNPs" && snp != "Non-modifying SNPs") {
+                console.log("ope");
+                this.collapse(this.dataItem);
+            }
+            }
     });
+        // attach select event handler via bind()
+    $("#snpbar").data("kendoPanelBar").bind("select", onSelect);
 }
 
 function createPanel(data) {
@@ -159,14 +196,14 @@ function fill_effect_grid(effects) {
              data: effects,
              pageSize: 10,
          },
-         filterable: true,
          sortable: true,
          resizable: true,
          pageable: true,
          columns: [
-             {field: "snp", title: "SNP", width:"200px"},
-             {field: "amino_acid", title: "Amino Acid Index", width:"200px"},
-             {field: "affected_features", title: "Affected Features", template: renderCol, width:"400px"},
+             {field: "snp", title: "SNP", width:"120px"},
+             {field: "amino_acid", title: "Amino Acid Index", width:"150px"},
+             {field: "affected_features", title: "Affected Features", template: renderCol, width:"350px"},
+             {field: "risk_level", title: "Risk", width: "120px"}
          ]
      });
 }
