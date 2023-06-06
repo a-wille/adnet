@@ -1,8 +1,6 @@
 {% load static %}
 <head>
     <head>
-    <!--base href="http://demos.telerik.com/kendo-ui/grid/remote-data-binding"-->
-{#    <link rel="stylesheet" href="{% static 'styles/style3.css' %}" />#}
         <link rel="stylesheet" href="{% static 'styles/home.css' %}" />
         <script src="{% static 'js/jquery.min.js' %}"></script>
         <script src="{% static 'js/kendo.all.min.js' %}"></script>
@@ -10,11 +8,17 @@
 </head>
 <div id="desc">
 
-    <img id="nice" src="/home/acretan/capstone/webapp/static/img/floating.jpg", width="540", height="1016", style="float:left"; >
-    <header id="intro">Welcome to ADNet, a web application dedicated to helping researchers build their own neural
-        networks to predict the likelihood of Alzheimer's disease in an individual, based on their genetic information.</header>
+    <h2>Jobs</h2>
+    <div id="jobgrid2"></div>
+    <div>
+    </div>
 </div>
 
 {% load static %}
     <script src="{% static 'run.js' %}"></script>
 {% csrf_token %}
+<style>
+    .k-grid .k-dirty {
+        display: none;
+    }
+</style>

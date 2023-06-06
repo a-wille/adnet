@@ -270,7 +270,8 @@ $(document).ready(function() {
             resizable: true,
             serverSorting: false,
         },
-        height: 550,
+        height: 500,
+        // width: "95%",
         sortable: true,
         pageable: true,
         toolbar: ["create"],
@@ -283,7 +284,7 @@ $(document).ready(function() {
             $("#jobgrid").data("kendoGrid").refresh();
         },
         columns: [
-            {field: "name", title: "Name", width: "250px"},
+            {field: "name", title: "Name"},
             {field:"one", title:"1", width: "150px", sortable: false, editor: oneGeneAutoCompleteEditor},
             {field:"two", title: "2", width: "150px", sortable: false, editor: twoGeneAutoCompleteEditor},
             {field:"three", title:"3", width: "150px", sortable: false, editor: threeGeneAutoCompleteEditor},
@@ -292,21 +293,19 @@ $(document).ready(function() {
             {field: 'status', title: "Status", width: "150px", editable: false, nullable: true, defaultValue: "draft"},
             {
                 command:[{
-                    name: "Details",
-
+                    name: "Run",
+                    visible: function(dataItem) {return dataItem.status == 'draft'},
                     click: function(e) {
                         e.preventDefault();
                         var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
                         ml_configs(dataItem.name)
                     }
                 }],
-
-                title: "ML Configurations",
-                template: '<input type="button" class="k-button  k-rounded-md" name="details" value="Details" />',
-            filterable: false, sortable: false, width: "160px"
+                template: '<input type="button" class="k-button  k-rounded-md" name="details" value="Run" />',
+            filterable: false, sortable: false, width: "120px",
             },
-            { command: "edit", width: "120px"},
-            { command: "destroy", width: "150px"}
+            { command: "edit", width: "115px"},
+            { command: "destroy", width: "200px"}
         ],
         beforeEdit: function(e) {
             editedItem = e.model.name;

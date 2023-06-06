@@ -75,7 +75,7 @@ $(document).ready(function() {
                 success: function(result){
                     console.log(result)
                     $('#searchDefinition').append(
-                        '<h3 style="font-size: 24px;">' + result['term'] + '</h3>\n<p style="font-size: 20px;">' +
+                        '<h3 class="k-h6" style="font-size: 24px;">' + result['term'] + '</h3>\n<p style="padding-left: 40px; font-size: 20px;">' +
                         result['definition'] + '</p>'
                     ).hide().fadeIn(1000);
                 }
@@ -84,7 +84,7 @@ $(document).ready(function() {
     });
 
     $("#listView").kendoListView({
-        template: "<h3>${term}</h3> \n<p>       ${definition}</p>",
+        template: "<h3 class='k-h6' style='padding-left: 20px; padding-top: 20px;!important padding-bottom: 0px;'>${term}</h3> \n<p style='padding-left: 40px;'>       ${definition}</p>",
     });
 
 });

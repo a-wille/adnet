@@ -40,6 +40,7 @@ $(document).ready(function() {
         url: "/SNPSearch/GetSNPInfo/" + snpId.toString(),
         type: "GET",
         success: function (data) {
+            console.log("hello")
             data = JSON.parse(data)
             document.getElementById("location").innerHTML = data.location;
             document.getElementById("functional_class").innerHTML = data.functional_class;

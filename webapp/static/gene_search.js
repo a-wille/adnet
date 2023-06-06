@@ -22,7 +22,7 @@ $(document).ready(function() {
     const csrftoken = getCookie('csrftoken');
 
     $("#information_window").kendoWindow({
-        modal: true,
+        modal: false,
         visible: false,
         width: 900,
         height: 750,
@@ -55,7 +55,7 @@ $(document).ready(function() {
     });
 
     info = $('#information_window').kendoWindow({
-            modal: true,
+            modal: false,
             visible: false,
             width: 950,
             height: 900,

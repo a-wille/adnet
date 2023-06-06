@@ -27,8 +27,7 @@ def get_all_names(request):
 	"Get all names of SNPS for search bar"
 	conn = get_mongo()
 	docs = conn.AdNet.SNPs.find({}, {'_id': 1})
-	docs2 = conn.AdNet.Genes.find({}, {'_id': 1})
-	return HttpResponse(json.dumps(list(docs) + list(docs2)))
+	return HttpResponse(json.dumps(list(docs)))
 
 def get_snp_details(request):
 	snp_id = remove_substring_from_string(request.path, '/SNPSearch/get_details/')

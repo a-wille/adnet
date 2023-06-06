@@ -7,21 +7,21 @@
     <script src="{% static 'js/kendo.all.min.js' %}"></script>
     </head>
 
-    <header class="intro">Explore SNPs!</header>
+{#    <header class="intro k-header">Explore SNPs!</header>#}
 </head>
 <body>
     <div id="details_window" style="display:none"></div>
-    <div class="k-d-flex k-justify-content-center" style="padding-top: 54px;">
+    <div class="k-d-flex k-justify-content-center" style="padding-top: 30px;">
         <div class="k-w-300">
-            <label for="snps">Search by name...</label>
+            <label for="snps" style="!important text-align: center;">Search SNPs by name...</label>
             <input id="snps" style="width: 100%;" />
 {#            <div class="demo-hint">Hint: type "che"</div>#}
         </div>
     </div>
-    <br></br>
+
     <div id="searchSNPs" class=".k-listview" style="padding-left: 40px; padding-right: 40px"></div>
-    <span></span>
-    <div class="intro">
+
+    <div class="intro k-header" style="padding-top: 35px; padding-bottom:35px">
         Or explore different SNPs using the grid below!
     </div>
     <div id="snpgrid"></div>
@@ -33,5 +33,8 @@
 <style>
     .intro {
         text-align: center;
+    }
+    .k-grid-header-wrap th {
+        font-size: xx-small;
     }
 </style>
