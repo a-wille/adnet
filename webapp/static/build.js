@@ -293,15 +293,29 @@ $(document).ready(function() {
             {field: 'status', title: "Status", width: "150px", editable: false, nullable: true, defaultValue: "draft"},
             {
                 command:[{
-                    name: "Run",
+                    name: "Submit",
                     visible: function(dataItem) {return dataItem.status == 'draft'},
                     click: function(e) {
                         e.preventDefault();
                         var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
-                        ml_configs(dataItem.name)
+                        if (confirm("Are you sure you are ready to submit this job?")){
+                            console.log(dataItem)
+                            $.ajax({
+                                type: "POST",
+                                url: "/submit_job/",
+                                data: {'obj': JSON.stringify(dataItem)},
+                                headers: {'X-CSRFToken': csrftoken},
+                                contentType: "application/x-www-form-urlencoded",
+                                success: function(response) {
+                                    console.log("okay")
+                                }
+                            });
+                        }
+
+
                     }
                 }],
-                template: '<input type="button" class="k-button  k-rounded-md" name="details" value="Run" />',
+                template: '<input type="button" class="k-button  k-rounded-md" name="details" value="Submit" />',
             filterable: false, sortable: false, width: "120px",
             },
             { command: "edit", width: "115px"},

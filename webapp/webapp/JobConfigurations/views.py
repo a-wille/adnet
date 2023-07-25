@@ -8,6 +8,16 @@ def get_all_jobs(request):
     doc = conn.AdNet.users.find_one({'id': email})
     return HttpResponse(json.dumps(doc['jobs']))
 
+def get_completed_jobs(request):
+    conn = get_mongo()
+    email = request.user.email
+    doc = conn.AdNet.users.find_one({'id': email})
+    jobs = doc['jobs']
+    completed_jobs = []
+    for job in jobs:
+        if job['status'] == 'completed':
+            completed_jobs.append(job)
+    return HttpResponse(json.dumps(completed_jobs))
 
 def create(request):
     info = request.GET.dict()

@@ -31,7 +31,7 @@ $(document).ready(function() {
         dataSource: {
             transport: {
                 read: {
-                    url: "/JobConfigurations/GetAllJobs/",
+                    url: "/JobConfigurations/GetCompletedJobs/",
                     dataType: "json",
                     type: "GET"
                 },
@@ -58,6 +58,7 @@ $(document).ready(function() {
         height: 550,
         sortable: true,
         pageable: true,
+        noRecords: true,
         columns: [
             {field: "name", title: "Name", width: "250px"},
             {field:"one", title:"1", width: "150px", sortable: false},
@@ -66,21 +67,6 @@ $(document).ready(function() {
             {field:"four", title:"4", width: "150px", sortable: false},
             {field:"five", title: "5", width: "150px", sortable: false},
             {field: 'status', title: "Status", width: "150px", editable: false, nullable: true, defaultValue: "draft"},
-            {
-                command:[{
-                    name: "Details",
-
-                    click: function(e) {
-                        e.preventDefault();
-                        var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
-                        ml_configs(dataItem.name)
-                    }
-                }],
-
-                title: "ML Configurations",
-                template: '<input type="button" class="k-button  k-rounded-md" name="details" value="Details" />',
-            filterable: false, sortable: false, width: "160px"
-            },
             {
                 command:[{
                     name: "Results",
@@ -99,5 +85,4 @@ $(document).ready(function() {
             },
         ],
     });
-    console.log("okay???");
 });

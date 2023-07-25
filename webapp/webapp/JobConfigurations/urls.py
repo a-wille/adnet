@@ -3,6 +3,7 @@ from webapp.JobConfigurations import views
 
 urlpatterns = [
 	path('GetAllJobs/', views.get_all_jobs),
+	path('GetCompletedJobs/', views.get_completed_jobs),
 	path('Create/', views.create),
 	path('Edit/', views.edit),
 	path('Delete/', views.delete),

@@ -17,6 +17,7 @@ urlpatterns = [
 	path('home', views.home),
 	path('gene_search', views.gene_search),
 	path('snp_search', views.snp_search),
+	path('submit_job/', views.submit_job),
 	path('build', views.build),
 	path('run', views.run),
 	path('login', views.login),
