@@ -3,6 +3,8 @@ from django.shortcuts import render
 import json
 from django.db import IntegrityError
 from django.contrib.auth import authenticate, logout
+
+from daemons.user_check_daemon import create_service, gmail_send_message
 from webapp.models import User
 from django.contrib.auth import login as login_django
 from webapp.view_helpers import get_mongo
@@ -159,5 +161,11 @@ def submit_job(request):
 		'Accept': 'application/json'
 	}
 	requests.post(url, json=data, headers=headers)
+	return HttpResponse({'success': True})
 
-	return HttpResponse({'okay': 'hi'})
+def process_results(request):
+	data = request.POST.dict()
+	service = create_service()
+	gmail_send_message(service, data['email'], data['job_id'])
+	return HttpResponse({'success': True})
+
