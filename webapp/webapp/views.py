@@ -155,6 +155,7 @@ def check_admin(request):
 def submit_job(request):
 	data = json.loads(request.POST.dict()['obj'])
 	data['user_id'] = request.user.email
+	data['csrftoken'] = request.COOKIES['csrftoken']
 	url = "http://138.49.185.228:5000/build/"
 	headers = {
 		'Content-type': 'application/json',
