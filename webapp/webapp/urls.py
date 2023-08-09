@@ -26,7 +26,7 @@ urlpatterns = [
 	path('check_login/', views.check_login),
 	path('create_account/', views.create_account),
 	path('logout/', views.my_logout),
-	path('check_admin/', views.check_admin)
+	path('check_admin/', views.check_admin),
 ]
 
 if settings.DEBUG:

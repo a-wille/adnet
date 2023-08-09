@@ -1,10 +1,14 @@
 from django.shortcuts import redirect
 from django.shortcuts import render
 import json
+import logging
+from email.message import EmailMessage
+import base64
+from django.views.decorators.csrf import csrf_exempt
 from django.db import IntegrityError
 from django.contrib.auth import authenticate, logout
-
-from daemons.user_check_daemon import create_service, gmail_send_message
+from django.http import JsonResponse
+from daemons.user_check_daemon import create_service
 from webapp.models import User
 from django.contrib.auth import login as login_django
 from webapp.view_helpers import get_mongo
@@ -153,19 +157,45 @@ def check_admin(request):
 	return HttpResponse({'success': False})
 
 def submit_job(request):
-	data = json.loads(request.POST.dict()['obj'])
-	data['user_id'] = request.user.email
-	url = "http://138.49.185.228:5000/build/"
-	headers = {
+    data = json.loads(request.POST.dict()['obj'])
+    data['user_id'] = request.user.email
+    url = 'http://138.49.185.228:5000/build'
+    headers = {
 		'Content-type': 'application/json',
 		'Accept': 'application/json'
-	}
-	requests.post(url, json=data, headers=headers)
-	return HttpResponse({'success': True})
+    }
+    requests.post(url, json=data, headers=headers)
+    return HttpResponse({'success': True})
 
+
+def gmail_send_message(service, email, job_id):
+
+    try:
+        message = EmailMessage()
+        message.set_content('Your results for job {} have been processed and are ready for viewing! Please sign in and check the results page to see how your neural network performed!'.format(job_id))
+        message['To'] = email
+        message['From'] = 'information@adnet.app'
+        message['Subject'] = 'Results Ready for Viewing!'
+
+        # encoded message
+        encoded_message = base64.urlsafe_b64encode(message.as_bytes()) \
+            .decode()
+
+        create_message = {
+            'raw': encoded_message
+        }
+        # pylint: disable=E1101
+        send_message = (service.users().messages().send
+                        (userId="me", body=create_message).execute())
+    except HttpError as error:
+        send_message = None
+    return send_message
+
+
+@csrf_exempt
 def process_results(request):
-	data = request.POST.dict()
-	service = create_service()
-	gmail_send_message(service, data['email'], data['job_id'])
-	return HttpResponse({'success': True})
-
+    os.chdir('/home/ubuntu/adnet/webapp/daemons/')
+    data = json.loads(request.body)
+    service = create_service()
+    gmail_send_message(service, data['email'], data['job_id'])
+    return HttpResponse({'success': True})
