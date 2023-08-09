@@ -1,3 +1,6 @@
+import os
+import json
+import tensorflow as tf
 from pymongo import MongoClient
 from flask import Flask, request, jsonify
 from sklearn.preprocessing import StandardScaler, OneHotEncoder
@@ -9,7 +12,9 @@ import numpy as np
 import tensorflow as tf
 from tensorflow.python.keras import layers
 from natsort import natsorted
+from time import sleep
 from threading import Thread
+import requests
 
 
 global data
@@ -40,10 +45,6 @@ risk_level = {
 
 app = Flask(__name__)
 
-# the minimal Flask application
-@app.route('/')
-def index():
-    return '<h1>Hello, World!</h1>'
 
 def find_indexes(concerned_snps, organized):
     conn = get_mongo()
@@ -74,7 +75,6 @@ def get_mongo(**kwargs):
     _mongo_conn = MongoClient("mongodb+srv://adnet.khzkajw.mongodb.net/AdNet", username=user, password=pw)
     return _mongo_conn
 
-
 @app.route('/build/', methods=['POST'])
 def submitting_job_function():
     print(request.json)
@@ -82,12 +82,7 @@ def submitting_job_function():
     daemon.start()
     return({'message': 'perhaps?'})
 
-
-
-
 def build_model(data):
-    print(data)
-    print("start build")
     concerned_snps = []
     for i in ['one', 'two', 'three', 'four', 'five']:
         if data[i] != '':
@@ -165,8 +160,16 @@ def build_model(data):
         x_train, x_test, y_train, y_test = train_test_split(x_train, y_train, test_size=0.1, random_state=42)
         model.fit(x_train, y_train, epochs=10, batch_size=32, validation_data=(x_val, y_val))
         loss, accuracy = model.evaluate(x_test, y_test)
-        print("end build")
-        return jsonify({'message': 'it ran at least'})
+        url = 'https://adnet.app/process_results/'
+
+        headers = {
+                'Content-type': 'appliation/json',
+                'Accept': 'application/json',
+                'Referer': 'https://adnet.app',
+                }
+        data = {'job_id': data['name'], 'email': data['user_id']}
+        requests.post(url, json=data, headers=headers)
+        return {'success': True}
 
 
 if __name__ == '__main__':
