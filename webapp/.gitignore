@@ -1,8 +1,9 @@
 webapp/__pycache__/
 webapp/webapp/__pycache__/
 ncbi_dataset/
-webapp/daemons/token.json
-webapp/daemons/credentials.json
-webapp/old_token/
-webapp/webapp/settings.py
+daemons/token.json
+daemons/credentials.json
+old_token/
+webapp/settings.py
 venv/
+/.idea/
