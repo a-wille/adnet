@@ -8,6 +8,8 @@ from django.views.decorators.csrf import csrf_exempt
 from django.db import IntegrityError
 from django.contrib.auth import authenticate, logout
 from django.http import JsonResponse
+from googleapiclient.errors import HttpError
+
 from daemons.user_check_daemon import create_service
 from webapp.models import User
 from django.contrib.auth import login as login_django
@@ -85,11 +87,11 @@ def create_account(request):
 	doc = conn.AdNet.users.find_one({'id': request.POST.get('email')})
 	try:
 		user = User.objects.create(firstname=request.POST.get('first'),
-							   		lastname=request.POST.get('last'),
-							   		institution=request.POST.get('institution'),
-							   		email=request.POST.get('email'),
-							   		password=request.POST.get('pass'),
-								   	username=request.POST.get('email'),
+									lastname=request.POST.get('last'),
+									institution=request.POST.get('institution'),
+									email=request.POST.get('email'),
+									password=request.POST.get('pass'),
+									username=request.POST.get('email'),
 							   )
 		user.set_password(user.password)
 		user.save()
@@ -157,45 +159,90 @@ def check_admin(request):
 	return HttpResponse({'success': False})
 
 def submit_job(request):
-    data = json.loads(request.POST.dict()['obj'])
-    data['user_id'] = request.user.email
-    url = 'http://138.49.185.228:5000/build'
-    headers = {
+	"""Job submit checks if there are any pending or running jobs first for the user
+	If yes, new job is updated with a status of “pending”
+	If no, new job is updated with a status of “running”
+"""
+	data = json.loads(request.POST.dict()['obj'])
+	conn = get_mongo()
+	all_jobs = conn.AdNet.users.find_one({'id': request.user.email}, {'_id': 0, 'jobs': 1})['jobs']
+	pending = False
+	for job in all_jobs:
+		if job['status'] == 'running' or job['status'] == 'pending':
+			pending = True
+
+	for job in all_jobs:
+		if job['name'] == data['name']:
+			job['status'] = 'running'
+			if pending:
+				job['status'] = 'pending'
+	conn.AdNet.users.update_one({'id': request.user.email}, {"$set": {'jobs': all_jobs}})
+	data['user_id'] = request.user.email
+	url = 'http://138.49.185.228:5000/build'
+	headers = {
 		'Content-type': 'application/json',
 		'Accept': 'application/json'
-    }
-    requests.post(url, json=data, headers=headers)
-    return HttpResponse({'success': True})
+	}
+	requests.post(url, json=data, headers=headers)
+	return HttpResponse({'success': True})
 
 
 def gmail_send_message(service, email, job_id):
 
-    try:
-        message = EmailMessage()
-        message.set_content('Your results for job {} have been processed and are ready for viewing! Please sign in and check the results page to see how your neural network performed!'.format(job_id))
-        message['To'] = email
-        message['From'] = 'information@adnet.app'
-        message['Subject'] = 'Results Ready for Viewing!'
+	try:
+		message = EmailMessage()
+		message.set_content('Your results for job {} have been processed and are ready for viewing! Please sign in and check the results page to see how your neural network performed!'.format(job_id))
+		message['To'] = email
+		message['From'] = 'information@adnet.app'
+		message['Subject'] = 'Results Ready for Viewing!'
 
-        # encoded message
-        encoded_message = base64.urlsafe_b64encode(message.as_bytes()) \
-            .decode()
+		# encoded message
+		encoded_message = base64.urlsafe_b64encode(message.as_bytes()) \
+			.decode()
 
-        create_message = {
-            'raw': encoded_message
-        }
-        # pylint: disable=E1101
-        send_message = (service.users().messages().send
-                        (userId="me", body=create_message).execute())
-    except HttpError as error:
-        send_message = None
-    return send_message
-
+		create_message = {
+			'raw': encoded_message
+		}
+		# pylint: disable=E1101
+		send_message = (service.users().messages().send
+						(userId="me", body=create_message).execute())
+	except HttpError as error:
+		send_message = None
+	return send_message
 
 @csrf_exempt
 def process_results(request):
-    os.chdir('/home/ubuntu/adnet/webapp/daemons/')
-    data = json.loads(request.body)
-    service = create_service()
-    gmail_send_message(service, data['email'], data['job_id'])
-    return HttpResponse({'success': True})
+	"""
+	Returned results are put into a results collection with the user email and job name (this combination will result in a unique search result
+	Update job status as completed
+	Check if there are any pending jobs for the user
+	If yes, first pending job is sent via submit_job call
+	If no, do nothing
+	Send email
+	"""
+	os.chdir('/home/ubuntu/adnet/webapp/daemons/')
+	data = json.loads(request.body)
+	conn = get_mongo()
+	# Returned results are put into a results collection with the user email and job name (this combination will result in a unique search result
+	conn.AdNet.Results.insert_one({'job_id': data['job_id'], 'email': data['email'], 'results': data['results']})
+	all_jobs = conn.AdNet.users.find_one({'id': request.user.email}, {'_id': 0, 'jobs': 1})['jobs']
+	next_job = None
+	for job in all_jobs:
+		if job['name'] == data['name']:
+			job['status'] = 'completed'
+		if job['name'] != data['name'] and job['status'] == 'pending' and not next_job:
+			next_job = job
+			job['status'] = 'running'
+	conn.AdNet.users.update_one({'id': request.user.email}, {"$set": {'jobs': all_jobs}})
+	service = create_service()
+	gmail_send_message(service, data['email'], data['job_id'])
+	if next_job:
+		data = next_job
+		data['user_id'] = request.user.email
+		url = 'http://138.49.185.228:5000/build'
+		headers = {
+			'Content-type': 'application/json',
+			'Accept': 'application/json'
+		}
+		requests.post(url, json=data, headers=headers)
+	return HttpResponse({'success': True})
