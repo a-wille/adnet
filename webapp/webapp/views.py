@@ -228,9 +228,9 @@ def process_results(request):
 	all_jobs = conn.AdNet.users.find_one({'id': data['email']}, {'_id': 0, 'jobs': 1})['jobs']
 	next_job = None
 	for job in all_jobs:
-		if job['name'] == data['name']:
+		if job['name'] == data['job_id']:
 			job['status'] = 'completed'
-		if job['name'] != data['name'] and job['status'] == 'pending' and not next_job:
+		if job['name'] != data['job_id'] and job['status'] == 'pending' and not next_job:
 			next_job = job
 			job['status'] = 'running'
 	conn.AdNet.users.update_one({'id': data['email']}, {"$set": {'jobs': all_jobs}})
