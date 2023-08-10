@@ -3,7 +3,9 @@ webapp/webapp/__pycache__/
 ncbi_dataset/
 daemons/token.json
 daemons/credentials.json
+daemons/test.py
 old_token/
 webapp/settings.py
 venv/
 /.idea/
+db.sqlite3
