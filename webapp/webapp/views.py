@@ -225,7 +225,7 @@ def process_results(request):
 	conn = get_mongo()
 	# Returned results are put into a results collection with the user email and job name (this combination will result in a unique search result
 	conn.AdNet.Results.insert_one({'job_id': data['job_id'], 'email': data['email'], 'results': data['results']})
-	all_jobs = conn.AdNet.users.find_one({'id': request.user.email}, {'_id': 0, 'jobs': 1})['jobs']
+	all_jobs = conn.AdNet.users.find_one({'id': data['email']}, {'_id': 0, 'jobs': 1})['jobs']
 	next_job = None
 	for job in all_jobs:
 		if job['name'] == data['name']:
