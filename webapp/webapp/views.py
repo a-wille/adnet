@@ -233,16 +233,16 @@ def process_results(request):
 		if job['name'] != data['name'] and job['status'] == 'pending' and not next_job:
 			next_job = job
 			job['status'] = 'running'
-	conn.AdNet.users.update_one({'id': request.user.email}, {"$set": {'jobs': all_jobs}})
+	conn.AdNet.users.update_one({'id': data['email']}, {"$set": {'jobs': all_jobs}})
 	service = create_service()
 	gmail_send_message(service, data['email'], data['job_id'])
 	if next_job:
-		data = next_job
-		data['user_id'] = request.user.email
+		new_data = next_job
+		new_data['user_id'] = data['email']
 		url = 'http://138.49.185.228:5000/build'
 		headers = {
 			'Content-type': 'application/json',
 			'Accept': 'application/json'
 		}
-		requests.post(url, json=data, headers=headers)
+		requests.post(url, json=new_data, headers=headers)
 	return HttpResponse({'success': True})
