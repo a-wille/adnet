@@ -22,17 +22,7 @@ $(document).ready(function () {
     var jobId = document.getElementById("job_id").textContent;
     var rowCounter = 0;
     // create ComboBox from input HTML element
-    var activation_dataSource = new kendo.data.DataSource({
-        data: [
-            {Id: "sigmoid", name: "Sigmoid"},
-            {Id: "relu", name: "ReLU (Rectified Linear Unit)"},
-            {Id: "leaky_relu", name: "Leaky ReLU"},
-            {Id: "tanh", name: "Hyperbolic Tangent"},
-            {Id: "softmax", name: "Softmax"},
-            {Id: "swish", name: "Swish"},
-            {Id: "linear", name: "Linear"},
-        ]
-    });
+
     var response_data;
     $.ajax({
         url: "/JobConfigurations/GetMLForJob/" + jobId,
@@ -48,6 +38,20 @@ $(document).ready(function () {
             console.log(`Error ${error}`);
         }
     });
+
+    var activation_dataSource = new kendo.data.DataSource({
+        data: [
+            {Id: "sigmoid", name: "Sigmoid"},
+            {Id: "relu", name: "ReLU (Rectified Linear Unit)"},
+            {Id: "leaky_relu", name: "Leaky ReLU"},
+            {Id: "tanh", name: "Hyperbolic Tangent"},
+            {Id: "softmax", name: "Softmax"},
+            {Id: "swish", name: "Swish"},
+            {Id: "linear", name: "Linear"},
+        ]
+    });
+    activation_dataSource.read();
+
 
     $("#layergrid").kendoGrid({
         dataSource: new kendo.data.DataSource({
@@ -92,6 +96,7 @@ $(document).ready(function () {
                 title: "Activation Function",
                 width: 120,
                 template: function (dataItem) {
+                    console.log("okay");
                     var activationItem = activation_dataSource.data().find(function (item) {
                         return item.Id === dataItem.activation;
                     });
@@ -119,13 +124,13 @@ $(document).ready(function () {
         edit: function (e) {
             e.preventDefault();
             rowCounter = 0;
-            console.log("editing");
-            if (!e.model.isNew()) {
-                // Disable the editor of the "id" column when editing data items
-                var numeric = e.container.find("input[name=id]").data("kendoNumericTextBox");
-                numeric.enable(false);
-            }
+
+        },
+        dataBound: function (e) {
+            e.preventDefault();
+            rowCounter = 0;
         }
+
     });
 
 
@@ -135,7 +140,6 @@ $(document).ready(function () {
         dataSource: activation_dataSource,
         filter: "contains",
         suggest: true,
-        noDataTemplate: $("#noDataTemplate").html()
     });
 
     var culater = $("#activation_combobox").data("kendoComboBox");
@@ -161,7 +165,6 @@ $(document).ready(function () {
         dataSource: optimizer_dataSource,
         filter: "contains",
         suggest: true,
-        noDataTemplate: $("#noDataTemplate").html()
     });
     culater = $("#optimizer_combobox").data("kendoComboBox");
     culater.value(response_data['optimizer']);
@@ -186,8 +189,7 @@ $(document).ready(function () {
         dataValueField: "Id",
         dataSource: loss_dataSource,
         filter: "contains",
-        suggest: true,
-        noDataTemplate: $("#noDataTemplate").html()
+        suggest: true
     });
     culater = $("#loss_combobox").data("kendoComboBox");
     culater.value(response_data['loss']);
@@ -244,22 +246,33 @@ $(document).ready(function () {
                 .addClass("invalid");
         }
 
+        layers = $("#layergrid").data("kendoGrid").dataSource.data().toJSON();
+        var count = 0;
+        layers.forEach(function (dict) {
+            // Access dictionary keys and values
+            count ++;
+            dict['number'] = count;
+        });
+        console.log(layers);
         var final = {
             'job_id': job_id,
-            'layers': layer_data,
-            'final_activation': $("#activation_combobox").val(),
-            'optimizer': $("#optimizer_combobox").val(),
-            'loss': $("#loss_combobox").val(),
-            'epochs': $("#epoch_size").val(),
-            'batch_size': $("#batch_size").val()
+            'ml_configs': {
+                'layers': layers,
+                'final_activation': $("#activation_combobox").val(),
+                'optimizer': $("#optimizer_combobox").val(),
+                'loss': $("#loss_combobox").val(),
+                'epochs': $("#epoch_size").val(),
+                'batch_size': $("#batch_size").val()
+            }
+
         }
 
         $.ajax({
             url: "/JobConfigurations/SetMLConfigs/",
             type: "POST",
             headers: {'X-CSRFToken': csrftoken},
-                            dataType: 'json',
-            data: final,
+            dataType: 'json',
+            data: JSON.stringify(final),
             async: false,
             success: function (data) {
                 alert("Changes saved successfully");
