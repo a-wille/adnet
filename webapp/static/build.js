@@ -96,12 +96,12 @@ $(document).ready(function() {
 
     var datalist = optionsDataSource.read();
 
-    $("#ml_window").kendoWindow({
+    var info = $("#ml_window").kendoWindow({
         modal: true,
         visible: false,
-        width: 900,
+        width: 500,
         height: 750,
-    });
+    }).data("kendoWindow");
 
     $("#jobgrid").kendoGrid({
         dataSource: {
@@ -293,6 +293,26 @@ $(document).ready(function() {
             {field: 'status', title: "Status", width: "150px", editable: false, nullable: true, defaultValue: "draft"},
             {
                 command:[{
+                    name: "Settings",
+                    width: "160px",
+                    click: function(e) {
+                        e.preventDefault();
+                        var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
+                        console.log(dataItem);
+                        job_id = dataItem.id;
+                        info.title('ML Configurations for ' + job_id);
+                        info.refresh({
+                            url: '/JobConfigurations/GetMLConfigurations/' + job_id + '/'
+                        })
+                        info.center().open();
+                    }
+                }],
+                title: "ML Configurations",
+                template: '<input type="button" class="k-button info" name="info" value="Settings" />',
+
+            filterable: false, sortable: false, width: "160px"},
+            {
+                command:[{
                     name: "Submit",
                     visible: function(dataItem) {return dataItem.status == 'draft'},
                     click: function(e) {
@@ -307,12 +327,10 @@ $(document).ready(function() {
                                 headers: {'X-CSRFToken': csrftoken},
                                 contentType: "application/x-www-form-urlencoded",
                                 success: function(response) {
-                                    console.log("okay")
+                                    $("#jobgrid").data("kendoGrid").dataSource.read()
                                 }
                             });
                         }
-
-
                     }
                 }],
                 template: '<input type="button" class="k-button  k-rounded-md" name="details" value="Submit" />',

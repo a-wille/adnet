@@ -8,6 +8,9 @@ urlpatterns = [
 	path('Edit/', views.edit),
 	path('Delete/', views.delete),
 	path('AddToConfig/', views.add_item),
-	path('GetAddJobs/', views.get_add_jobs)
+	path('GetAddJobs/', views.get_add_jobs),
+	re_path(r'GetMLConfigurations/.*$', views.get_ml_configurations),
+	re_path(r'GetMLForJob/.*$', views.get_ml_for_job),
+	path('SetMLConfigs/', views.set_ml_configs)
 ]
 

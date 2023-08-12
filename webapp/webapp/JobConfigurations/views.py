@@ -1,12 +1,19 @@
 import json
 from django.http import HttpResponse
-from webapp.view_helpers import get_mongo
+from django.shortcuts import render
+
+from webapp.view_helpers import get_mongo, remove_substring_from_string
+
 
 def get_all_jobs(request):
     email = request.user.email
     conn = get_mongo()
     doc = conn.AdNet.users.find_one({'id': email})
     return HttpResponse(json.dumps(doc['jobs']))
+
+def get_ml_configurations(request):
+    job_id = remove_substring_from_string(request.path, 'JobConfigurations/GetMLConfigurations/')[1:-1]
+    return render(request, 'ml_configurations.html', {'content': job_id})
 
 def get_completed_jobs(request):
     conn = get_mongo()
@@ -74,6 +81,33 @@ def get_add_jobs(request):
             edited_jobs.append(job)
     return HttpResponse(json.dumps(edited_jobs))
 
+def get_ml_for_job(request):
+    job_id = remove_substring_from_string(request.path, '/JobConfigurations/GetMLForJob/')
+    user = request.user.email
+    conn = get_mongo()
+    jobs = conn.AdNet.users.find_one({'id': user})['jobs']
+    ml_configs = None
+    for job in jobs:
+        if job['name'] == job_id:
+            if job['ml_configs'] == []:
+                # prepopulate with default values
+                job['ml_configs'] = {
+                    'layers': [{'number': 1, 'size': 64, 'activation': 'relu'},
+                               {'number': 2, 'size': 64, 'activation': 'relu'}],
+                    'final_activation': 'sigmoid',
+                    'optimizer': 'adam',
+                    'loss': 'binary_crossentropy',
+                    'epochs': 10,
+                    'batch_size': 32
+                }
+                conn.AdNet.users.update_one({'id': request.user.email}, {"$set": {'jobs': jobs}})
+            ml_configs = job['ml_configs']
+
+    return HttpResponse(json.dumps(ml_configs))
+
+def set_ml_configs(request):
+    data = request.POST.dict()
+    return HttpResponse({})
 
 def add_item(request):
     keys = ['one', 'two', 'three', 'four', 'five']
