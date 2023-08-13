@@ -176,10 +176,10 @@ def submit_job(request):
 			job['status'] = 'running'
 			if pending:
 				job['status'] = 'pending'
-	conn.AdNet.users.update_one({'id': request.user.email}, {"$set": {'jobs': all_jobs}})
+	# conn.AdNet.users.update_one({'id': request.user.email}, {"$set": {'jobs': all_jobs}})
 	data['user_id'] = request.user.email
-	#url = 'http://138.49.185.228:5000/build'
-	url = 'http://localhost:5000/build'
+	url = 'http://138.49.185.228:5000/build'
+	# url = 'http://localhost:5000/build'
 	headers = {
 		'Content-type': 'application/json',
 		'Accept': 'application/json'
@@ -224,8 +224,6 @@ def process_results(request):
 	os.chdir('/home/ubuntu/adnet/webapp/daemons/')
 	data = json.loads(request.body)
 	conn = get_mongo()
-	# Returned results are put into a results collection with the user email and job name (this combination will result in a unique search result
-	conn.AdNet.Results.insert_one({'job_id': data['job_id'], 'email': data['email'], 'results': data['results']})
 	all_jobs = conn.AdNet.users.find_one({'id': data['email']}, {'_id': 0, 'jobs': 1})['jobs']
 	next_job = None
 	for job in all_jobs:
@@ -234,14 +232,14 @@ def process_results(request):
 		if job['name'] != data['job_id'] and job['status'] == 'pending' and not next_job:
 			next_job = job
 			job['status'] = 'running'
-	# conn.AdNet.users.update_one({'id': data['email']}, {"$set": {'jobs': all_jobs}})
+	conn.AdNet.users.update_one({'id': data['email']}, {"$set": {'jobs': all_jobs}})
 	service = create_service()
 	gmail_send_message(service, data['email'], data['job_id'])
 	if next_job:
 		new_data = next_job
 		new_data['user_id'] = data['email']
-		# url = 'http://138.49.185.228:5000/build'
-		url = 'http://localhost:5000/build'
+		url = 'http://138.49.185.228:5000/build'
+		# url = 'http://localhost:5000/build'
 		headers = {
 			'Content-type': 'application/json',
 			'Accept': 'application/json'

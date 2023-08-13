@@ -94,6 +94,9 @@ $(document).ready(function() {
             {field:"chromosome", title: "Location", width:"250px", template:"#=chromosome#:#=range.begin# - #=range.end#",
                 sortable: {
                     compare: function naturalSort (a, b) {
+                        if (a.chromosome == null || a.range.begin == null){
+                            console.log(a);
+                        }
                         a = a.chromosome.toString() + ':' + a.range.begin.toString() + '-' + a.range.end.toString()
                         b = b.chromosome.toString() + ':' + b.range.begin.toString() + '-' + b.range.end.toString()
                         var re = /(^([+\-]?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?(?=\D|\s|$))|^0x[\da-fA-F]+$|\d+)/g,

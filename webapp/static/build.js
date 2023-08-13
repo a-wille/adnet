@@ -333,6 +333,7 @@ $(document).ready(function () {
                         var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
                         console.log(dataItem);
                         job_id = dataItem.id;
+                        info = $("#ml_window").data("kendoWindow");
                         info.title('ML Configurations for ' + job_id);
                         info.refresh({
                             url: '/JobConfigurations/GetMLConfigurations/' + job_id + '/'
