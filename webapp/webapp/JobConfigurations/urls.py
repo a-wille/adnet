@@ -11,6 +11,8 @@ urlpatterns = [
 	path('GetAddJobs/', views.get_add_jobs),
 	re_path(r'GetMLConfigurations/.*$', views.get_ml_configurations),
 	re_path(r'GetMLForJob/.*$', views.get_ml_for_job),
+	re_path(r'Results/.*$', views.get_results_view),
+	re_path(r'GetResults/.*$', views.get_results_data),
 	path('SetMLConfigs/', views.set_ml_configs)
 ]
 

@@ -7,19 +7,20 @@
     </head>
 </head>
 <div id="desc">
-    <div id="ml_window" style="display:none"></div>
-    <h2 class="k-h3" style="padding: 10px;">Job Configurations</h2>
-    <div id="jobgrid"></div>
+    <div id="results_window" style="display:none"></div>
+    <h2 class="k-h3" style="padding: 10px;">Completed Jobs</h2>
+    <div id="resultsgrid"></div>
     <div>
     </div>
 </div>
 
 {% load static %}
-    <script src="{% static 'build.js' %}"></script>
+    <script src="{% static 'results_tab.js' %}"></script>
 {% csrf_token %}
 <style>
     .k-grid .k-dirty {
         display: none;
     }
+
 
 </style>

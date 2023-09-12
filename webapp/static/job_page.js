@@ -78,30 +78,7 @@ function fiveGeneAutoCompleteEditor(container, options) {
         });
 }
 
-
-const csrftoken = getCookie('csrftoken');
-
-$(document).ready(function () {
-    const csrftoken = getCookie('csrftoken');
-    optionsDataSource = new kendo.data.DataSource.create({
-        transport: {
-            read: {
-                url: "/SNPSearch/GetAllSNPNames/",
-                dataType: "json",
-                type: "GET"
-            }
-        }
-    });
-
-    var datalist = optionsDataSource.read();
-
-    var info = $("#ml_window").kendoWindow({
-        modal: true,
-        visible: false,
-        width: 500,
-        height: 750,
-    });
-
+function setUpGrid() {
     $("#jobgrid").kendoGrid({
         dataSource: {
             transport: {
@@ -252,8 +229,11 @@ $(document).ready(function () {
                                 required: true,
                                 namevalidation: function (input) {
                                     if (input.is("[name='name']") && input.val() != "") {
-                                        console.log("okdoke");
-                                        d = $("#jobgrid").data("kendoGrid").dataSource.data();
+                                        var a = $("#jobgrid").data("kendoGrid");
+                                        if (!a) {
+                                            setUpGrid();
+                                        }
+                                        var d = a.dataSource.data();
                                         var x = 0
                                         var cur_row = input.closest("tr").index()
                                         counter = 0
@@ -305,15 +285,15 @@ $(document).ready(function () {
             var dataItem = e.model;
 
             var grid = this;
-        var dataItem = e.model;
+            var dataItem = e.model;
 
-        if (dataItem.isNew() || dataItem._isNewRow) {
-            // If the row is new (being added), remove the entire new row
-            grid.cancelRow();
-        } else {
-            var d = $("#jobgrid").data("kendoGrid").dataSource;
-            d.cancelChanges(dataItem);
-        }
+            if (dataItem.isNew() || dataItem._isNewRow) {
+                // If the row is new (being added), remove the entire new row
+                grid.cancelRow();
+            } else {
+                var d = $("#jobgrid").data("kendoGrid").dataSource;
+                d.cancelChanges(dataItem);
+            }
 
         },
         columns: [
@@ -331,9 +311,18 @@ $(document).ready(function () {
                     click: function (e) {
                         e.preventDefault();
                         var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
-                        console.log(dataItem);
-                        job_id = dataItem.id;
-                        info = $("#ml_window").data("kendoWindow");
+                        var job_id = dataItem.id;
+                        console.log("jobid");
+                        console.log(job_id);
+                        var info = $("#ml_window").data("kendoWindow");
+                        if (!info) {
+                            info = $("#ml_window").kendoWindow({
+                                modal: false,
+                                visible: false,
+                                width: 500,
+                                height: 750,
+                            }).data("kendoWindow");
+                        }
                         info.title('ML Configurations for ' + job_id);
                         info.refresh({
                             url: '/JobConfigurations/GetMLConfigurations/' + job_id + '/'
@@ -356,7 +345,7 @@ $(document).ready(function () {
                         e.preventDefault();
                         var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
                         if (confirm("Are you sure you are ready to submit this job?")) {
-                            console.log(dataItem)
+                            console.log(dataItem);
                             $.ajax({
                                 type: "POST",
                                 url: "/submit_job/",
@@ -364,7 +353,7 @@ $(document).ready(function () {
                                 headers: {'X-CSRFToken': csrftoken},
                                 contentType: "application/x-www-form-urlencoded",
                                 success: function (response) {
-                                    $("#jobgrid").data("kendoGrid").dataSource.read()
+                                    $("#jobgrid").data("kendoGrid").dataSource.read();
                                 }
                             });
                         }
@@ -380,4 +369,32 @@ $(document).ready(function () {
             editedItem = e.model.name;
         }
     });
+}
+
+
+const csrftoken = getCookie('csrftoken');
+
+$(document).ready(function () {
+    setUpGrid();
+
+    optionsDataSource = new kendo.data.DataSource.create({
+        transport: {
+            read: {
+                url: "/SNPSearch/GetAllSNPNames/",
+                dataType: "json",
+                type: "GET"
+            }
+        }
+    });
+
+    var datalist = optionsDataSource.read();
+
+    var info = $("#ml_window").kendoWindow({
+        modal: false,
+        visible: false,
+        width: 500,
+        height: 750,
+    }).data("kendoWindow");
+
+
 });

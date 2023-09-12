@@ -1,6 +1,7 @@
 import json
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
+import base64
 
 from webapp.view_helpers import get_mongo, remove_substring_from_string
 
@@ -14,6 +15,11 @@ def get_all_jobs(request):
 def get_ml_configurations(request):
     job_id = remove_substring_from_string(request.path, 'JobConfigurations/GetMLConfigurations/')[1:-1]
     return render(request, 'ml_configurations.html', {'content': job_id})
+
+
+def get_results_view(request):
+    job_id = remove_substring_from_string(request.path, 'JobConfigurations/Results/')[1:-1]
+    return render(request, 'results_subpage.html', {'content': job_id})
 
 def get_completed_jobs(request):
     conn = get_mongo()
@@ -81,6 +87,29 @@ def get_add_jobs(request):
             edited_jobs.append(job)
     return HttpResponse(json.dumps(edited_jobs))
 
+def get_results_data(request):
+    job_id = remove_substring_from_string(request.path, '/JobConfigurations/GetResults/')
+    user = request.user.email
+    conn = get_mongo()
+    results =  conn.AdNet.Results.find_one({'user': user, 'job_id': job_id}, {'_id': 0})
+    attrs = list(results.keys())
+    attrs.pop(attrs.index('loss'))
+    attrs.pop(attrs.index('acc'))
+    attrs.pop(attrs.index('co'))
+    attrs.pop(attrs.index('job_id'))
+    attrs.pop(attrs.index('user'))
+    image_list = []
+    for image in attrs:
+        image_info = {
+            "filename": image,
+            "content_type": 'image/png',
+            "image_data": base64.b64encode(results[image]).decode('utf-8'),
+        }
+        image_list.append(image_info)
+
+    response_data = {"images": image_list}
+    return JsonResponse(response_data)
+
 def get_ml_for_job(request):
     job_id = remove_substring_from_string(request.path, '/JobConfigurations/GetMLForJob/')
     user = request.user.email
@@ -115,7 +144,7 @@ def set_ml_configs(request):
             job['ml_configs'] = data['ml_configs']
     conn.AdNet.users.update_one({'id': request.user.email}, {"$set": {'jobs': jobs}})
 
-    return HttpResponse({})
+    return HttpResponse(json.dumps({'success': True}))
 
 def add_item(request):
     keys = ['one', 'two', 'three', 'four', 'five']

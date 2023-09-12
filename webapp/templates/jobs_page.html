@@ -1,0 +1,21 @@
+{% load static %}
+<head>
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+    <script src="{% static 'js/kendo.all.min.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'styles/home.css' %}"/>
+
+</head>
+<body>
+    <div id="ml_window" style="display:none"></div>
+    <h2 class="k-h3" style="padding: 10px;">Job Configurations</h2>
+    <div id="jobgrid"></div>
+</body>
+
+<script src="{% static 'job_page.js' %}"></script>
+{% csrf_token %}
+<style>
+    .k-grid .k-dirty {
+        display: none;
+    }
+
+</style>

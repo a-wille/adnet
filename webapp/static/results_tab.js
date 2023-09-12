@@ -19,15 +19,14 @@ const csrftoken = getCookie('csrftoken');
 
 $(document).ready(function() {
     const csrftoken = getCookie('csrftoken');
-    console.log("what is happening?");
 
-    $("#ml_window").kendoWindow({
+    $("#results_window").kendoWindow({
         visible: false,
         width: 900,
         height: 750,
     });
 
-    $("#jobgrid2").kendoGrid({
+    $("#resultsgrid").kendoGrid({
         dataSource: {
             transport: {
                 read: {
@@ -74,7 +73,13 @@ $(document).ready(function() {
                     click: function(e) {
                         e.preventDefault();
                         var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
-                        console.log(dataItem);
+                        job_id = dataItem.id;
+                        info = $("#results_window").data("kendoWindow");
+                        info.title('Results Configurations for ' + job_id);
+                        info.refresh({
+                            url: '/JobConfigurations/Results/' + job_id + '/'
+                        })
+                        info.center().open();
                         // ml_configs(dataItem.name)
                     }
                 }],

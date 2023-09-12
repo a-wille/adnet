@@ -70,10 +70,10 @@ def account_view(request):
 	return render(request, 'account_creation.html')
 
 def build(request):
-	return render(request, 'build_page.html')
+	return render(request, 'jobs_page.html')
 
 def run(request):
-	return render(request, 'run_page.html')
+	return render(request, 'results_tab.html')
 
 def create_account(request):
 	"""creates an account for a user"""
@@ -178,8 +178,8 @@ def submit_job(request):
 				job['status'] = 'pending'
 	conn.AdNet.users.update_one({'id': request.user.email}, {"$set": {'jobs': all_jobs}})
 	data['user_id'] = request.user.email
-	url = 'http://138.49.185.228:5000/build'
-	# url = 'http://localhost:5000/build'
+	# url = 'http://138.49.185.228:5000/build'
+	url = 'http://localhost:5000/build'
 	headers = {
 		'Content-type': 'application/json',
 		'Accept': 'application/json'
@@ -221,7 +221,8 @@ def process_results(request):
 	If no, do nothing
 	Send email
 	"""
-	os.chdir('/home/ubuntu/adnet/webapp/daemons/')
+	# os.chdir('/home/ubuntu/adnet/webapp/daemons/')
+	os.chdir('/home/acretan/capstone/webapp/daemons/')
 	data = json.loads(request.body)
 	conn = get_mongo()
 	all_jobs = conn.AdNet.users.find_one({'id': data['email']}, {'_id': 0, 'jobs': 1})['jobs']
@@ -238,8 +239,8 @@ def process_results(request):
 	if next_job:
 		new_data = next_job
 		new_data['user_id'] = data['email']
-		url = 'http://138.49.185.228:5000/build'
-		# url = 'http://localhost:5000/build'
+		# url = 'http://138.49.185.228:5000/build'
+		url = 'http://localhost:5000/build'
 		headers = {
 			'Content-type': 'application/json',
 			'Accept': 'application/json'

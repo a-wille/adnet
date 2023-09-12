@@ -255,7 +255,7 @@ $(document).ready(function () {
         });
         console.log(layers);
         var final = {
-            'job_id': job_id,
+            'job_id': jobId,
             'ml_configs': {
                 'layers': layers,
                 'final_activation': $("#activation_combobox").val(),
@@ -266,6 +266,7 @@ $(document).ready(function () {
             }
 
         }
+        console.log(final);
 
         $.ajax({
             url: "/JobConfigurations/SetMLConfigs/",

@@ -1,0 +1,22 @@
+{% load static %}
+<head>
+    <head>
+    <link rel="stylesheet" href="{% static 'styles/style3.css' %}" />
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+    <script src="{% static 'js/kendo.all.min.js' %}"></script>
+    </head>
+</head>
+<body>
+{% block content %}
+    <p hidden id="job_id">{{ content }}</p>
+{% endblock %}
+{% csrf_token %}
+<div class="k-content">
+    <h4 class="k-h4">Results</h4>
+    <div id="image-container"></div>
+    <br>
+    </div>
+</body>
+{% load static %}
+    <script src="{% static 'results_subpage.js' %}"></script>
+{% csrf_token %}

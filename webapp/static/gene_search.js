@@ -60,6 +60,7 @@ $(document).ready(function() {
             width: 950,
             height: 900,
         }).data("kendoWindow");
+
     $("#genegrid").kendoGrid({
         dataSource: {
             transport: {
