@@ -8,7 +8,7 @@ function getCookie(name) {
             // Does this cookie string begin with the name we want?
             if (cookie.substring(0, name.length + 1) === (name + '=')) {
                 cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                 break;
+                break;
             }
         }
     }
@@ -17,14 +17,14 @@ function getCookie(name) {
 
 const csrftoken = getCookie('csrftoken');
 
-$(document).ready(function() {
+$(document).ready(function () {
     const csrftoken = getCookie('csrftoken');
 
-    $("#results_window").kendoWindow({
+    var results = $("#results_window").kendoWindow({
         visible: false,
         width: 900,
         height: 750,
-    });
+    }).data("kendoWindow");
 
     $("#resultsgrid").kendoGrid({
         dataSource: {
@@ -60,21 +60,28 @@ $(document).ready(function() {
         noRecords: true,
         columns: [
             {field: "name", title: "Name", width: "250px"},
-            {field:"one", title:"1", width: "150px", sortable: false},
-            {field:"two", title: "2", width: "150px", sortable: false},
-            {field:"three", title:"3", width: "150px", sortable: false},
-            {field:"four", title:"4", width: "150px", sortable: false},
-            {field:"five", title: "5", width: "150px", sortable: false},
+            {field: "one", title: "1", width: "150px", sortable: false},
+            {field: "two", title: "2", width: "150px", sortable: false},
+            {field: "three", title: "3", width: "150px", sortable: false},
+            {field: "four", title: "4", width: "150px", sortable: false},
+            {field: "five", title: "5", width: "150px", sortable: false},
             {field: 'status', title: "Status", width: "150px", editable: false, nullable: true, defaultValue: "draft"},
             {
-                command:[{
+                command: [{
                     name: "Results",
 
-                    click: function(e) {
+                    click: function (e) {
                         e.preventDefault();
                         var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
-                        job_id = dataItem.id;
-                        info = $("#results_window").data("kendoWindow");
+                        var job_id = dataItem.id;
+                        var info = $("#results_window").data("kendoWindow");
+                        if (!info) {
+                            info = $("#results_window").kendoWindow({
+                                visible: false,
+                                width: 900,
+                                height: 750,
+                            }).data("kendoWindow");
+                        }
                         info.title('Results Configurations for ' + job_id);
                         info.refresh({
                             url: '/JobConfigurations/Results/' + job_id + '/'
@@ -86,7 +93,7 @@ $(document).ready(function() {
 
                 title: "Results",
                 template: '<input type="button" class="k-button  k-rounded-md" name="details" value="Results" />',
-            filterable: false, sortable: false, width: "160px"
+                filterable: false, sortable: false, width: "160px"
             },
         ],
     });
