@@ -178,13 +178,14 @@ def submit_job(request):
 				job['status'] = 'pending'
 	conn.AdNet.users.update_one({'id': request.user.email}, {"$set": {'jobs': all_jobs}})
 	data['user_id'] = request.user.email
-	# url = 'http://138.49.185.228:5000/build'
-	url = 'http://localhost:5000/build'
+	url = 'http://138.49.185.228:5000/build'
+	# url = 'http://localhost:5000/build'
 	headers = {
 		'Content-type': 'application/json',
 		'Accept': 'application/json'
 	}
-	requests.post(url, json=data, headers=headers)
+	if not pending:
+		requests.post(url, json=data, headers=headers)
 	return HttpResponse({'success': True})
 
 
@@ -239,8 +240,8 @@ def process_results(request):
 	if next_job:
 		new_data = next_job
 		new_data['user_id'] = data['email']
-		# url = 'http://138.49.185.228:5000/build'
-		url = 'http://localhost:5000/build'
+		url = 'http://138.49.185.228:5000/build'
+		# url = 'http://localhost:5000/build'
 		headers = {
 			'Content-type': 'application/json',
 			'Accept': 'application/json'

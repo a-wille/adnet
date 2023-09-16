@@ -91,6 +91,10 @@ function setUpGrid() {
                     url: "/JobConfigurations/Edit/",
                     dataType: "jsonp",
                     complete: function (e) {
+                        var grid = $("#jobgrid").data("kendoGrid");
+                        if (!grid) {
+                            setUpGrid();
+                        }
                         $("#jobgrid").data("kendoGrid").dataSource.read();
                     }
                 },
@@ -98,6 +102,10 @@ function setUpGrid() {
                     url: "/JobConfigurations/Delete/",
                     dataType: "jsonp",
                     complete: function (e) {
+                        var grid = $("#jobgrid").data("kendoGrid");
+                        if (!grid) {
+                            setUpGrid();
+                        }
                         $("#jobgrid").data("kendoGrid").dataSource.read();
                     }
                 },
@@ -105,6 +113,10 @@ function setUpGrid() {
                     url: "/JobConfigurations/Create/",
                     dataType: "jsonp",
                     complete: function (e) {
+                        var grid = $("#jobgrid").data("kendoGrid");
+                        if (!grid) {
+                            setUpGrid();
+                        }
                         $("#jobgrid").data("kendoGrid").dataSource.read();
                     }
                 },
@@ -233,7 +245,7 @@ function setUpGrid() {
                                         if (!a) {
                                             setUpGrid();
                                         }
-                                        var d = a.dataSource.data();
+                                        var d = $("#jobgrid").data("kendoGrid").dataSource.data();
                                         var x = 0
                                         var cur_row = input.closest("tr").index()
                                         counter = 0
@@ -353,6 +365,10 @@ function setUpGrid() {
                                 headers: {'X-CSRFToken': csrftoken},
                                 contentType: "application/x-www-form-urlencoded",
                                 success: function (response) {
+                                    var grid = $("#jobgrid").data("kendoGrid");
+                                    if (!grid) {
+                                        setUpGrid();
+                                    }
                                     $("#jobgrid").data("kendoGrid").dataSource.read();
                                 }
                             });

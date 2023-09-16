@@ -31,7 +31,7 @@ function b64toBlob(b64Data, contentType) {
         byteArrays.push(byteArray);
     }
 
-    return new Blob(byteArrays, { type: contentType });
+    return new Blob(byteArrays, {type: contentType});
 }
 
 $(document).ready(function () {
@@ -48,12 +48,30 @@ $(document).ready(function () {
             const imageContainer = document.getElementById('image-container');
 
             data.images.forEach(imageInfo => {
+                console.log(imageInfo);
                 const image = document.createElement('img');
                 const imageBlob = b64toBlob(imageInfo.image_data, imageInfo.content_type);
                 const imageUrl = URL.createObjectURL(imageBlob);
 
+                const title = document.createElement('h2');
+                title.classList.add('k-h5'); // Replace 'your-class-name' with your desired class name
+                title.textContent = imageInfo.title; // Assuming title is an attribute in imageInfo
+
+                // Create a caption element
+                const caption = document.createElement('p');
+                caption.classList.add('k-p-md');
+                caption.textContent = imageInfo.caption; // Assuming caption is an attribute in imageInfo
+
+                const br = document.createElement('br');
+
                 image.src = imageUrl;
+
+                imageContainer.appendChild(title);
+                imageContainer.appendChild(br);
                 imageContainer.appendChild(image);
+                imageContainer.appendChild(caption);
+                imageContainer.appendChild(br);
+
             });
 
         },

@@ -32,124 +32,173 @@ def find_indexes(concerned_snps, organized):
 if __name__ == "__main__":
     s = get_organized_snps()
     data_list = []
-    concerned_snps = ['rs1059768', 'rs3740688', 'rs55742290', 'rs199533']
-
+    # concerned_snps = ['rs1059768', 'rs3740688', 'rs55742290', 'rs199533']
+    concerned_snps = ['rs35048651', 'rs7517289', 'rs9304690', 'rs679515']
     # set all SNP values randomly initially, before we
     # set up pattern for the 4 specific SNPS
     prob_list = [[1, 0.23], [0, 0.77]]
-    for i in range(0, 2000):
+    for i in range(0, 2400):
         empty_list = []
-        for item in range(0, 1954):
+        for item in range(0, len(s)):
             empty_list.append(pick_random(prob_list))
         data_list.append(empty_list)
 
     indexes = find_indexes(concerned_snps, s)
-
-    for i in range(0, 100):
-        #0000
-        data_list[i][1815] = 0
-        data_list[i][979] = 0
-        data_list[i][1153] = 0
-        data_list[i][1394] = 0
-        data_list[i].append('Not AD')
-    for i in range(100, 200):
-        #0001
-        data_list[i][1815] = 0
-        data_list[i][979] = 0
-        data_list[i][1153] = 0
-        data_list[i][1394] = 1
-        data_list[i].append('Not AD')
-    for i in range(200, 300):
-        #0010
-        data_list[i][1815] = 0
-        data_list[i][979] = 0
-        data_list[i][1153] = 1
-        data_list[i][1394] = 0
-        data_list[i].append('Not AD')
-    for i in range(300, 400):
-        data_list[i][1815] = 0
-        data_list[i][979] = 0
-        data_list[i][1153] = 1
-        data_list[i][1394] = 1
-        data_list[i].append('Not AD')
-    for i in range(400, 500):
-        data_list[i][1815] = 0
-        data_list[i][979] = 1
-        data_list[i][1153] = 0
-        data_list[i][1394] = 0
-        data_list[i].append('Not AD')
-    for i in range(500, 600):
-        data_list[i][1815] = 0
-        data_list[i][979] = 1
-        data_list[i][1153] = 0
-        data_list[i][1394] = 1
-        data_list[i].append('AD')
-    for i in range(600, 700):
-        data_list[i][1815] = 0
-        data_list[i][979] = 1
-        data_list[i][1153] = 1
-        data_list[i][1394] = 0
-        data_list[i].append('AD')
-    for i in range(700, 800):
-        data_list[i][1815] = 0
-        data_list[i][979] = 1
-        data_list[i][1153] = 1
-        data_list[i][1394] = 1
-        data_list[i].append('AD')
-    for i in range(800, 900):
-        data_list[i][1815] = 1
-        data_list[i][979] = 0
-        data_list[i][1153] = 0
-        data_list[i][1394] = 0
-        data_list[i].append('AD')
-    for i in range(900, 1000):
-        data_list[i][1815] = 1
-        data_list[i][979] = 0
-        data_list[i][1153] = 0
-        data_list[i][1394] = 1
-        data_list[i].append('Not AD')
-    for i in range(1000, 1100):
-        data_list[i][1815] = 1
-        data_list[i][979] = 0
-        data_list[i][1153] = 1
-        data_list[i][1394] = 0
-        data_list[i].append('AD')
-    for i in range(1100, 1200):
-        data_list[i][1815] = 1
-        data_list[i][979] = 0
-        data_list[i][1153] = 1
-        data_list[i][1394] = 1
-        data_list[i].append('AD')
-    for i in range(1200, 1300):
-        data_list[i][1815] = 1
-        data_list[i][979] = 1
-        data_list[i][1153] = 0
-        data_list[i][1394] = 0
-        data_list[i].append('AD')
-    for i in range(1300, 1400):
-        data_list[i][1815] = 1
-        data_list[i][979] = 1
-        data_list[i][1153] = 0
-        data_list[i][1394] = 1
-        data_list[i].append('Not AD')
-    for i in range(1400, 1500):
-        data_list[i][1815] = 1
-        data_list[i][979] = 1
-        data_list[i][1153] = 1
-        data_list[i][1394] = 0
-        data_list[i].append('AD')
-    for i in range(1500, 1600):
-        data_list[i][1815] = 1
-        data_list[i][979] = 1
-        data_list[i][1153] = 1
-        data_list[i][1394] = 1
+    for i in range(0, 400):
+        data_list[i][indexes[concerned_snps[0]]] = 1
         data_list[i].append('AD')
 
-    for i in range(1600, 1800):
+    for i in range(400, 800):
+        data_list[i][indexes[concerned_snps[0]]] = 0
+        data_list[i][indexes[concerned_snps[1]]] = 1
         data_list[i].append('AD')
-    for i in range(1800, 2000):
+    for i in range(800, 1200):
+        data_list[i][indexes[concerned_snps[0]]] = 0
+        data_list[i][indexes[concerned_snps[1]]] = 0
+        data_list[i][indexes[concerned_snps[2]]] = 1
+        data_list[i][indexes[concerned_snps[3]]] = 0
         data_list[i].append('Not AD')
+    for i in range(1200, 1600):
+        data_list[i][indexes[concerned_snps[0]]] = 0
+        data_list[i][indexes[concerned_snps[1]]] = 0
+        data_list[i][indexes[concerned_snps[3]]] = 1
+        data_list[i].append('AD')
+    for i in range(1600, 2000):
+        data_list[i][indexes[concerned_snps[0]]] = 0
+        data_list[i][indexes[concerned_snps[1]]] = 0
+        data_list[i][indexes[concerned_snps[2]]] = 0
+        data_list[i][indexes[concerned_snps[3]]] = 0
+        data_list[i].append('Not AD')
+    count = 0
+    for i in range(2000, 2200):
+        if count < 40:
+            if data_list[i][indexes[concerned_snps[0]]] == 1:
+                data_list[i].append('AD')
+                count += 1
+                print(count)
+            else:
+                data_list[i].append('Not AD')
+        else:
+            data_list[i].append('Not AD')
+
+    count = 0
+    for i in range(2200, 2400):
+        if count < 40:
+            if data_list[i][indexes[concerned_snps[2]]] == 1:
+                data_list[i].append('AD')
+                count += 1
+                print(count)
+            else:
+                data_list[i].append('Not AD')
+        else:
+            data_list[i].append('Not AD')
+
+    # for i in range(0, 2000):
+    #     if data_list[i][indexes[concerned_snps[1]]] == 1:
+    #         data_list[i].append('AD')
+    #     else:
+    #         data_list[i].append('Not AD')
 
     conn = get_mongo()
     for item in data_list:
-        conn.AdNet.SimulatedData.insert_one({'data': item[0:1954], 'outcome': item[1954]})
+        conn.AdNet.SimulatedData.insert_one({'data': item[0:len(data_list[1])-1], 'outcome': item[len(data_list[1])-1]})
+
+    #
+    # for i in range(0, 100):
+    #     data_list[i][1815] = 0
+    #     data_list[i][979] = 0
+    #     data_list[i][1153] = 0
+    #     data_list[i][1394] = 0
+    #     data_list[i].append('Not AD')
+    # for i in range(100, 200):
+    #     #0001
+    #     data_list[i][1815] = 0
+    #     data_list[i][979] = 0
+    #     data_list[i][1153] = 0
+    #     data_list[i][1394] = 1
+    #     data_list[i].append('Not AD')
+    # for i in range(200, 300):
+    #     #0010
+    #     data_list[i][1815] = 0
+    #     data_list[i][979] = 0
+    #     data_list[i][1153] = 1
+    #     data_list[i][1394] = 0
+    #     data_list[i].append('Not AD')
+    # for i in range(300, 400):
+    #     data_list[i][1815] = 0
+    #     data_list[i][979] = 0
+    #     data_list[i][1153] = 1
+    #     data_list[i][1394] = 1
+    #     data_list[i].append('Not AD')
+    # for i in range(400, 500):
+    #     data_list[i][1815] = 0
+    #     data_list[i][979] = 1
+    #     data_list[i][1153] = 0
+    #     data_list[i][1394] = 0
+    #     data_list[i].append('Not AD')
+    # for i in range(500, 600):
+    #     data_list[i][1815] = 0
+    #     data_list[i][979] = 1
+    #     data_list[i][1153] = 0
+    #     data_list[i][1394] = 1
+    #     data_list[i].append('AD')
+    # for i in range(600, 700):
+    #     data_list[i][1815] = 0
+    #     data_list[i][979] = 1
+    #     data_list[i][1153] = 1
+    #     data_list[i][1394] = 0
+    #     data_list[i].append('AD')
+    # for i in range(700, 800):
+    #     data_list[i][1815] = 0
+    #     data_list[i][979] = 1
+    #     data_list[i][1153] = 1
+    #     data_list[i][1394] = 1
+    #     data_list[i].append('AD')
+    # for i in range(800, 900):
+    #     data_list[i][1815] = 1
+    #     data_list[i][979] = 0
+    #     data_list[i][1153] = 0
+    #     data_list[i][1394] = 0
+    #     data_list[i].append('AD')
+    # for i in range(900, 1000):
+    #     data_list[i][1815] = 1
+    #     data_list[i][979] = 0
+    #     data_list[i][1153] = 0
+    #     data_list[i][1394] = 1
+    #     data_list[i].append('Not AD')
+    # for i in range(1000, 1100):
+    #     data_list[i][1815] = 1
+    #     data_list[i][979] = 0
+    #     data_list[i][1153] = 1
+    #     data_list[i][1394] = 0
+    #     data_list[i].append('AD')
+    # for i in range(1100, 1200):
+    #     data_list[i][1815] = 1
+    #     data_list[i][979] = 0
+    #     data_list[i][1153] = 1
+    #     data_list[i][1394] = 1
+    #     data_list[i].append('AD')
+    # for i in range(1200, 1300):
+    #     data_list[i][1815] = 1
+    #     data_list[i][979] = 1
+    #     data_list[i][1153] = 0
+    #     data_list[i][1394] = 0
+    #     data_list[i].append('AD')
+    # for i in range(1300, 1400):
+    #     data_list[i][1815] = 1
+    #     data_list[i][979] = 1
+    #     data_list[i][1153] = 0
+    #     data_list[i][1394] = 1
+    #     data_list[i].append('Not AD')
+    # for i in range(1400, 1500):
+    #     data_list[i][1815] = 1
+    #     data_list[i][979] = 1
+    #     data_list[i][1153] = 1
+    #     data_list[i][1394] = 0
+    #     data_list[i].append('AD')
+    # for i in range(1500, 1600):
+    #     data_list[i][1815] = 1
+    #     data_list[i][979] = 1
+    #     data_list[i][1153] = 1
+    #     data_list[i][1394] = 1
+    #     data_list[i].append('AD')

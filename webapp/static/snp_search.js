@@ -113,6 +113,7 @@ $(document).ready(function() {
                     click: function(e) {
                         e.preventDefault();
                         var id = e.currentTarget.closest("tr").cells[0].textContent;
+                        console.log(id);
                         more_details(id);
                     }
                 }],
