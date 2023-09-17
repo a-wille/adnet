@@ -274,8 +274,8 @@ function setUpGrid() {
             resizable: true,
             serverSorting: false,
         },
-        height: 500,
-        // width: "95%",
+        // height: 500,
+        width: "100%",
         sortable: true,
         pageable: true,
         toolbar: ["create"],
@@ -309,13 +309,13 @@ function setUpGrid() {
 
         },
         columns: [
-            {field: "name", title: "Name", width: "250px"},
+            {field: "name", title: "Name", width: "200px"},
             {field: "one", title: "1", width: "150px", sortable: false, editor: oneGeneAutoCompleteEditor},
             {field: "two", title: "2", width: "150px", sortable: false, editor: twoGeneAutoCompleteEditor},
             {field: "three", title: "3", width: "150px", sortable: false, editor: threeGeneAutoCompleteEditor},
             {field: "four", title: "4", width: "150px", sortable: false, editor: fourGeneAutoCompleteEditor},
             {field: "five", title: "5", width: "150px", sortable: false, editor: fiveGeneAutoCompleteEditor},
-            {field: 'status', title: "Status", width: "150px", editable: false, nullable: true, defaultValue: "draft"},
+            {field: 'status', title: "Status", width: "115px", editable: false, nullable: true, defaultValue: "draft"},
             {
                 command: [{
                     name: "Settings",
@@ -379,7 +379,7 @@ function setUpGrid() {
                 filterable: false, sortable: false, width: "120px",
             },
             {command: "edit", width: "115px"},
-            {command: "destroy", width: "200px"}
+            {command: "destroy", width: "150px"}
         ],
         beforeEdit: function (e) {
             editedItem = e.model.name;
