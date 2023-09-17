@@ -45,9 +45,9 @@ $(document).ready(function () {
             {Id: "relu", name: "ReLU (Rectified Linear Unit)"},
             {Id: "leaky_relu", name: "Leaky ReLU"},
             {Id: "tanh", name: "Hyperbolic Tangent"},
-            {Id: "softmax", name: "Softmax"},
-            {Id: "swish", name: "Swish"},
-            {Id: "linear", name: "Linear"},
+            // {Id: "softmax", name: "Softmax"},
+            // {Id: "swish", name: "Swish"},
+            // {Id: "linear", name: "Linear"},
         ]
     });
     activation_dataSource.read();
@@ -150,12 +150,12 @@ $(document).ready(function () {
         data: [
             {Id: "sgd", name: "Stochastic Gradient Descent (SGD)"},
             {Id: "adam", name: "Adam"},
-            {Id: "rmsprop", name: "RMSPropr"},
+            {Id: "rmsprop", name: "RMSProp"},
             {Id: "adagrad", name: "Adagrad"},
             {Id: "adadelta", name: "Adadelta"},
             {Id: "nadam", name: "Nadam"},
-            {Id: "ftrl", name: "FTRL"},
-            {Id: "proximaladagrad", name: "Proximal AdaGrad"}
+            // {Id: "ftrl", name: "FTRL"},
+            // {Id: "proximaladagrad", name: "Proximal AdaGrad"}
         ]
     });
 
@@ -175,12 +175,12 @@ $(document).ready(function () {
             {Id: "binary_crossentropy", name: "Binary Cross-Entropy"},
             {Id: "categorical_crossentropy", name: "Categorical Cross-Entropy"},
             {Id: "sparse_categorical_crossentropy", name: "Sparse Categorical Cross-Entropy"},
-            {Id: "mean_squared_error", name: "Mean Squared Error"},
-            {Id: "mean_absolute_error", name: "Mean Absolute Error"},
-            {Id: "huber_loss", name: "Huber"},
+            // {Id: "mean_squared_error", name: "Mean Squared Error"},
+            // {Id: "mean_absolute_error", name: "Mean Absolute Error"},
+            // {Id: "huber_loss", name: "Huber"},
             {Id: "hinge_loss", name: "Hinge"},
-            {Id: "cosine_similarity", name: "Cosine Similarity"},
-            {Id: "kl_divergence", name: "KL Divergence"},
+            // {Id: "cosine_similarity", name: "Cosine Similarity"},
+            // {Id: "kl_divergence", name: "KL Divergence"},
         ]
     });
 
