@@ -1,17 +1,108 @@
 {% load static %}
 <head>
     <head>
-    <!--base href="http://demos.telerik.com/kendo-ui/grid/remote-data-binding"-->
-{#    <link rel="stylesheet" href="{% static 'styles/style3.css' %}" />#}
-        <link rel="stylesheet" href="{% static 'styles/home.css' %}" />
+        <!--base href="http://demos.telerik.com/kendo-ui/grid/remote-data-binding"-->
+        {#    <link rel="stylesheet" href="{% static 'styles/style3.css' %}" />#}
+        {#        <link rel="stylesheet" href="{% static 'styles/home.css' %}"/>#}
         <script src="{% static 'js/jquery.min.js' %}"></script>
         <script src="{% static 'js/kendo.all.min.js' %}"></script>
     </head>
 </head>
-<div id="desc">
+<div id="desc" class="k-content">
 
-    <img id="nice" src="/home/acretan/capstone/webapp/static/img/floating.jpg", width="540", height="1016", style="float:left"; >
-    <header id="intro">Welcome to ADNet, a web application dedicated to helping researchers build their own neural
-        networks to predict the likelihood of Alzheimer's disease in an individual, based on their genetic information.</header>
+    <header id="intro" class="k-header">Welcome to ADNet, a web application dedicated to helping researchers build their
+        own neural
+        networks to predict the likelihood of Alzheimer's disease in an individual, based on their genetic information.
+    </header>
+
+    <div id="panelbar">
+    </div>
+
 </div>
 
+
+<script src="{% static 'home.js' %}"></script>
+
+<style>
+    /* CSS for Kendo PanelBar */
+    .k-panelbar {
+        font-weight: bold; /* Make the main title text bold */
+    }
+
+    .k-panelbar .k-link {
+        font-size: 30px; /* Set the font size for main title text */
+    }
+
+    {#.k-panelbar .k-content {#}
+    {#    max-height: 400px; /* Limit image height to 400 pixels */#}
+
+
+    .k-content {
+
+        max-width: 90vw; /* Set maximum width to 90% of viewport width */
+        margin: 0 auto; /* Center the container horizontally */
+        padding: 20px; /* Add padding for spacing */
+        /* Add any other styles you want for the container */
+
+    }
+
+    #intro {
+        alignment: center;
+        align: center;
+        text-align: center;
+        vertical-align: center;
+        padding-top: 40px;
+        padding-right: 20%;
+        padding-left: 20%;
+
+    }
+
+    .container {
+        display: flex;
+        align-items: center;
+        margin-bottom: 20px; /* Add some spacing between sections */
+    }
+
+    {#.text {#}
+    {#    flex: 1;#}
+    {#    font-size: 16px; /* Adjust the text size */#}
+    {#    font-weight: normal; /* Remove boldness */#}
+
+    .image {
+        margin-left: 20px; /* Add some spacing between text and image */
+    }
+
+    #dna_snp {
+        {#width: 35%;#}
+        height: 500px;
+        max-width: 100%; /* Make sure the image doesn't overflow */
+        float: left; /* Float the image to the left */
+        margin-right: 20px;
+    }
+
+    #snp_amino {
+        {#width: 35%;#}
+        height: 260px;
+        max-width: 100%; /* Make sure the image doesn't overflow */
+        float: right; /* Float the image to the left */
+        margin-left: 20px;
+    }
+
+    #classification {
+        width: 100%;
+        {#height: 500px;#}
+        max-width: 100%; /* Make sure the image doesn't overflow */
+        justify-content: center;
+    }
+
+    .k-h5 {
+        font-weight: bold;
+    }
+
+    #neural_net {
+        max-width: 100%; /* Make sure the image doesn't overflow */
+        float: left; /* Float the image to the left */
+        margin-right: 20px;
+    }
+
+</style>
