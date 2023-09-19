@@ -1,9 +1,9 @@
 {% load static %}
 <head>
     <head>
-    <link rel="stylesheet" href="{% static 'styles/style3.css' %}" />
-    <script src="{% static 'js/jquery.min.js' %}"></script>
-    <script src="{% static 'js/kendo.all.min.js' %}"></script>
+        <link rel="stylesheet" href="{% static 'styles/style3.css' %}"/>
+        <script src="{% static 'js/jquery.min.js' %}"></script>
+        <script src="{% static 'js/kendo.all.min.js' %}"></script>
     </head>
 </head>
 <body>
@@ -65,43 +65,52 @@
         <div id="allele_grid"></div>
     </div>
     <br>
-        {% if perms.webapp.can_create_jobs %}
-            <div>
-                <h2 id="whatever" style="text-align:center">Add SNP to job configurations*</h2>
-                <p style="text-align:center">*job configurations that are full, or configurations that already have the current SNP in them will NOT be displayed in the grid below</p>
+    {% if perms.webapp.can_create_jobs %}
+        <div>
+            <h2 id="whatever" style="text-align:center">Add SNP to job configurations*</h2>
+            <p style="text-align:center">*job configurations that are full, or configurations that already have the
+                current SNP in them will NOT be displayed in the grid below</p>
             <div id="addsnptojobgrid"></div>
-            </div>
-        {% endif %}
+        </div>
+    {% endif %}
 </div>
 
 {% load static %}
-    <script src="{% static 'snp_information.js' %}"></script>
+<script src="{% static 'snp_information.js' %}"></script>
 {% csrf_token %}
 </body>
 <style>
     #snptable {
-  width: 100%;
-  display: table;
-  border: none;
-    border-collapse: collapse;
-    font-size: 15px;
-    table-layout: fixed;
+        width: 100%;
+        display: table;
+        border: none;
+        border-collapse: collapse;
+        font-size: 15px;
+        table-layout: fixed;
         text-align: left;
-}
+    }
 
 
-th {
-  text-align: left;
-  padding: 5px;
-  border: none;
-    max-height: 30px;
-}
+    th {
+        text-align: left;
+        padding: 5px;
+        border: none;
+        max-height: 30px;
+    }
 
-td {
-    vertical-align: middle;
-  padding: 5px;
-    height: 25px;
-  border: none;
-  display: table-cell;
-}
+    td {
+        vertical-align: middle;
+        padding: 5px;
+        height: 25px;
+        border: none;
+        display: table-cell;
+    }
+
+    .k-panelbar {
+        font-weight: normal; /* Make the main title text bold */
+    }
+
+    .k-panelbar .k-link {
+        font-size: 20px; /* Set the font size for main title text */
+    }
 </style>
