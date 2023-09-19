@@ -331,7 +331,7 @@ function setUpGrid() {
                             info = $("#ml_window").kendoWindow({
                                 modal: false,
                                 visible: false,
-                                width: 500,
+                                width: 700,
                                 height: 750,
                             }).data("kendoWindow");
                         }
@@ -408,7 +408,7 @@ $(document).ready(function () {
     var info = $("#ml_window").kendoWindow({
         modal: false,
         visible: false,
-        width: 500,
+        width: 700,
         height: 750,
     }).data("kendoWindow");
 

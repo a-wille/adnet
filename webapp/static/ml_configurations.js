@@ -45,9 +45,6 @@ $(document).ready(function () {
             {Id: "relu", name: "ReLU (Rectified Linear Unit)"},
             {Id: "leaky_relu", name: "Leaky ReLU"},
             {Id: "tanh", name: "Hyperbolic Tangent"},
-            // {Id: "softmax", name: "Softmax"},
-            // {Id: "swish", name: "Swish"},
-            // {Id: "linear", name: "Linear"},
         ]
     });
     activation_dataSource.read();

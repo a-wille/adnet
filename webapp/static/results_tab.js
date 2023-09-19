@@ -65,7 +65,6 @@ $(document).ready(function () {
             {field: "three", title: "3", width: "150px", sortable: false},
             {field: "four", title: "4", width: "150px", sortable: false},
             {field: "five", title: "5", width: "150px", sortable: false},
-            {field: 'status', title: "Status", width: "150px", editable: false, nullable: true, defaultValue: "draft"},
             {
                 command: [{
                     name: "Results",

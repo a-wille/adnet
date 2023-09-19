@@ -12,23 +12,152 @@
 {% endblock %}
 {% csrf_token %}
 <div class="k-content">
-    <h4 class="k-h4">Results</h4>
-    <div id="image-container"></div>
+    <h5 class="k-h5">Export page content</h5>
+    <div class="box-col">
+        <button class='export-pdf'>Export as PDF</button>
+    </div>
     <br>
+    <div class="content-wrapper">
+        <h4 class="k-h4">ML Configurations</h4>
+        <div id="ml_configs">
+            <h5 class="k-h5">Hidden Layer Configuration</h5>
+            <div id="resultlayergrid"></div>
+            <br>
+            <div>
+                <div class="field-container">
+                    <!-- First Line -->
+                    <div class="field1">
+                        <div class="field-header">
+                            <span class="k-d-inline-block">Model Optimizer:</span>
+                        </div>
+                        <div class="field-description" id="r_optimizer"></div>
+                    </div>
+
+                    <div class="field1">
+                        <div class="field-header">
+                            <span class="k-d-inline-block">Output Layer Activation Function:</span>
+                        </div>
+                        <div class="field-description" id="r_activation"></div>
+                    </div>
+
+                    <div class="field1">
+                        <div class="field-header">
+                            <span class="k-d-inline-block">Loss Function:</span>
+                        </div>
+                        <div class="field-description" id="r_loss"></div>
+                    </div>
+                </div>
+
+                <div class="field-container">
+                    <!-- Second Line -->
+                    <div class="field">
+                        <div class="field-header">
+                            <span class="k-d-inline-block">Epoch #:</span>
+                        </div>
+                        <div class="field-description" id="r_epoch_size"></div>
+                    </div>
+
+                    <div class="field">
+                        <div class="field-header">
+                            <span class="k-d-inline-block">Batch Size:</span>
+                        </div>
+                        <div class="field-description" id="r_batch_size"></div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <br>
+        <h4 class="k-h4">Performance Results</h4>
+        <div id="image-container"></div>
+        <br>
+    </div>
+
 </div>
 </body>
 {% load static %}
 <script src="{% static 'results_subpage.js' %}"></script>
 <style>
+
+
+    /* Style for field containers */
+    .field-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        margin-bottom: 10px;
+    }
+
+
+    /* Style for field containers */
+    .field-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        margin-bottom: 10px;
+    }
+
+    /* Style for each field */
+    .field1 {
+        flex-basis: calc(33.33% - 10px); /* Three fields per line with spacing */
+        box-sizing: border-box;
+        margin-bottom: 10px;
+        /* Remove borders */
+        border: none;
+        /* Optional: Add padding and background color to simulate box spacing */
+        padding: 10px;
+        background-color: #f0f0f0;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .field {
+        flex-basis: calc(50% - 10px); /* Three fields per line with spacing */
+        box-sizing: border-box;
+        margin-bottom: 10px;
+        /* Remove borders */
+        border: none;
+        /* Optional: Add padding and background color to simulate box spacing */
+        padding: 10px;
+        background-color: #f0f0f0;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    /* Style for field headers */
+    .field-header {
+        font-weight: bold;
+    }
+
+    /* Style for field descriptions */
+    .field-description {
+        margin-top: 5px;
+        text-align: center;
+
+    }
+
     #image-container {
         display: flex;
         flex-wrap: wrap;
         justify-content: center;
     }
 
+    /* Style for each image wrapper */
+    .image-wrapper {
+        text-align: center;
+        margin: 10px;
+    }
+
+
     #image-container img {
-        {#min-width: 90%;#}
+        min-width: 77%;
         max-width: 100%; /* Ensure the image doesn't exceed its container width */
         height: auto; /* Let the height scale proportionally */
     }
+
+
 </style>
