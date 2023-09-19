@@ -103,13 +103,14 @@ def get_add_jobs(request):
     jobs = doc['jobs']
     edited_jobs = []
     for job in jobs:
-        del job['ml_configs']
-        del job['status']
-        job['_id'] = job['name']
-        del job['name']
-        possible = check_if_possible(job, d['item'])
-        if possible:
-            edited_jobs.append(job)
+        if job['status'] == 'draft':
+            del job['ml_configs']
+            del job['status']
+            job['_id'] = job['name']
+            del job['name']
+            possible = check_if_possible(job, d['item'])
+            if possible:
+                edited_jobs.append(job)
     return HttpResponse(json.dumps(edited_jobs))
 
 
