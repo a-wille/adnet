@@ -72,8 +72,8 @@ $(document).ready(function () {
                     click: function (e) {
                         e.preventDefault();
                         var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
-                        var job_id = dataItem.id;
-                        console.log(job_id);
+                        var result_id = dataItem.id;
+                        console.log(result_id);
                         var info = $("#results_window").data("kendoWindow");
                         if (!info) {
                             info = $("#results_window").kendoWindow({
@@ -82,11 +82,11 @@ $(document).ready(function () {
                                 height: 750,
                             }).data("kendoWindow");
                         }
-                        info.title('Results Configurations for ' + job_id);
-                        console.log(job_id);
+                        info.title('Results Configurations for ' + results_id);
+                        console.log(results_id);
                         console.log('again');
                         info.refresh({
-                            url: '/JobConfigurations/Results/' + job_id + '/'
+                            url: '/JobConfigurations/Results/' + results_id + '/'
                         })
                         info.center().open();
                         // ml_configs(dataItem.name)
