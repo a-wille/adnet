@@ -9,3 +9,4 @@ webapp/settings.py
 venv/
 /.idea/
 db.sqlite3
+/daemons/gene_id_list.txt

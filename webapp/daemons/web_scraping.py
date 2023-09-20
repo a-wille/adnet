@@ -523,7 +523,7 @@ class SNPDaemon:
         req = requests.get(url, headers=self.headers).json()
         url = req['_links']['associationsByTraitSummary']['href']
         self.data = requests.get(url, headers=self.headers).json()
-        f = open('genes.json', 'w')
+        f = open('../gene_daemon/genes.json', 'w')
         f.write(json.dumps(self.data))
         f.close()
         self.get_snps()

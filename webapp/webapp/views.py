@@ -176,7 +176,6 @@ def submit_job(request):
 			job['status'] = 'running'
 			if pending:
 				job['status'] = 'pending'
-	conn.AdNet.users.update_one({'id': request.user.email}, {"$set": {'jobs': all_jobs}})
 	data['user_id'] = request.user.email
 	url = 'http://138.49.185.228:5000/build'
 	# url = 'http://localhost:5000/build'
@@ -186,6 +185,7 @@ def submit_job(request):
 	}
 	if not pending:
 		requests.post(url, json=data, headers=headers)
+	conn.AdNet.users.update_one({'id': request.user.email}, {"$set": {'jobs': all_jobs}})
 	return HttpResponse({'success': True})
 
 
