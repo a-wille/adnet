@@ -72,8 +72,8 @@ $(document).ready(function () {
                     click: function (e) {
                         e.preventDefault();
                         var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
-                        var result_id = dataItem.id;
-                        console.log(result_id);
+                        var results_id = dataItem.id;
+                        console.log(results_id);
                         var info = $("#results_window").data("kendoWindow");
                         if (!info) {
                             info = $("#results_window").kendoWindow({
