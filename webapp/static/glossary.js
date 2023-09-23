@@ -48,7 +48,7 @@ $(document).ready(function() {
     })
 
     $("#terms").kendoAutoComplete({
-        dataTextField: "term",
+        dataTextField: "name",
         filter: "contains",
         autoWidth: true,
         minLength: 1,
@@ -75,7 +75,7 @@ $(document).ready(function() {
                 success: function(result){
                     console.log(result)
                     $('#searchDefinition').append(
-                        '<h3 class="k-h6" style="font-size: 24px;">' + result['term'] + '</h3>\n<p style="padding-left: 40px; font-size: 20px;">' +
+                        '<h3 class="k-h6" style="font-size: 24px;">' + result['name'] + '</h3>\n<p style="padding-left: 40px; font-size: 20px;">' +
                         result['definition'] + '</p>'
                     ).hide().fadeIn(1000);
                 }
@@ -83,8 +83,20 @@ $(document).ready(function() {
         },
     });
 
+    // $("#listView").kendoListView({
+    //     // template: "<h3 class='k-h6' style='padding-left: 20px; padding-top: 20px;!important padding-bottom: 0px;'>${name}</h3> \n<p style='padding-left: 40px;'>       ${definition}</p>",
+    //     template: "<div class='glossary-item' style='background-color: ${type == 'g' ? '#c0e8c7' : '#b0e4fa'};'>" +
+    //     "<h3 class='k-h6' style='padding-left: 20px; padding-top: 20px; padding-bottom: 0px;'>${name}</h3>" +
+    //     "<p style='padding-left: 40px;'>${definition}</p>" +
+    //     "</div>",
+    // });
+
     $("#listView").kendoListView({
-        template: "<h3 class='k-h6' style='padding-left: 20px; padding-top: 20px;!important padding-bottom: 0px;'>${term}</h3> \n<p style='padding-left: 40px;'>       ${definition}</p>",
-    });
+    template: "<div class='glossary-item' style='background-color: ${type == 'g' ? '\\#e9ffed' : '\\#e0f3fd'};'>" +
+        "<h3 class='k-h6' style='padding-left: 20px; padding-top: 5px; padding-bottom: 0px;'>${name}</h3>" +
+        "<p style='padding-left: 40px; padding-botton: 5px;'>${definition}</p>" +
+        "</div>",
+});
+
 
 });

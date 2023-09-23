@@ -13,11 +13,8 @@ def glossary_page(request):
 
 def get_all_terms(request):
 	"""returns a list of all currently occurring and future events to volunteers and donors"""
-	data = []
 	conn = get_mongo()
-	docs = conn.AdNet.Glossary.find({})
-	for doc in docs:
-		data.append({'term': doc['name'], 'definition': doc['definition']})
+	data = list(conn.AdNet.Glossary.find({}, {'_id': 0}))
 	return HttpResponse(json.dumps(data))
 
 def get_term_definition(request):
@@ -31,16 +28,10 @@ def get_term_definition(request):
 
 def get_ml_terms(request):
 	conn = get_mongo()
-	data = []
-	docs = conn.AdNet.Glossary.find({'type': 'ml'})
-	for doc in docs:
-		data.append({'term': doc['name'], 'definition': doc['definition']})
+	data = list(conn.AdNet.Glossary.find({'type': 'ml'}, {'_id': 0}))
 	return HttpResponse(json.dumps(data))
 
 def get_g_terms(request):
 	conn = get_mongo()
-	data = []
-	docs = conn.AdNet.Glossary.find({'type': 'g'})
-	for doc in docs:
-		data.append({'term': doc['name'], 'definition': doc['definition']})
+	data = list(conn.AdNet.Glossary.find({'type': 'g'}, {'_id': 0}))
 	return HttpResponse(json.dumps(data))

@@ -1,5 +1,5 @@
 from pymongo import MongoClient
-from settings import MONGO_USER, MONGO_PASS
+from webapp.settings import MONGO_USER, MONGO_PASS
 
 def get_mongo(**kwargs):
     # allows an instance of a mongo connection to allow for inserts, edits, and

@@ -86,7 +86,7 @@ def create_service():
 
 if __name__ == '__main__':
     service = create_service()
-    schedule.every().day.at("12:50").do(lambda: check_user_accounts(service))
+    schedule.every().day.at("11:30").do(lambda: check_user_accounts(service))
     while True:
         schedule.run_pending()
         time.sleep(1)
