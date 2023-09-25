@@ -1,9 +1,9 @@
 {% load static %}
 <head>
     <head>
-    <link rel="stylesheet" href="{% static 'styles/style3.css' %}" />
-    <script src="{% static 'js/jquery.min.js' %}"></script>
-    <script src="{% static 'js/kendo.all.min.js' %}"></script>
+        <link rel="stylesheet" href="{% static 'styles/style3.css' %}"/>
+        <script src="{% static 'js/jquery.min.js' %}"></script>
+        <script src="{% static 'js/kendo.all.min.js' %}"></script>
     </head>
 </head>
 <body>
@@ -64,17 +64,23 @@
             </tr>
             <tr style="background: rgba(221,240,255,0.14);">
                 <th id="pc">Catalytic Activity</th>
-                <td><div id="catalytic_activity" style="height: 92px; padding-top: 2px; overflow-y:scroll; overflow-wrap:normal;"></div></td>
+                <td>
+                    <div id="catalytic_activity"
+                         style="height: 92px; padding-top: 2px; overflow-y:scroll; overflow-wrap:normal;"></div>
+                </td>
             </tr>
             <tr style="background: rgba(147,211,255,0.14);">
                 <th>Protein Sequence</th>
-                <td ><div id="p_sequence" style="height: 90px; padding-top: 2px; overflow-y:scroll; overflow-wrap:anywhere;"></div></td>
+                <td>
+                    <div id="p_sequence"
+                         style="height: 90px; padding-top: 2px; overflow-y:scroll; overflow-wrap:anywhere;"></div>
+                </td>
             </tr>
         </table>
         <br>
         <h4 class="k-h5" id="protein-features-header" hidden="hidden">Protein Features</h4>
         <div id="featuregrid"></div>
-    <br>
+        <br>
     </div>
     <div>
         <h4 class="k-h4">Alzheimer's Associated SNPs</h4>
@@ -87,51 +93,51 @@
 </div>
 </body>
 {% load static %}
-    <script src="{% static 'gene_information.js' %}"></script>
+<script src="{% static 'gene_information.js' %}"></script>
 {% csrf_token %}
 <style>
-#gentable {
-  width: 100%;
-  display: table;
-  border: none;
-    border-collapse: collapse;
-    font-size: 15px;
-}
+    #gentable {
+        width: 100%;
+        display: table;
+        border: none;
+        border-collapse: collapse;
+        font-size: 15px;
+    }
 
-#protable {
-  width: 100%;
-    visibility: hidden;
-  display: table;
-  border: none;
-    border-collapse: collapse;
-    font-size: 15px;
-}
+    #protable {
+        width: 100%;
+        visibility: hidden;
+        display: table;
+        border: none;
+        border-collapse: collapse;
+        font-size: 15px;
+    }
 
-th {
-  text-align: left;
-  width: 35%;
-  padding: 5px;
-  border: none;
-    max-height: 30px;
+    th {
+        text-align: left;
+        width: 35%;
+        padding: 5px;
+        border: none;
+        max-height: 30px;
 
-}
+    }
 
-td {
-    vertical-align: middle;
-  text-align: left;
-  width: 60%;
-  padding: 5px;
-    height: 25px;
-  border: none;
-  display: table-cell;
-}
+    td {
+        vertical-align: middle;
+        text-align: left;
+        width: 60%;
+        padding: 5px;
+        height: 25px;
+        border: none;
+        display: table-cell;
+    }
 
-span { /* Hide horizontal scrollbar */
-    max-height: 200px;
-    -moz-user-select: text;
-    -khtml-user-select: text;
-    -webkit-user-select: text;
-    -ms-user-select: text;
-}
+    span { /* Hide horizontal scrollbar */
+        max-height: 200px;
+        -moz-user-select: text;
+        -khtml-user-select: text;
+        -webkit-user-select: text;
+        -ms-user-select: text;
+    }
 
 </style>

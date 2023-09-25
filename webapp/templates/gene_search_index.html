@@ -1,35 +1,36 @@
 {% load static %}
 <head>
     <head>
-    <link rel="stylesheet" href="{% static 'styles/style3.css' %}" />
+        <link rel="stylesheet" href="{% static 'styles/style3.css' %}"/>
         <script src="{% static 'js/jquery.min.js' %}"></script>
-    <script src="{% static 'js/kendo.all.min.js' %}"></script>
+        <script src="{% static 'js/kendo.all.min.js' %}"></script>
     </head>
-{#    <header class="intro">Explore genes!</header>#}
+    {#    <header class="intro">Explore genes!</header>#}
 </head>
 <body>
-    <div id="snpdetails_window" style="display:none"></div>
-    <div id="information_window" style="display:none"></div>
-    <div class="k-d-flex k-justify-content-center" style="padding-top: 30px;">
-        <div class="k-w-300">
-            <label for="genes">Search genes by name...</label>
-            <input id="genes" style="width: 100%;" />
-        </div>
+<div id="snpdetails_window" style="display:none"></div>
+<div id="information_window" style="display:none"></div>
+<div class="k-d-flex k-justify-content-center" style="padding-top: 30px;">
+    <div class="k-w-300">
+        <label for="genes">Search genes by name...</label>
+        <input id="genes" style="width: 100%;"/>
     </div>
+</div>
 {#    <div id="geneData" class=".k-listview" style="padding-left: 40px; padding-right: 40px"></div>#}
 
-    <div class="intro k-header" style="padding-top: 35px; padding-bottom: 35px;">
-        Or explore different genes using the grid below!
-    </div>
-    <div id="genegrid"></div>
+<div class="intro k-header" style="padding-top: 35px; padding-bottom: 35px;">
+    Or explore different genes using the grid below!
+</div>
+<div id="genegrid"></div>
 </body>
 {% load static %}
-    <script src="{% static 'gene_search.js' %}"></script>
+<script src="{% static 'gene_search.js' %}"></script>
 {% csrf_token %}
 <style>
     .intro {
         text-align: center;
     }
+
     .k-grid-header-wrap th {
         font-size: xx-small;
     }

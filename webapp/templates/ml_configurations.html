@@ -1,9 +1,9 @@
 {% load static %}
 <head>
     <head>
-    <link rel="stylesheet" href="{% static 'styles/style3.css' %}" />
-    <script src="{% static 'js/jquery.min.js' %}"></script>
-    <script src="{% static 'js/kendo.all.min.js' %}"></script>
+        <link rel="stylesheet" href="{% static 'styles/style3.css' %}"/>
+        <script src="{% static 'js/jquery.min.js' %}"></script>
+        <script src="{% static 'js/kendo.all.min.js' %}"></script>
     </head>
 </head>
 <body>
@@ -14,102 +14,104 @@
 <div class="k-content">
 
     <div class="k-w-300 k-d-flex k-justify-content-center" style="padding-top: 10px;">
-			  <form id="batch_form">
-			    <ul id="fieldlist">
-                    <li>
-                        <h5 class="k-h5">Hidden Layer Configuration</h5>
-                        <div id="layergrid"></div>
-                    </li>
-                    <li>
-                        <span class="k-d-inline-block">Model Optimizer</span>
-        <select id="optimizer_combobox"></select>
-                    </li>
-                    <li><span class="k-d-inline-block">Activation Function</span>
-        <select id="activation_combobox"></select></li>
-                    <li>
-                        <span class="k-d-inline-block">Loss Function</span>
-        <select id="loss_combobox"></select>
-                    </li>
-                    <li>
+        <form id="batch_form">
+            <ul id="fieldlist">
+                <li>
+                    <h5 class="k-h5">Hidden Layer Configuration</h5>
+                    <div id="layergrid"></div>
+                </li>
+                <li>
+                    <span class="k-d-inline-block">Model Optimizer</span>
+                    <select id="optimizer_combobox"></select>
+                </li>
+                <li><span class="k-d-inline-block">Activation Function</span>
+                    <select id="activation_combobox"></select></li>
+                <li>
+                    <span class="k-d-inline-block">Loss Function</span>
+                    <select id="loss_combobox"></select>
+                </li>
+                <li>
 
-			        <label for="epoch_size">Epoch #</label>
-			        <input id="epoch_size"
-			               name="Epoch #"
-			               type="text"
-			               data-min="1"
-			               data-max="200"
-			               required
-			               placeholder="Type a number between 1 and 200..."
-			        />
-			        <span class="k-invalid-msg" data-for="Epoch Size"></span>
-			      </li>
-			      <li>
-			        <label for="batch_size">Batch Size</label>
-			        <input id="batch_size"
-			               name="Batch Size"
-			               type="text"
-			               data-min="1"
-			               data-max="100"
-			               required
-			               placeholder="Type a number between 1 and 100..."
-			        />
-			        <span class="k-invalid-msg" data-for="Batch Size"></span>
-			      </li>
-			      <li class="confirm">
-                      <button class="k-button k-button-solid-primary k-button-solid k-button-md k-rounded-md">Save Configuration</button>
-			      </li>
-			      <li class="status">
-			      </li>
-			    </ul>
-			  </form>
+                    <label for="epoch_size">Epoch #</label>
+                    <input id="epoch_size"
+                           name="Epoch #"
+                           type="text"
+                           data-min="1"
+                           data-max="200"
+                           required
+                           placeholder="Type a number between 1 and 200..."
+                    />
+                    <span class="k-invalid-msg" data-for="Epoch Size"></span>
+                </li>
+                <li>
+                    <label for="batch_size">Batch Size</label>
+                    <input id="batch_size"
+                           name="Batch Size"
+                           type="text"
+                           data-min="1"
+                           data-max="100"
+                           required
+                           placeholder="Type a number between 1 and 100..."
+                    />
+                    <span class="k-invalid-msg" data-for="Batch Size"></span>
+                </li>
+                <li class="confirm">
+                    <button class="k-button k-button-solid-primary k-button-solid k-button-md k-rounded-md">Save
+                        Configuration
+                    </button>
+                </li>
+                <li class="status">
+                </li>
+            </ul>
+        </form>
     </div>
-{#    <span>Batch Size</span>#}
-{#        <input id="numeric_batch"#}
-{#               name="Batch Size"#}
-{#               data-min="1"#}
-{#               data-max="200"/>#}
-{#    <span class="k-invalid-msg" data-for="Batch Size"></span>#}
+    {#    <span>Batch Size</span>#}
+    {#        <input id="numeric_batch"#}
+    {#               name="Batch Size"#}
+    {#               data-min="1"#}
+    {#               data-max="200"/>#}
+    {#    <span class="k-invalid-msg" data-for="Batch Size"></span>#}
 </div>
 {% load static %}
-    <script src="{% static 'ml_configurations.js' %}"></script>
+<script src="{% static 'ml_configurations.js' %}"></script>
 {% csrf_token %}
 <style>
-                #fieldlist {
-                    margin: 0;
-                    padding: 0;
-                }
+    #fieldlist {
+        margin: 0;
+        padding: 0;
+    }
 
-                #fieldlist li {
-                    list-style: none;
-                    padding-bottom: .7em;
-                    text-align: left;
-                }
+    #fieldlist li {
+        list-style: none;
+        padding-bottom: .7em;
+        text-align: left;
+    }
 
-                #fieldlist label {
-                    display: block;
-                    padding-bottom: .3em;
-                    font-weight: bold;
-                    text-transform: uppercase;
-                    font-size: 12px;
-                }
+    #fieldlist label {
+        display: block;
+        padding-bottom: .3em;
+        font-weight: bold;
+        text-transform: uppercase;
+        font-size: 12px;
+    }
 
-                #fieldlist li.status {
-                    text-align: center;
-                }
+    #fieldlist li.status {
+        text-align: center;
+    }
 
-                #fieldlist li .k-widget:not(.k-tooltip){
-                    margin: 0 5px 5px 0;
-                }
+    #fieldlist li .k-widget:not(.k-tooltip) {
+        margin: 0 5px 5px 0;
+    }
 
-                .confirm {
-                    padding-top: 1em;
-                }
+    .confirm {
+        padding-top: 1em;
+    }
 
-                .valid {
-                    color: green;
-                }
+    .valid {
+        color: green;
+    }
 
-                .invalid {
-                    color: red;
-                }
-            </style>
+    .invalid {
+        color: red;
+    }
+</style>

@@ -1,7 +1,7 @@
 {% load static %}
 <head>
     <head>
-        <link rel="stylesheet" href="{% static 'styles/style3.css' %}" />
+        <link rel="stylesheet" href="{% static 'styles/style3.css' %}"/>
         <script src="{% static 'js/jquery.min.js' %}"></script>
         <script src="{% static 'js/kendo.all.min.js' %}"></script>
     </head>
@@ -9,8 +9,8 @@
 
 <div id="content-main">
 
-<form id="account-form">
-</form>
+    <form id="account-form">
+    </form>
     {% csrf_token %}
     <script>
         function getCookie(name) {
@@ -28,75 +28,76 @@
             }
             return cookieValue;
         }
+
         const csrftoken = getCookie('csrftoken');
         $("#account-form").kendoForm({
-        orientation: "vertical",
-        items: [{
-            type: "group",
-            label: "Create An Account",
-            items: [
-                {field: "firstname", label: "First Name", validation: {required: true}},
-                {field: "lastname", label: "Last Name", validation: {required: true}},
-                {field: "institution", label: "Affiliated Institution(s)", validation: {required: true}},
-                {field: "email", label: "Email:", validation: { required: true, email: true } },
-                {field: "password", label: "Password", validation: {required: true},
-                    editor: function(container, options) {
-                        container.append($("<input type='password' class='k-textbox k-valid' id='password' name='Password' title='Password' required='required' autocomplete='off' aria-labelledby='Password-form-label' data-bind='value:password'>"));
-                    }
-                },
-            ]
-        }],
-        validateField: function(e) {
-            if (e.field == 'email' && e.input.length > 0) {
-                if (!(e.input[0].value.endsWith('.edu'))) {
-                    alert("Please use an educational email ending with .edu for account approval.")
-                }
-            }
-        },
-        submit: function(e) {
-            e.preventDefault();
-            var $first = $('#firstname');
-            var $last = $('#lastname');
-            var $institution = $('#institution');
-            var $pass = $('#password');
-            var $email = $('#email');
-            var vals = {
-                'first': $first.val(),
-                'last': $last.val(),
-                'institution': $institution.val(),
-                'pass': $pass.val(),
-                'email': $email.val()
-            };
-            $.ajax({
-                type: "POST",
-                url: "/create_account/",
-                headers: {'X-CSRFToken': csrftoken},
-                data: vals,
-                contentType: "application/x-www-form-urlencoded",
-                success: function(response) {
-                    if (response == 'duplicate_email'){
-                        alert("An account using this email already exists. Please try logging in instead.");
-                    } else if (response == 'error') {
-                        alert("Sorry, we experienced an error trying to create your account. Please try again later.")
-                    } else if (response == 'non-educational email') {
+            orientation: "vertical",
+            items: [{
+                type: "group",
+                label: "Create An Account",
+                items: [
+                    {field: "firstname", label: "First Name", validation: {required: true}},
+                    {field: "lastname", label: "Last Name", validation: {required: true}},
+                    {field: "institution", label: "Affiliated Institution(s)", validation: {required: true}},
+                    {field: "email", label: "Email:", validation: {required: true, email: true}},
+                    {
+                        field: "password", label: "Password", validation: {required: true},
+                        editor: function (container, options) {
+                            container.append($("<input type='password' class='k-textbox k-valid' id='password' name='Password' title='Password' required='required' autocomplete='off' aria-labelledby='Password-form-label' data-bind='value:password'>"));
+                        }
+                    },
+                ]
+            }],
+            validateField: function (e) {
+                if (e.field == 'email' && e.input.length > 0) {
+                    if (!(e.input[0].value.endsWith('.edu'))) {
                         alert("Please use an educational email ending with .edu for account approval.")
                     }
-                    else {
-                        alert("Your account has been created successfully, and is now pending admin approval. " +
-                            "An email will be sent once an administrator has approved or denied your account for further access.")
-                       $('span.k-i-close').click();
-                        location.reload();
-                    }
-                },
-                error: function(response) {
-                    alert("Error Creating Account");
-                    console.log("ouch");
                 }
-            });
-            return false;
-        },
-        clear: function(ev) {
-        }
-     });
+            },
+            submit: function (e) {
+                e.preventDefault();
+                var $first = $('#firstname');
+                var $last = $('#lastname');
+                var $institution = $('#institution');
+                var $pass = $('#password');
+                var $email = $('#email');
+                var vals = {
+                    'first': $first.val(),
+                    'last': $last.val(),
+                    'institution': $institution.val(),
+                    'pass': $pass.val(),
+                    'email': $email.val()
+                };
+                $.ajax({
+                    type: "POST",
+                    url: "/create_account/",
+                    headers: {'X-CSRFToken': csrftoken},
+                    data: vals,
+                    contentType: "application/x-www-form-urlencoded",
+                    success: function (response) {
+                        if (response == 'duplicate_email') {
+                            alert("An account using this email already exists. Please try logging in instead.");
+                        } else if (response == 'error') {
+                            alert("Sorry, we experienced an error trying to create your account. Please try again later.")
+                        } else if (response == 'non-educational email') {
+                            alert("Please use an educational email ending with .edu for account approval.")
+                        } else {
+                            alert("Your account has been created successfully, and is now pending admin approval. " +
+                                "An email will be sent once an administrator has approved or denied your account for further access.")
+                            $('span.k-i-close').click();
+                            location.reload();
+                        }
+                    },
+                    error: function (response) {
+                        alert("Error Creating Account");
+                        console.log("ouch");
+                    }
+                });
+                return false;
+            },
+            clear: function (ev) {
+            }
+        });
     </script>
 </div>

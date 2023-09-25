@@ -2,57 +2,63 @@
 {% load static %}
 <head>
     <head>
-    <title></title>
-    <link rel="stylesheet" href="{% static 'styles/style3.css' %}" />
-    <link rel="stylesheet" href="{% static 'styles/style3.css' %}" />
-    <link rel="stylesheet" href="{% static 'styles/todo.css' %}"/>
-    <script src="{% static 'js/jquery.min.js' %}"></script>
-    <script src="{% static 'js/kendo.all.min.js' %}"></script>
+        <title></title>
+        <link rel="stylesheet" href="{% static 'styles/style3.css' %}"/>
+        <link rel="stylesheet" href="{% static 'styles/style3.css' %}"/>
+        <link rel="stylesheet" href="{% static 'styles/todo.css' %}"/>
+        <script src="{% static 'js/jquery.min.js' %}"></script>
+        <script src="{% static 'js/kendo.all.min.js' %}"></script>
 
     </head>
 </head>
 <body class="k-content">
-    <div id="snpdetails_window" style="display:none"></div>
-    <div hidden="true" id="tabthatisactive">{{ active_tab }}</div>
+<div id="snpdetails_window" style="display:none"></div>
+<div hidden="true" id="tabthatisactive">{{ active_tab }}</div>
 
-    <div>
-        <header id="header">ADNet   </header>
+<div>
+    <header id="header">ADNet</header>
 
-        {% if user.is_authenticated %}
-            <header id="account">Welcome {{ user.firstname }}</header>
-            <header id="account"><button id="account_logout" class="k-button-primary">Log Out</button></header>
-        {% else %}
-            <header id="account" ><button id="account_signin" class="k-button-primary">Sign In</button></header>
-            <header id="account2" ><button id="account_creation" class="k-button">Create Account</button></header>
-        {% endif %}
-    </div>
-    <div id="tabstrip">
-        <ul>
-            <li>
-                Home
-            </li>
-            <li class ="glossary_tab {% if active_tab == 'glossary_tab' %} k-state-active{% endif %}">
-                Glossary
-            </li>
-            <li>
-                Gene Search
-            </li>
-            <li>
-                SNP Search
-            </li>
-            {% if perms.webapp.can_create_jobs %}
+    {% if user.is_authenticated %}
+        <header id="account">Welcome {{ user.firstname }}</header>
+        <header id="account">
+            <button id="account_logout" class="k-button-primary">Log Out</button>
+        </header>
+    {% else %}
+        <header id="account">
+            <button id="account_signin" class="k-button-primary">Sign In</button>
+        </header>
+        <header id="account2">
+            <button id="account_creation" class="k-button">Create Account</button>
+        </header>
+    {% endif %}
+</div>
+<div id="tabstrip">
+    <ul>
+        <li>
+            Home
+        </li>
+        <li class="glossary_tab {% if active_tab == 'glossary_tab' %} k-state-active{% endif %}">
+            Glossary
+        </li>
+        <li>
+            Gene Search
+        </li>
+        <li>
+            SNP Search
+        </li>
+        {% if perms.webapp.can_create_jobs %}
             <li>
                 Jobs
             </li>
             <li>
                 Results
             </li>
-            {% endif %}
-        </ul>
-    </div>
-    <div id="login_window" style="display:none"></div>
-    <div id="account_window" style="display:none"></div>
-    </div>
+        {% endif %}
+    </ul>
+</div>
+<div id="login_window" style="display:none"></div>
+<div id="account_window" style="display:none"></div>
+</div>
 
 </body>
 {% load static %}
