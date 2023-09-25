@@ -15,13 +15,14 @@ function getCookie(name) {
     return cookieValue;
 }
 
+let modlength = 0;
+let nmlength = 0;
+
 function createSNPPanel(mod, nonmod) {
-
+    modlength = mod.length;
+    nmlength = nonmod.length;
     var onSelect = function (e) {
-        // access the selected item via e.item (HTMLElement)
-        console.log("hit");
-        // detach select event handler via unbind()
-
+        e.preventDefault();
     };
 
     function customCollapse(e) {
@@ -32,13 +33,10 @@ function createSNPPanel(mod, nonmod) {
 
 
     $("#snpbar").kendoPanelBar({
-        // template: "<h1> #= item.text # </h1>",
         dataSource: [
             {text: "Modifying SNPs", items: mod},
             {text: "Non-modifying SNPs", items: nonmod}
         ],
-        // collapse: customCollapse,
-        // select: onSelect,
         select: function (e) {
             e.preventDefault();
             var snp = e.item.innerText;
@@ -48,6 +46,14 @@ function createSNPPanel(mod, nonmod) {
             } else if (snp != "Modifying SNPs" && snp != "Non-modifying SNPs") {
                 console.log("ope");
                 this.collapse(this.dataItem);
+            } else if (snp == "Modifying SNPs") {
+                if (modlength == 0) {
+                    alert("No modifying SNPs are in this gene!");
+                }
+            } else if (snp == "Non-modifying SNPs") {
+                if (nmlength == 0) {
+                    alert("No non-modifying SNPs are in this gene!");
+                }
             }
         }
     });
