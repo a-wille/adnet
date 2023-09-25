@@ -33,7 +33,6 @@ def get_snp_details(request):
 	snp_id = remove_substring_from_string(request.path, '/SNPSearch/get_details/')
 	return render(request, 'snp_information.html', {'content': snp_id})
 
-
 def get_snp_data(request):
 	snp_id = remove_substring_from_string(request.path, '/SNPSearch/GetSNPInfo/')
 	conn = get_mongo()

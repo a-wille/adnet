@@ -46,6 +46,25 @@ function create_account() {
     win.center();
 }
 
+
+function openSNPWindow(snp) {
+    var snpdetails = $("#snpdetails_window").data("kendoWindow");
+    if (snpdetails == null) {
+        snpdetails = $('#snpdetails_window').kendoWindow({
+            modal: true,
+            visible: false,
+            width: 850,
+            height: 650,
+        }).data("kendoWindow");
+    }
+
+    snpdetails.title('Details: ' + snp);
+    snpdetails.refresh({
+        url: '/SNPSearch/get_details/' + snp
+    }).open();
+    snpdetails.center();
+}
+
 function logout() {
     //logs out the user
     $.ajax({

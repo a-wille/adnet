@@ -15,24 +15,6 @@ function getCookie(name) {
     return cookieValue;
 }
 
-function more_details(snp) {
-
-    var details = $("#details_window").data("kendoWindow");
-    if (details == null) {
-        details = $('#details_window').kendoWindow({
-            modal: true,
-            visible: false,
-            width: 950,
-            height: 650,
-        }).data("kendoWindow");
-    }
-    details.title('Details: ' + snp);
-    details.refresh({
-        url: '/SNPSearch/get_details/' + snp
-    }).open();
-    details.center();
-}
-
 const csrftoken = getCookie('csrftoken');
 
 
@@ -56,9 +38,8 @@ $(document).ready(function() {
         select: function (e) {
             var item = e.item;
             var text = item.text();
-            console.log(text);
             $('#searchSNPs').empty();
-            more_details(text);
+            openSNPWindow(text);
         },
     });
 
@@ -113,8 +94,7 @@ $(document).ready(function() {
                     click: function(e) {
                         e.preventDefault();
                         var id = e.currentTarget.closest("tr").cells[0].textContent;
-                        console.log(id);
-                        more_details(id);
+                        openSNPWindow(id);
                     }
                 }],
                 title: "More Information ",

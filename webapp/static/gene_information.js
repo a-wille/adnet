@@ -8,7 +8,7 @@ function getCookie(name) {
             // Does this cookie string begin with the name we want?
             if (cookie.substring(0, name.length + 1) === (name + '=')) {
                 cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                 break;
+                break;
             }
         }
     }
@@ -17,9 +17,9 @@ function getCookie(name) {
 
 function createSNPPanel(mod, nonmod) {
 
-    var onSelect = function(e) {
+    var onSelect = function (e) {
         // access the selected item via e.item (HTMLElement)
-		console.log("hit");
+        console.log("hit");
         // detach select event handler via unbind()
 
     };
@@ -34,34 +34,24 @@ function createSNPPanel(mod, nonmod) {
     $("#snpbar").kendoPanelBar({
         // template: "<h1> #= item.text # </h1>",
         dataSource: [
-            { text: "Modifying SNPs", items: mod},
-            { text: "Non-modifying SNPs", items: nonmod }
+            {text: "Modifying SNPs", items: mod},
+            {text: "Non-modifying SNPs", items: nonmod}
         ],
         // collapse: customCollapse,
         // select: onSelect,
-        select: function(e) {
+        select: function (e) {
+            e.preventDefault();
             var snp = e.item.innerText;
-            if (snp != "Modifying SNPs" && snp != "Non-modifying SNPs" && snp.startsWith("rs")){
+            if (snp != "Modifying SNPs" && snp != "Non-modifying SNPs" && snp.startsWith("rs")) {
+                openSNPWindow(snp);
 
-                var details = $('#snpdetails_window').kendoWindow({
-                    modal: false,
-                    visible: false,
-                    width: 950,
-                    height: 650,
-                }).data("kendoWindow");
-
-                details.title('Details: ' + snp);
-                details.refresh({
-                    url: '/SNPSearch/get_details/' + snp
-                }).open();
-                details.center();
             } else if (snp != "Modifying SNPs" && snp != "Non-modifying SNPs") {
                 console.log("ope");
                 this.collapse(this.dataItem);
             }
-            }
+        }
     });
-        // attach select event handler via bind()
+    // attach select event handler via bind()
     $("#snpbar").data("kendoPanelBar").bind("select", onSelect);
 }
 
@@ -84,8 +74,8 @@ function createChart(data) {
             data: data
         },
         title: {
-            text:"Expression by Tissue (RPKM)",
-            size:"15px"
+            text: "Expression by Tissue (RPKM)",
+            size: "15px"
         },
         seriesDefaults: {
             type: "bar",
@@ -115,7 +105,7 @@ function createChart(data) {
     });
 }
 
-function fill_feature_grid(features){
+function fill_feature_grid(features) {
     $("#featuregrid").kendoGrid({
         dataSource: {
             data: features,
@@ -126,9 +116,13 @@ function fill_feature_grid(features){
         resizable: true,
         pageable: true,
         columns: [
-            {field:"location", title: "Location", width:"200px", template:"#=location.start.value# - #=location.end.value#",
-            sortable: {
-                    compare: function naturalSort (a, b) {
+            {
+                field: "location",
+                title: "Location",
+                width: "200px",
+                template: "#=location.start.value# - #=location.end.value#",
+                sortable: {
+                    compare: function naturalSort(a, b) {
                         a = a.location.start.value.toString() + '-' + a.location.end.value.toString()
                         b = b.location.start.value.toString() + '-' + b.location.end.value.toString()
                         var re = /(^([+\-]?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?(?=\D|\s|$))|^0x[\da-fA-F]+$|\d+)/g,
@@ -137,30 +131,33 @@ function fill_feature_grid(features){
                             dre = /(^([\w ]+,?[\w ]+)?[\w ]+,?[\w ]+\d+:\d+(:\d+)?[\w ]?|^\d{1,4}[\/\-]\d{1,4}[\/\-]\d{1,4}|^\w+, \w+ \d+, \d{4})/,
                             hre = /^0x[0-9a-f]+$/i,
                             ore = /^0/,
-                            i = function(s) {
+                            i = function (s) {
                                 return (naturalSort.insensitive && ('' + s).toLowerCase() || '' + s).replace(sre, '');
                             },
-                        // convert all to strings strip whitespace
-                        x = i(a),
-                        y = i(b),
-                        // chunk/tokenize
-                        xN = x.replace(re, '\0$1\0').replace(/\0$/,'').replace(/^\0/,'').split('\0'),
-                        yN = y.replace(re, '\0$1\0').replace(/\0$/,'').replace(/^\0/,'').split('\0'),
-                        // numeric, hex or date detection
-                        xD = parseInt(x.match(hre), 16) || (xN.length !== 1 && Date.parse(x)),
-                        yD = parseInt(y.match(hre), 16) || xD && y.match(dre) && Date.parse(y) || null,
-                        normChunk = function(s, l) {
-                            // normalize spaces; find floats not starting with '0', string or 0 if not defined (Clint Priest)
-                            return (!s.match(ore) || l == 1) && parseFloat(s) || s.replace(snre, ' ').replace(sre, '') || 0;
-                        },
-                        oFxNcL, oFyNcL;
+                            // convert all to strings strip whitespace
+                            x = i(a),
+                            y = i(b),
+                            // chunk/tokenize
+                            xN = x.replace(re, '\0$1\0').replace(/\0$/, '').replace(/^\0/, '').split('\0'),
+                            yN = y.replace(re, '\0$1\0').replace(/\0$/, '').replace(/^\0/, '').split('\0'),
+                            // numeric, hex or date detection
+                            xD = parseInt(x.match(hre), 16) || (xN.length !== 1 && Date.parse(x)),
+                            yD = parseInt(y.match(hre), 16) || xD && y.match(dre) && Date.parse(y) || null,
+                            normChunk = function (s, l) {
+                                // normalize spaces; find floats not starting with '0', string or 0 if not defined (Clint Priest)
+                                return (!s.match(ore) || l == 1) && parseFloat(s) || s.replace(snre, ' ').replace(sre, '') || 0;
+                            },
+                            oFxNcL, oFyNcL;
                         // first try and sort Hex codes or Dates
                         if (yD) {
-                            if (xD < yD) { return -1; }
-                            else if (xD > yD) { return 1; }
+                            if (xD < yD) {
+                                return -1;
+                            } else if (xD > yD) {
+                                return 1;
+                            }
                         }
                         // natural sorting through split numeric strings and default strings
-                        for(var cLoc = 0, xNl = xN.length, yNl = yN.length, numS = Math.max(xNl, yNl); cLoc < numS; cLoc++) {
+                        for (var cLoc = 0, xNl = xN.length, yNl = yN.length, numS = Math.max(xNl, yNl); cLoc < numS; cLoc++) {
                             oFxNcL = normChunk(xN[cLoc] || '', xNl);
                             oFyNcL = normChunk(yN[cLoc] || '', yNl);
                             // handle numeric vs string comparison - number < string - (Kyle Adams)
@@ -172,14 +169,17 @@ function fill_feature_grid(features){
                                 var comp = oFxNcL.localeCompare(oFyNcL);
                                 return comp / Math.abs(comp);
                             }
-                            if (oFxNcL < oFyNcL) { return -1; }
-                            else if (oFxNcL > oFyNcL) { return 1; }
+                            if (oFxNcL < oFyNcL) {
+                                return -1;
+                            } else if (oFxNcL > oFyNcL) {
+                                return 1;
+                            }
                         }
                     }
                 }
             },
-            {field:"type", title: "Type", width:"225px"},
-            {field:"description", title:"Description"},
+            {field: "type", title: "Type", width: "225px"},
+            {field: "description", title: "Description"},
         ]
     });
 }
@@ -191,26 +191,26 @@ function renderCol(model) {
 }
 
 function fill_effect_grid(effects) {
-     $("#effectgrid").kendoGrid({
-         dataSource: {
-             data: effects,
-             pageSize: 10,
-         },
-         sortable: true,
-         resizable: true,
-         pageable: true,
-         columns: [
-             {field: "snp", title: "SNP", width:"120px"},
-             {field: "amino_acid", title: "Amino Acid Index", width:"150px"},
-             {field: "affected_features", title: "Affected Features", template: renderCol, width:"350px"},
-             {field: "risk_level", title: "Risk", width: "120px"}
-         ]
-     });
+    $("#effectgrid").kendoGrid({
+        dataSource: {
+            data: effects,
+            pageSize: 10,
+        },
+        sortable: true,
+        resizable: true,
+        pageable: true,
+        columns: [
+            {field: "snp", title: "SNP", width: "120px"},
+            {field: "amino_acid", title: "Amino Acid Index", width: "150px"},
+            {field: "affected_features", title: "Affected Features", template: renderCol, width: "350px"},
+            {field: "risk_level", title: "Risk", width: "120px"}
+        ]
+    });
 }
 
 const csrftoken = getCookie('csrftoken');
 
-$(document).ready(function() {
+$(document).ready(function () {
     const csrftoken = getCookie('csrftoken');
     var geneId = document.getElementById("gene").textContent
     $.ajax({
@@ -231,14 +231,14 @@ $(document).ready(function() {
                 createChart(data.expression)
             }
 
-            if(data.type == "PROTEIN_CODING"){
+            if (data.type == "PROTEIN_CODING") {
                 if (data.nm_len != 0) {
                     document.getElementById("snp-effects-header").removeAttribute("hidden")
                 }
                 document.getElementById("protein-header").removeAttribute("hidden")
                 document.getElementById("protein-features-header").removeAttribute("hidden")
 
-                document.getElementById("protable").style.visibility="visible"
+                document.getElementById("protable").style.visibility = "visible"
                 document.getElementById("p_description").innerHTML = data.protein_description
                 document.getElementById("p_sequence").innerHTML = data.sequence
                 document.getElementById("locations").innerHTML = data.locations
@@ -246,7 +246,7 @@ $(document).ready(function() {
                 document.getElementById("catalytic_activity").innerHTML = data.catalytic_activity
                 fill_feature_grid(data.protein_features);
                 createPanel(data.rna_sequences)
-                if(data.nm_len > 0) {
+                if (data.nm_len > 0) {
                     fill_effect_grid(data.snp_effects)
                 } else {
                     $("#effectgrid").hide()
