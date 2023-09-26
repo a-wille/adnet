@@ -2,7 +2,6 @@ import json
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
 import base64
-
 from webapp.view_helpers import get_mongo, remove_substring_from_string
 
 image_supplement = {
@@ -11,7 +10,6 @@ image_supplement = {
     'feature_importance': {'title': 'Feature Importance Diagram', 'caption': 'This feature importance diagram is relatively self explanatory, in the sense that it visualizes which features of the data had the most impact in the first layer of the model. It is important to note, after the first layer it becomes impossibly difficult to see which features have the most impact later on, so these weights may change over the course of the model. However, it can still provide some insight into which features and attributes of the data may have more impact on the prediction of AD. To see how input features such as function (FC) and location classification (LC) are determined, please reference the Classification Diagram on the home tab.'},
     'model_performance': {'title': 'Model Testing and Validation Performance', 'caption': 'There are two graphs here which provide further insight on the model performance. The left diagram displays the overall accuracy of the model during training and validation phases. Perfect accuracy, indicating the model always guesses accurately, is 1.0. On the right, the loss of the model is graphed as well. Loss is a fundamental metric which measures the differences between a model\'s predictions, and actual target values. In supervised learning, the goal is to minimize loss. Initially, the loss should be typically high because the model\'s weights are random, and its predictions are far from accurate. Looking at loss performance is essential because if the loss on the training data continues to decrease while the loss on a separate validation dataset starts increasing, it may indicate overfitting. Overfitting occurs when the model learns to fit the training data too closely and performs poorly on unseen data. On the other hand, if both the training and validation loss remain high or decrease too slowly, it may suggest underfitting, indicating that the model is too simple to capture the complexities of the data.'}
 }
-
 
 def get_all_jobs(request):
     email = request.user.email
@@ -207,5 +205,5 @@ def delete(request):
         if job['name'] != info['name']:
             updated_jobs.append(job)
     conn.AdNet.users.update_one({'id': request.user.email}, {"$set": {'jobs': updated_jobs}})
-    conn.AdNet.Results.delete_one({'user': request.user.email, 'job_id': info['name']})
+    conn.AdNet.Results.delete({'user': request.user.email, 'job_id': info['name']})
     return HttpResponse({'success': True})

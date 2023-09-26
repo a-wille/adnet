@@ -284,6 +284,17 @@ function setUpGrid() {
             mode: "inline",
             confirmDelete: "Yes"
         },
+        dataBound: function () {
+            var grid = this;
+            grid.tbody.find("tr[role='row']").each(function () {
+                console.log("in databound");
+                var model = grid.dataItem(this);
+
+                if (model.status != 'draft') {
+                    $(this).find(".k-grid-edit").remove();
+                }
+            });
+        },
         edit: function (e) {
             var dataItem = e.model;
 
@@ -315,10 +326,21 @@ function setUpGrid() {
             {field: "three", title: "3", width: "150px", sortable: false, editor: threeGeneAutoCompleteEditor},
             {field: "four", title: "4", width: "150px", sortable: false, editor: fourGeneAutoCompleteEditor},
             {field: "five", title: "5", width: "150px", sortable: false, editor: fiveGeneAutoCompleteEditor},
-            {field: 'status', title: "Status", width: "115px", editable: false, nullable: true, defaultValue: "draft"},
+            {
+                field: 'status',
+                title: "Status",
+                width: "115px",
+                editable: false,
+                filterable: true,
+                nullable: true,
+                defaultValue: "draft"
+            },
             {
                 command: [{
                     name: "Settings",
+                    visible: function (dataItem) {
+                        return dataItem.status == 'draft'
+                    },
                     width: "100px",
                     click: function (e) {
                         e.preventDefault();

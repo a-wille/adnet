@@ -1,20 +1,15 @@
-from django.shortcuts import redirect
 from django.shortcuts import render
 import json
-import logging
 from email.message import EmailMessage
 import base64
 from django.views.decorators.csrf import csrf_exempt
 from django.db import IntegrityError
 from django.contrib.auth import authenticate, logout
-from django.http import JsonResponse
 from googleapiclient.errors import HttpError
-
 from daemons.user_check_daemon import create_service
 from webapp.models import User
 from django.contrib.auth import login as login_django
-
-from webapp.settings import BUILD_URL
+from webapp.settings import BUILD_URL, TEST_CALL
 from webapp.view_helpers import get_mongo
 from django.http import HttpResponse
 from django.contrib.auth.models import Group
@@ -235,6 +230,8 @@ def process_results(request):
 			next_job = job
 			job['status'] = 'running'
 	conn.AdNet.users.update_one({'id': data['email']}, {"$set": {'jobs': all_jobs}})
+	if os.getcwd() == TEST_CALL:
+		os.chdir('daemons/')
 	service = create_service()
 	gmail_send_message(service, data['email'], data['job_id'])
 	if next_job:
