@@ -4,7 +4,6 @@
     <head>
         <title></title>
         <link rel="stylesheet" href="{% static 'styles/style3.css' %}"/>
-        <link rel="stylesheet" href="{% static 'styles/style3.css' %}"/>
         <link rel="stylesheet" href="{% static 'styles/todo.css' %}"/>
         <script src="{% static 'js/jquery.min.js' %}"></script>
         <script src="{% static 'js/kendo.all.min.js' %}"></script>
@@ -19,10 +18,13 @@
     <header id="header">ADNet</header>
 
     {% if user.is_authenticated %}
+
         <header id="account">Welcome {{ user.firstname }}</header>
-        <header id="account">
+        <header id="account_buttons">
             <button id="account_logout" class="k-button-primary">Log Out</button>
+            <button id="change_pass" class="k-button-primary">Change Password</button>
         </header>
+
     {% else %}
         <header id="account">
             <button id="account_signin" class="k-button-primary">Sign In</button>
@@ -31,6 +33,9 @@
             <button id="account_creation" class="k-button">Create Account</button>
         </header>
     {% endif %}
+</div>
+<div id="changePasswordWindow" style="display: none">
+{#    <form class="container" id="changePasswordForm"></form>#}
 </div>
 <div id="tabstrip">
     <ul>

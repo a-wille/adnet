@@ -40,12 +40,6 @@
                     {field: "lastname", label: "Last Name", validation: {required: true}},
                     {field: "institution", label: "Affiliated Institution(s)", validation: {required: true}},
                     {field: "email", label: "Email:", validation: {required: true, email: true}},
-                    {
-                        field: "password", label: "Password", validation: {required: true},
-                        editor: function (container, options) {
-                            container.append($("<input type='password' class='k-textbox k-valid' id='password' name='Password' title='Password' required='required' autocomplete='off' aria-labelledby='Password-form-label' data-bind='value:password'>"));
-                        }
-                    },
                 ]
             }],
             validateField: function (e) {
@@ -60,13 +54,11 @@
                 var $first = $('#firstname');
                 var $last = $('#lastname');
                 var $institution = $('#institution');
-                var $pass = $('#password');
                 var $email = $('#email');
                 var vals = {
                     'first': $first.val(),
                     'last': $last.val(),
                     'institution': $institution.val(),
-                    'pass': $pass.val(),
                     'email': $email.val()
                 };
                 $.ajax({
@@ -83,8 +75,7 @@
                         } else if (response == 'non-educational email') {
                             alert("Please use an educational email ending with .edu for account approval.")
                         } else {
-                            alert("Your account has been created successfully, and is now pending admin approval. " +
-                                "An email will be sent once an administrator has approved or denied your account for further access.")
+                            alert("Your account has been created successfully. Please sign in using the auto-generated password sent to your email.")
                             $('span.k-i-close').click();
                             location.reload();
                         }

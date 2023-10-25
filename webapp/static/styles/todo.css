@@ -5,10 +5,6 @@
     min-width: 100%;
 }
 
-#desc {
-    display: inline-block;
-}
-
 #intro {
     alignment: center;
     align: center;
@@ -64,9 +60,19 @@
     alignment: right;
     font-size: 15px;
     position: absolute;
-    right: 13px;
-    top: 30px;
+    right: 30px;
+    top: 80px;
     width: 70px;
+}
+#change_pass {
+    text-align: center;
+    align: right;
+    alignment: right;
+    font-size: 15px;
+    position: absolute;
+    right: 120px;
+    top: 80px;
+    width: 160px;
 }
 
 
@@ -90,20 +96,6 @@
     height: 800px;
 }
 
-#donation_headers {
-    align: center;
-    alignment: center;
-    text-align: center;
-}
-
-#ud {
-    height: 36px;
-    align: center;
-    width: 390px;
-    font-size: 28px;
-    text-align: center;
-}
-
 #horizontal {
     position: relative;
     width: 100%;
@@ -114,9 +106,9 @@
     text-align: left;
 }
 
-.pane-content {
-    padding: 0 10px;
-}
+/*.pane-content {*/
+/*    padding: 0 10px;*/
+/*}*/
 
 .k-tabstrip {
     color: white;
@@ -125,13 +117,13 @@
     display: inline-block;
 }
 
-.k-button-primary {
-    text-align: right;
-    align: right;
-    alignment: right;
-    font-size: 15px;
-    height: 30px;
-}
+/*.k-button-primary {*/
+/*    text-align: right;*/
+/*    align: right;*/
+/*    alignment: right;*/
+/*    font-size: 15px;*/
+/*    height: 30px;*/
+/*}*/
 
 .k-grid {
     padding: 0px;

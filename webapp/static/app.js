@@ -16,20 +16,24 @@ function getCookie(name) {
 }
 
 const csrftoken = getCookie('csrftoken');
+var loginWindow;
+var changePasswordWindow;
 
 function sign_in() {
     //creates and populates window for logging in a user
-    $("#login_window").show().kendoWindow({
+    loginWindow = $("#login_window").show().kendoWindow({
         content: {
             url: 'login'
         },
         // width: 300,
         height: 400,
     });
-    var win = $("#login_window").data("kendoWindow");
-    win.open();
-    win.center();
+    loginWindow = $("#login_window").data("kendoWindow");
+    loginWindow.open();
+    loginWindow.center();
 }
+
+
 
 
 function create_account() {
@@ -38,7 +42,6 @@ function create_account() {
         content: {
             url: 'create'
         },
-        // width: 300,
         height: 600,
     });
     var win = $("#account_window").data("kendoWindow");
@@ -82,7 +85,7 @@ $(window).resize(function () {
     //styling stuff
     $('.login-window').css({
         position: 'absolute',
-        left: ($(window).width() - $('.login-window').outerWidth()) / 2,
+        left: ($(window).width() -  $('.login-window').outerWidth()) / 2,
         top: ($(window).height() - $('.login-window').outerHeight()) / 2,
     });
 });
@@ -106,6 +109,13 @@ $(document).ready(function () {
 
     $('#account_logout').kendoButton({
         click: logout
+    })
+
+    $('#change_pass').kendoButton({
+        click: function (e) {
+            e.preventDefault();
+            showChangePasswordWindow();
+        }
     })
 
     //load content for frontend tabs based on user permissions
@@ -134,3 +144,23 @@ $(document).ready(function () {
         })
     });
 });
+
+function showChangePasswordWindow(username) {
+    console.log(username);
+    $("#changePasswordWindow").kendoWindow({
+        content: {
+            url: "change_pass_window/" + username,
+            data: {'username': username}
+        },
+        width: 300,
+        height: 350,
+    });
+    var changePasswordWindow = $("#changePasswordWindow").data("kendoWindow");
+    changePasswordWindow.open();
+    changePasswordWindow.center();
+}
+
+function closeLoginWindow(){
+    console.log(loginWindow);
+    loginWindow.close();
+}

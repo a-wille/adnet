@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.conf import settings
-from django.urls import path, include
+from django.urls import path, include, re_path
 from django.conf.urls.static import static
 from webapp import views
 
@@ -19,6 +19,8 @@ urlpatterns = [
 	path('snp_search', views.snp_search),
 	path('submit_job/', views.submit_job),
 	path('process_results/', views.process_results),
+	path('change_password/', views.change_password),
+	re_path('change_pass_window/.*$', views.get_change_pass_window),
 	path('build', views.build),
 	path('run', views.run),
 	path('login', views.login),
