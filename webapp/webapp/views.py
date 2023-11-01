@@ -244,6 +244,58 @@ def gmail_send_message(service, email, job_id):
         send_message = None
     return send_message
 
+def gmail_send_error_message(service, email, job_id):
+    try:
+        message = EmailMessage()
+        message.set_content(
+            'Your job with ID {} has encountered an error and '
+            'did your model was not successfully generated. An administrator has been contacted '
+            'for further support, and your job has been reverted back to \'draft\' status. '
+            ' Please wait for further details from an administrator regarding your error before '
+            'resubmitting your job. '.format(
+                job_id))
+        message['To'] = email
+        message['From'] = 'information@adnet.app'
+        message['Subject'] = 'Job Error'
+
+        # encoded message
+        encoded_message = base64.urlsafe_b64encode(message.as_bytes()) \
+            .decode()
+
+        create_message = {
+            'raw': encoded_message
+        }
+        # pylint: disable=E1101
+        send_message = (service.users().messages().send
+                        (userId="me", body=create_message).execute())
+    except HttpError as error:
+        send_message = None
+    return send_message
+
+def gmail_send_error_admin(service, email, job_id, error):
+    try:
+        message = EmailMessage()
+        message.set_content(
+            'A job with ID {} has encountered an error. Further details should be provided to {} when the error has been handled. \n\n {}'
+                .format(job_id, email, error))
+        message['To'] = 'acretan@adnet.app'
+        message['From'] = 'information@adnet.app'
+        message['Subject'] = 'Job Error'
+
+        # encoded message
+        encoded_message = base64.urlsafe_b64encode(message.as_bytes()) \
+            .decode()
+
+        create_message = {
+            'raw': encoded_message
+        }
+        # pylint: disable=E1101
+        send_message = (service.users().messages().send
+                        (userId="me", body=create_message).execute())
+    except HttpError as error:
+        send_message = None
+    return send_message
+
 
 def gmail_verify(service, email, password):
     try:
@@ -295,6 +347,43 @@ def change_password(request):
         u.save()
         return HttpResponse({'success': True})
 
+@csrf_exempt
+def process_error(request):
+    """
+    processes any jobs that encountered an error while running.
+    revert job status back to draft,
+    send email detailing error information to admin, and email detailing
+    that an error did occur to user
+
+    :param request:
+    :return:
+    """
+    data = json.loads(request.body)
+    conn = get_mongo()
+    all_jobs = conn.AdNet.users.find_one({'id': data['email']}, {'_id': 0, 'jobs': 1})['jobs']
+    next_job = None
+    for job in all_jobs:
+        if job['name'] == data['job_id']:
+            job['status'] = 'draft'
+        if job['name'] != data['job_id'] and job['status'] == 'pending' and not next_job:
+            next_job = job
+            job['status'] = 'running'
+    if os.getcwd() == TEST_CALL:
+        os.chdir('daemons/')
+    service = create_service()
+    gmail_send_error_message(service, data['email'], data['job_id'])
+    gmail_send_error_admin(service, data['email'], data['job_id'], data['error'])
+    conn.AdNet.users.update_one({'id': data['email']}, {"$set": {'jobs': all_jobs}})
+    if next_job:
+        new_data = next_job
+        new_data['user_id'] = data['email']
+        url = BUILD_URL
+        headers = {
+            'Content-type': 'application/json',
+            'Accept': 'application/json'
+        }
+        requests.post(url, json=new_data, headers=headers)
+    return HttpResponse({'success': True})
 
 @csrf_exempt
 def process_results(request):

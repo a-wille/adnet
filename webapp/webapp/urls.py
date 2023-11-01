@@ -19,6 +19,7 @@ urlpatterns = [
 	path('snp_search', views.snp_search),
 	path('submit_job/', views.submit_job),
 	path('process_results/', views.process_results),
+	path('process_error/', views.process_error),
 	path('change_password/', views.change_password),
 	re_path('change_pass_window/.*$', views.get_change_pass_window),
 	path('build', views.build),

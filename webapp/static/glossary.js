@@ -75,7 +75,7 @@ $(document).ready(function() {
                 success: function(result){
                     console.log(result)
                     $('#searchDefinition').append(
-                        '<h3 class="k-h6" style="font-size: 24px;">' + result['name'] + '</h3>\n<p style="padding-left: 40px; font-size: 20px;">' +
+                        '<h3 class="k-h6" style="font-size: 24px;">' + result['term'] + '</h3>\n<p style="padding-left: 40px; font-size: 20px;">' +
                         result['definition'] + '</p>'
                     ).hide().fadeIn(1000);
                 }
