@@ -1,21 +1,3 @@
-function getCookie(name) {
-    //returns cookie
-    let cookieValue = null;
-    if (document.cookie && document.cookie !== '') {
-        const cookies = document.cookie.split(';');
-        for (let i = 0; i < cookies.length; i++) {
-            const cookie = cookies[i].trim();
-            // Does this cookie string begin with the name we want?
-            if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                break;
-            }
-        }
-    }
-    return cookieValue;
-}
-
-const csrftoken = getCookie('csrftoken');
 
 function b64toBlob(b64Data, contentType) {
     const byteCharacters = atob(b64Data);
@@ -35,7 +17,6 @@ function b64toBlob(b64Data, contentType) {
 }
 
 $(document).ready(function () {
-    const csrftoken = getCookie('csrftoken');
     var jobId = document.getElementById("job_id").textContent;
 
     var result_response_data;

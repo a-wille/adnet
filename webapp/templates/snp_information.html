@@ -75,27 +75,8 @@
 {% load static %}
 
 <script type="text/javascript">
-    function getCookie(name) {
-        //returns cookie
-        let cookieValue = null;
-        if (document.cookie && document.cookie !== '') {
-            const cookies = document.cookie.split(';');
-            for (let i = 0; i < cookies.length; i++) {
-                const cookie = cookies[i].trim();
-                // Does this cookie string begin with the name we want?
-                if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                    break;
-                }
-            }
-        }
-        return cookieValue;
-    }
-
-    const csrftoken = getCookie('csrftoken');
 
     function make_grid(strongest_alleles) {
-        console.log(strongest_alleles);
         var localDataSource = new kendo.data.DataSource({data: strongest_alleles});
         $("#allele_grid").kendoGrid({
             dataSource: localDataSource,
@@ -116,7 +97,6 @@
         type: "GET",
         async: false,
         success: function (data) {
-            console.log("hello");
             var parsed = JSON.parse(data);
             document.getElementById("location").innerHTML = parsed.location;
             document.getElementById("functional_class").innerHTML = parsed.functional_class;
@@ -178,7 +158,6 @@
                         click: function (e) {
                             e.preventDefault();
                             var id = e.currentTarget.closest("tr").cells[0].textContent;
-                            console.log(id);
                             $.ajax({
                                 type: 'POST',
                                 url: '/JobConfigurations/AddToConfig/',
