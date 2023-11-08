@@ -255,6 +255,7 @@ $(document).ready(function () {
             async: false,
             success: function (data) {
                 alert("Changes saved successfully");
+                closeMLWindow();
             },
             error: function (error) {
                 console.log(`Error ${error}`);

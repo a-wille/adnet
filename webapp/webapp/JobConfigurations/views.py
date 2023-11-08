@@ -43,6 +43,7 @@ def get_completed_jobs(request):
 def create(request):
     info = request.GET.dict()
     conn = get_mongo()
+    print("ok")
     user_doc = conn.AdNet.users.find_one({'id': request.user.email})
     new_config = {'name': info['name'], 'one': info['one'], 'two': info['two'],
                   'three': info['three'], 'four': info['four'], 'five': info['five'],
@@ -73,6 +74,7 @@ def edit(request):
         if job['name'] != info['og_id']:
             updated_jobs.append(job)
         else:
+            job['name'] = info['name']
             new_config['ml_configs'] = job['ml_configs']
     updated_jobs.append(new_config)
     conn.AdNet.users.update_one({'id': request.user.email}, {"$set": {'jobs': updated_jobs}})

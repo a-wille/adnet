@@ -1,5 +1,6 @@
 var optionsDataSource;
 var editedItem;
+var mlWindow;
 
 function oneGeneAutoCompleteEditor(container, options) {
     $('<input name="one" validationMessage="Enter a valid SNP" data-bind="value:' + options.field + '"/>')
@@ -257,7 +258,7 @@ function setUpGrid() {
             resizable: true,
             serverSorting: false,
         },
-        // height: 500,
+        height: 500,
         width: "100%",
         sortable: true,
         pageable: true,
@@ -267,12 +268,16 @@ function setUpGrid() {
             mode: "inline",
             confirmDelete: "Yes"
         },
-        dataBound: function () {
+        dataBound: function (e) {
             var grid = this;
             grid.tbody.find("tr[role='row']").each(function () {
                 console.log("in databound");
                 var model = grid.dataItem(this);
-
+                if (model.isNew()) {
+                    // Store a flag indicating that this row is new (being added)
+                    model._isNewRow = true;
+                }
+                //
                 if (model.status != 'draft') {
                     $(this).find(".k-grid-edit").remove();
                 }
@@ -280,6 +285,7 @@ function setUpGrid() {
         },
         edit: function (e) {
             var dataItem = e.model;
+            console.log('editing now');
 
             if (dataItem.isNew()) {
                 // Store a flag indicating that this row is new (being added)
@@ -287,9 +293,6 @@ function setUpGrid() {
             }
         },
         cancel: function (e) {
-            var grid = this;
-            var dataItem = e.model;
-
             var grid = this;
             var dataItem = e.model;
 
@@ -331,20 +334,20 @@ function setUpGrid() {
                         var job_id = dataItem.id;
                         console.log("jobid");
                         console.log(job_id);
-                        var info = $("#ml_window").data("kendoWindow");
-                        if (!info) {
-                            info = $("#ml_window").kendoWindow({
+                        mlWindow = $("#ml_window").data("kendoWindow");
+                        if (!mlWindow) {
+                            mlWindow = $("#ml_window").kendoWindow({
                                 modal: false,
                                 visible: false,
                                 width: 700,
                                 height: 750,
                             }).data("kendoWindow");
                         }
-                        info.title('ML Configurations for ' + job_id);
-                        info.refresh({
+                        mlWindow.title('ML Configurations for ' + job_id);
+                        mlWindow.refresh({
                             url: '/JobConfigurations/GetMLConfigurations/' + job_id + '/'
                         })
-                        info.center().open();
+                        mlWindow.center().open();
                     }
                 }],
                 title: "ML Configurations",
@@ -408,7 +411,7 @@ $(document).ready(function () {
 
     var datalist = optionsDataSource.read();
 
-    var info = $("#ml_window").kendoWindow({
+    mlwindow = $("#ml_window").kendoWindow({
         modal: false,
         visible: false,
         width: 700,
@@ -417,3 +420,9 @@ $(document).ready(function () {
 
 
 });
+
+function closeMLWindow(){
+    console.log(mlWindow);
+    mlWindow.close();
+}
+

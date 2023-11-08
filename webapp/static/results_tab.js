@@ -34,7 +34,7 @@ $(document).ready(function () {
             resizable: true,
             serverSorting: false,
         },
-        // height: 550,
+        height: 500,
         sortable: true,
         pageable: true,
         noRecords: true,
