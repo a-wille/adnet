@@ -199,15 +199,17 @@ def submit_job(request):
     conn = get_mongo()
     all_jobs = conn.AdNet.users.find_one({'id': request.user.email}, {'_id': 0, 'jobs': 1})['jobs']
     pending = False
+    pending_count = 1
     for job in all_jobs:
-        if job['status'] == 'running' or job['status'] == 'pending':
+        if job['status'] == 'running' or 'pending' in job['status']:
             pending = True
-
+            if 'pending' in job['status']:
+                pending_count += 1
     for job in all_jobs:
         if job['name'] == data['name']:
             job['status'] = 'running'
             if pending:
-                job['status'] = 'pending'
+                job['status'] = 'pending ({})'.format(pending_count)
     data['user_id'] = request.user.email
     url = BUILD_URL
     headers = {
@@ -347,6 +349,20 @@ def change_password(request):
         u.save()
         return HttpResponse({'success': True})
 
+def update_jobs(all_jobs, job_id, status):
+    next_job = None
+    for job in all_jobs:
+        if job['name'] == job_id:
+            job['status'] = status
+        if job['name'] != job_id and job['status'] == 'pending (1)' and not next_job:
+            next_job = job
+            job['status'] = 'running'
+        if 'pending' in job['status']:
+            num = int(job['status'].split('(')[1].split(')')[0])
+            num -= 1
+            job['status'] = 'pending ({})'.format(num)
+    return all_jobs, next_job
+
 @csrf_exempt
 def process_error(request):
     """
@@ -361,13 +377,7 @@ def process_error(request):
     data = json.loads(request.body)
     conn = get_mongo()
     all_jobs = conn.AdNet.users.find_one({'id': data['email']}, {'_id': 0, 'jobs': 1})['jobs']
-    next_job = None
-    for job in all_jobs:
-        if job['name'] == data['job_id']:
-            job['status'] = 'draft'
-        if job['name'] != data['job_id'] and job['status'] == 'pending' and not next_job:
-            next_job = job
-            job['status'] = 'running'
+    all_jobs, next_job = update_jobs(all_jobs, data['job_id'], 'draft')
     if os.getcwd() == TEST_CALL:
         os.chdir('daemons/')
     service = create_service()
@@ -399,13 +409,7 @@ def process_results(request):
     data = json.loads(request.body)
     conn = get_mongo()
     all_jobs = conn.AdNet.users.find_one({'id': data['email']}, {'_id': 0, 'jobs': 1})['jobs']
-    next_job = None
-    for job in all_jobs:
-        if job['name'] == data['job_id']:
-            job['status'] = 'completed'
-        if job['name'] != data['job_id'] and job['status'] == 'pending' and not next_job:
-            next_job = job
-            job['status'] = 'running'
+    all_jobs, next_job = update_jobs(all_jobs, data['job_id'], 'completed')
     conn.AdNet.users.update_one({'id': data['email']}, {"$set": {'jobs': all_jobs}})
     if os.getcwd() == TEST_CALL:
         os.chdir('daemons/')

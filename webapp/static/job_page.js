@@ -332,8 +332,6 @@ function setUpGrid() {
                         e.preventDefault();
                         var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
                         var job_id = dataItem.id;
-                        console.log("jobid");
-                        console.log(job_id);
                         mlWindow = $("#ml_window").data("kendoWindow");
                         if (!mlWindow) {
                             mlWindow = $("#ml_window").kendoWindow({

@@ -167,10 +167,12 @@
                                 success: function (result) {
                                     $("#addsnptojobgrid").data("kendoGrid").dataSource.read();
                                     $("#addsnptojobgrid").data("kendoGrid").refresh();
+                                    alert("SNP Added Successfully")
                                 },
                                 error: function (result) {
                                     $("#addsnptojobgrid").data("kendoGrid").dataSource.read();
                                     $("#addsnptojobgrid").data("kendoGrid").refresh();
+                                    alert("Error adding SNP, please contact system administrator.")
                                 }
                             });
 
