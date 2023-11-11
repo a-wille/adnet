@@ -261,7 +261,16 @@ function setUpGrid() {
         height: 500,
         width: "100%",
         sortable: true,
-        pageable: true,
+        pageable: {
+            numeric: false,
+            previousNext: false,
+            messages: {
+                display: "Showing {2} data items"
+            }
+        },
+        scrollable: {
+            endless: true
+        },
         toolbar: ["create"],
         editable: {
             confirmation: true,
@@ -307,15 +316,15 @@ function setUpGrid() {
         },
         columns: [
             {field: "name", title: "Name", width: "200px"},
-            {field: "one", title: "1", width: "150px", sortable: false, editor: oneGeneAutoCompleteEditor},
-            {field: "two", title: "2", width: "150px", sortable: false, editor: twoGeneAutoCompleteEditor},
-            {field: "three", title: "3", width: "150px", sortable: false, editor: threeGeneAutoCompleteEditor},
-            {field: "four", title: "4", width: "150px", sortable: false, editor: fourGeneAutoCompleteEditor},
-            {field: "five", title: "5", width: "150px", sortable: false, editor: fiveGeneAutoCompleteEditor},
+            {field: "one", title: "1", width: "140px", sortable: false, editor: oneGeneAutoCompleteEditor},
+            {field: "two", title: "2", width: "140px", sortable: false, editor: twoGeneAutoCompleteEditor},
+            {field: "three", title: "3", width: "140px", sortable: false, editor: threeGeneAutoCompleteEditor},
+            {field: "four", title: "4", width: "140px", sortable: false, editor: fourGeneAutoCompleteEditor},
+            {field: "five", title: "5", width: "140px", sortable: false, editor: fiveGeneAutoCompleteEditor},
             {
                 field: 'status',
                 title: "Status",
-                width: "115px",
+                width: "110px",
                 editable: false,
                 filterable: true,
                 nullable: true,
@@ -351,7 +360,7 @@ function setUpGrid() {
                 title: "ML Configurations",
                 template: '<input type="button" class="k-button info" name="info" value="Settings" />',
 
-                filterable: false, sortable: false, width: "160px"
+                filterable: false, sortable: false, width: "120px"
             },
             {
                 command: [{
@@ -382,10 +391,10 @@ function setUpGrid() {
                     }
                 }],
                 template: '<input type="button" class="k-button  k-rounded-md" name="details" value="Submit" />',
-                filterable: false, sortable: false, width: "120px",
+                filterable: false, sortable: false, width: "90px",
             },
-            {command: "edit", width: "115px"},
-            {command: "destroy", width: "150px"}
+            {command: "edit", width: "110px"},
+            {command: "destroy", width: "110px"}
         ],
         beforeEdit: function (e) {
             editedItem = e.model.name;
@@ -419,7 +428,7 @@ $(document).ready(function () {
 
 });
 
-function closeMLWindow(){
+function closeMLWindow() {
     console.log(mlWindow);
     mlWindow.close();
 }

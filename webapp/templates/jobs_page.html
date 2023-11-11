@@ -6,8 +6,8 @@
 </head>
 <body>
 <div id="ml_window" style="display:none"></div>
-<h2 class="k-h3" style="padding: 10px;">Job Configurations</h2>
-<div id="jobgrid"></div>
+<h2 class="k-h3" style="padding-left: 10px; font-size: 40px;">Job Configurations</h2>
+<div id="jobgrid" style="padding-bottom: 0px;"></div>
 </body>
 
 <script src="{% static 'job_page.js' %}"></script>
@@ -16,5 +16,32 @@
     .k-grid .k-dirty {
         display: none;
     }
+    .k-grid td
+    {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+
+    .k-button {
+        padding: 5px;
+    }
+    .k-grid .k-edit-cell, .k-grid .k-command-cell, .k-grid .k-grid-edit-row td, .k-grid .k-grid-edit-row .k-table-td  {
+        padding-left: 5px;
+        padding-right: 0px;
+    }
+
+    input.k-input-inner{
+        padding-left: 12px !important;
+        padding-right: 0px !important;
+        font-size: 15px !important;
+    }
+
+    #jobgrid th.k-header {
+        padding-left: 15px !important;
+        padding-right: 0px !important;
+        overflow: visible;
+        font-family: Roboto, "Helvetica Neue", sans-serif !important;
+    }
+
 
 </style>
