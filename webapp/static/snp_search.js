@@ -51,11 +51,20 @@ $(document).ready(function() {
             pageSize: 15,
             resizable: true,
         },
-        // height: 550,
+        height: 700,
         filterable: true,
         sortable: true,
         resizable: true,
-        pageable: true,
+        pageable: {
+            numeric: false,
+            previousNext: false,
+            messages: {
+                display: "Showing {2} data items"
+            }
+        },
+        scrollable: {
+            endless: true
+        },
         columns: [
             {field:"_id", title:"Name", width:"150px"},
             // {field:"region", title: "Region"},

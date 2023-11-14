@@ -31,7 +31,11 @@ def get_all_names(request):
 
 def get_snp_details(request):
 	snp_id = remove_substring_from_string(request.path, '/SNPSearch/get_details/')
-	return render(request, 'snp_information.html', {'content': snp_id})
+	conn = get_mongo()
+	doc = conn.AdNet.SNPs.find_one({'_id': snp_id})
+	doc['values'] = format_list(doc, 'values')
+	doc['genes'] = format_list(doc, 'genes')
+	return render(request, 'snp_information.html', {'content': doc})
 
 def get_snp_data(request):
 	snp_id = remove_substring_from_string(request.path, '/SNPSearch/GetSNPInfo/')

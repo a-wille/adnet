@@ -14,52 +14,53 @@
         <table id="snptable">
             <tr style="background: rgba(147,211,255,0.14);">
                 <th colspan=1>Region</th>
-                <td colspan=3 id="region"></td>
+                <td colspan=3 id="region">{{ content.region }}</td>
             </tr>
             <tr style="background: rgba(221,240,255,0.14);">
                 <th colspan=1>Location</th>
-                <td colspan=3 id="location"></td>
+                <td colspan=3 id="location">{{ content.location }}</td>
             </tr>
             <tr style="background: rgba(147,211,255,0.14);">
                 <th colspan=1>Functional Class</th>
-                <td colspan=3 id="functional_class"></td>
+                <td colspan=3 id="functional_class">{{ content.functional_class }}</td>
             </tr>
             <tr style="background: rgba(221,240,255,0.14);">
                 <th colspan=1>Risk Level</th>
-                <td colspan=3 id="risk_level"></td>
+                <td colspan=3 id="risk_level">{{ content.risk_level }}</td>
             </tr>
             <tr style="background: rgba(147,211,255,0.14);">
                 <th colspan=1>P-value</th>
-                <td colspan=3 id="p-value"></td>
+                <td colspan=3 id="p-value">{{ content.pvalue }}</td>
             </tr>
             <tr style="background: rgba(221,240,255,0.14);">
                 <th>Minor Allele</th>
                 <td id="minor_allele"></td>
                 <th>Minor Allele Frequency</th>
-                <td id="maf">"maf"</td>
+                <td id="maf">{{ content.MAF }}</td>
             </tr>
             <tr style="background: rgba(147,211,255,0.14);">
-                <th colspan=1>P-value</th>
-                <td colspan=3 id="p-value"></td>
+                <th colspan=1>Associated Studies</th>
+                <td colspan=3 id="study"></td>
             </tr>
             <tr style="background: rgba(221,240,255,0.14);">
                 <th>Intergenic</th>
-                <td id="is_intergenic"></td>
+                <td id="is_intergenic">{{ content.is_intergenic }}</td>
                 <th>Most Severe Consequence</th>
-                <td id="most_severe_consequence">"maf"</td>
+                <td id="most_severe_consequence">{{ content.most_severe_consequence}}</td>
             </tr>
             <tr style="background: rgba(147,211,255,0.14);">
                 <th colspan=1>Allele Values</th>
-                <td colspan=3 id="values"></td>
+                <td colspan=3 id="values">{{ content.values }}</td>
             </tr>
             <tr style="background: rgba(221,240,255,0.14);">
                 <th colspan=1>Gene(s)</th>
-                <td colspan=3 id="genes"></td>
+                <td colspan=3 id="genes">{{ content.genes }}</td>
             </tr>
         </table>
     </div>
     <div>
         <div id="allele_grid"></div>
+        <div id="hidden", style="visibility: hidden"></div>
     </div>
     <br>
     {% if perms.webapp.can_create_jobs %}
@@ -71,12 +72,14 @@
         </div>
     {% endif %}
 </div>
+{{ content |json_script:"hello-data"}}
 
 {% load static %}
 
 <script type="text/javascript">
 
-    function make_grid(strongest_alleles) {
+    function make_grid() {
+        var strongest_alleles = JSON.parse(document.getElementById('hello-data').textContent)['strongest_risk_alleles'];
         var localDataSource = new kendo.data.DataSource({data: strongest_alleles});
         $("#allele_grid").kendoGrid({
             dataSource: localDataSource,
@@ -90,34 +93,10 @@
         });
     }
 
-    var snpId = "{{ content }}";
-
-    $.ajax({
-        url: "/SNPSearch/GetSNPInfo/" + snpId,
-        type: "GET",
-        async: false,
-        success: function (data) {
-            var parsed = JSON.parse(data);
-            document.getElementById("location").innerHTML = parsed.location;
-            document.getElementById("functional_class").innerHTML = parsed.functional_class;
-            document.getElementById("region").innerHTML = parsed.region;
-            document.getElementById("risk_level").innerHTML = parsed.risk_level;
-            document.getElementById("p-value").innerHTML = parsed.pvalue;
-            document.getElementById("maf").innerHTML = parsed.MAF;
-            document.getElementById("is_intergenic").innerHTML = parsed.is_intergenic;
-            document.getElementById("minor_allele").innerHTML = parsed.minor_allele;
-            document.getElementById("genes").innerHTML = parsed.genes;
-            document.getElementById("most_severe_consequence").innerHTML = parsed.most_severe_consequence;
-            document.getElementById("values").innerHTML = parsed.values;
-            make_grid(parsed.strongest_risk_alleles);
-        },
-        error: function (error) {
-            console.log(`Error ${error}`);
-        }
-    });
-
-
     $(document).ready(function () {
+        make_grid();
+        var snpId = JSON.parse(document.getElementById('hello-data').textContent)['_id']
+        console.log(snpId);
         $("#addsnptojobgrid").kendoGrid({
             dataSource: {
                 transport: {

@@ -1,5 +1,3 @@
-let modlength = 0;
-let nmlength = 0;
 
 function createSNPPanel(mod, nonmod) {
     modlength = mod.length;

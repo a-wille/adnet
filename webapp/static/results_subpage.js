@@ -163,21 +163,21 @@ $(document).ready(function () {
     if (item.Id == result_response_data['optimizer']) {
             document.getElementById("r_optimizer").textContent = item.name;
             console.log(item.name); // Exit the loop when the item is found
-        };
+        }
     });
 
     r_loss_names.data().forEach(function (item) {
     if (item.Id == result_response_data['loss']) {
             document.getElementById("r_loss").textContent = item.name;
             console.log(item.name); // Exit the loop when the item is found
-        };
+        }
     });
 
     r_activation_names.data().forEach(function (item) {
     if (item.Id == result_response_data['final_activation']) {
             document.getElementById("r_activation").textContent = item.name;
             console.log(item.name); // Exit the loop when the item is found
-        };
+        }
     });
     document.getElementById("r_epoch_size").textContent = result_response_data['epochs'];
     document.getElementById("r_batch_size").textContent = result_response_data['batch_size'];

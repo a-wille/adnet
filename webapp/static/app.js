@@ -19,6 +19,11 @@ const csrftoken = getCookie('csrftoken');
 var loginWindow;
 var changePasswordWindow;
 
+function centerWindowMain(window){
+    window.center();
+}
+
+
 function sign_in() {
     //creates and populates window for logging in a user
     loginWindow = $("#login_window").show().kendoWindow({
@@ -29,8 +34,9 @@ function sign_in() {
         height: 400,
     });
     loginWindow = $("#login_window").data("kendoWindow");
+    centerWindowMain(loginWindow);
     loginWindow.open();
-    loginWindow.center();
+    centerWindowMain(loginWindow);
 }
 
 
@@ -49,23 +55,24 @@ function create_account() {
     win.center();
 }
 
-
 function openSNPWindow(snp) {
     var snpdetails = $("#snpdetails_window").data("kendoWindow");
     if (snpdetails == null) {
         snpdetails = $('#snpdetails_window').kendoWindow({
             modal: true,
             visible: false,
-            width: 850,
+            width: 950,
             height: 650,
         }).data("kendoWindow");
+        centerWindowMain(snpdetails);
     }
 
     snpdetails.title('Details: ' + snp);
     snpdetails.refresh({
         url: '/SNPSearch/get_details/' + snp
     }).open();
-    snpdetails.center();
+    centerWindowMain(snpdetails);
+    // snpdetails.center();
 }
 
 function logout() {
@@ -164,4 +171,3 @@ function closeLoginWindow(){
     console.log(loginWindow);
     loginWindow.close();
 }
-

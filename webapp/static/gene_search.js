@@ -9,7 +9,7 @@ $(document).ready(function () {
             height: 650,
         }).data("kendoWindow");
     }
-    ;
+
 
     $("#information_window").kendoWindow({
         modal: false,
@@ -72,14 +72,23 @@ $(document).ready(function () {
                     }
                 }
             },
-            pageSize: 10,
             resizable: true,
             serverSorting: false,
         },
+        height: 700,
         filterable: true,
         sortable: true,
         resizable: true,
-        pageable: true,
+        pageable: {
+            numeric: false,
+            previousNext: false,
+            messages: {
+                display: "Showing {2} data items"
+            }
+        },
+        scrollable: {
+            endless: true
+        },
         columns: [
             {field: "_id", title: "Name", width: "150px"},
             {
@@ -164,6 +173,7 @@ $(document).ready(function () {
                             url: '/GeneSearch/get_information/' + gene
                         });
                         info.center().open();
+                        centerWindowMain(info);
                     }
                 }],
                 title: "More Information ",
