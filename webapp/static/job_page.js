@@ -315,12 +315,12 @@ function setUpGrid() {
 
         },
         columns: [
-            {field: "name", title: "Name", width: "200px"},
-            {field: "one", title: "1", width: "140px", sortable: false, editor: oneGeneAutoCompleteEditor},
-            {field: "two", title: "2", width: "140px", sortable: false, editor: twoGeneAutoCompleteEditor},
-            {field: "three", title: "3", width: "140px", sortable: false, editor: threeGeneAutoCompleteEditor},
-            {field: "four", title: "4", width: "140px", sortable: false, editor: fourGeneAutoCompleteEditor},
-            {field: "five", title: "5", width: "140px", sortable: false, editor: fiveGeneAutoCompleteEditor},
+            {field: "name", title: "Name", width: "190px"},
+            {field: "one", title: "1", width: "130px", sortable: false, editor: oneGeneAutoCompleteEditor},
+            {field: "two", title: "2", width: "130px", sortable: false, editor: twoGeneAutoCompleteEditor},
+            {field: "three", title: "3", width: "130px", sortable: false, editor: threeGeneAutoCompleteEditor},
+            {field: "four", title: "4", width: "130px", sortable: false, editor: fourGeneAutoCompleteEditor},
+            {field: "five", title: "5", width: "130px", sortable: false, editor: fiveGeneAutoCompleteEditor},
             {
                 field: 'status',
                 title: "Status",
@@ -385,6 +385,8 @@ function setUpGrid() {
                                         setUpGrid();
                                     }
                                     $("#jobgrid").data("kendoGrid").dataSource.read();
+                                }, error: function(response) {
+                                    alert("Error submitting job. Please try again later.");
                                 }
                             });
                         }

@@ -171,6 +171,9 @@ def set_ml_configs(request):
     data = json.loads(request.body)
     conn = get_mongo()
     jobs = conn.AdNet.users.find_one({'id': request.user.email})['jobs']
+    for layer in data['ml_configs']['layers']:
+        if layer['size'] <= 0:
+            return HttpResponse(json.dumps({'error': 'invalid_configuration'}))
 
     for job in jobs:
         if job['name'] == data['job_id']:
@@ -193,9 +196,9 @@ def add_item(request):
                     job[k] = info['item']
                     entered = True
     if entered == False:
-        return HttpResponse({'error'})
+        return HttpResponse(json.dumps({'error'}))
     conn.AdNet.users.update_one({'id': request.user.email}, {"$set": {'jobs': jobs}})
-    return HttpResponse({'success': True})
+    return HttpResponse(json.dumps({'success': True}))
 
 
 def delete(request):

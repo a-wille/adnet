@@ -34,6 +34,7 @@ def get_snp_details(request):
 	conn = get_mongo()
 	doc = conn.AdNet.SNPs.find_one({'_id': snp_id})
 	doc['values'] = format_list(doc, 'values')
+	doc['studies'] = doc['studies']['href']
 	doc['genes'] = format_list(doc, 'genes')
 	return render(request, 'snp_information.html', {'content': doc})
 
@@ -42,5 +43,6 @@ def get_snp_data(request):
 	conn = get_mongo()
 	doc = conn.AdNet.SNPs.find_one({'_id': snp_id})
 	doc['values'] = format_list(doc, 'values')
+	doc['studies'] = doc['studies']['href']
 	doc['genes'] = format_list(doc, 'genes')
 	return HttpResponse(json.dumps(doc))

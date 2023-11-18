@@ -13,40 +13,35 @@
         <h4 class="k-h4">General Information</h4>
         <table id="snptable">
             <tr style="background: rgba(147,211,255,0.14);">
-                <th colspan=1>Region</th>
-                <td colspan=3 id="region">{{ content.region }}</td>
+                <th>Region</th>
+                <td id="region">{{ content.region }}</td>
+                <th>Location</th>
+                <td id="location">{{ content.location }}</td>
             </tr>
             <tr style="background: rgba(221,240,255,0.14);">
-                <th colspan=1>Location</th>
-                <td colspan=3 id="location">{{ content.location }}</td>
+                <th>Functional Class</th>
+                <td id="functional_class">{{ content.functional_class }}</td>
+                <th>Intergenic</th>
+                <td id="is_intergenic">{{ content.is_intergenic }}</td>
             </tr>
             <tr style="background: rgba(147,211,255,0.14);">
-                <th colspan=1>Functional Class</th>
-                <td colspan=3 id="functional_class">{{ content.functional_class }}</td>
-            </tr>
-            <tr style="background: rgba(221,240,255,0.14);">
                 <th colspan=1>Risk Level</th>
                 <td colspan=3 id="risk_level">{{ content.risk_level }}</td>
             </tr>
-            <tr style="background: rgba(147,211,255,0.14);">
-                <th colspan=1>P-value</th>
-                <td colspan=3 id="p-value">{{ content.pvalue }}</td>
-            </tr>
             <tr style="background: rgba(221,240,255,0.14);">
                 <th>Minor Allele</th>
-                <td id="minor_allele"></td>
+                <td id="minor_allele">{{ content.minor_allele }}</td>
                 <th>Minor Allele Frequency</th>
                 <td id="maf">{{ content.MAF }}</td>
             </tr>
             <tr style="background: rgba(147,211,255,0.14);">
                 <th colspan=1>Associated Studies</th>
-                <td colspan=3 id="study"></td>
+                <td colspan=3 id="study"><a href="{{ content.studies }}">GWAS Link</a></td>
+
             </tr>
             <tr style="background: rgba(221,240,255,0.14);">
-                <th>Intergenic</th>
-                <td id="is_intergenic">{{ content.is_intergenic }}</td>
-                <th>Most Severe Consequence</th>
-                <td id="most_severe_consequence">{{ content.most_severe_consequence}}</td>
+                <th colspan=1>P-value</th>
+                <td colspan=3 id="p-value">{{ content.pvalue }}</td>
             </tr>
             <tr style="background: rgba(147,211,255,0.14);">
                 <th colspan=1>Allele Values</th>

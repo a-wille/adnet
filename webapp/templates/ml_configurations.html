@@ -1,7 +1,7 @@
 {% load static %}
 <head>
     <head>
-        <link rel="stylesheet" href="{% static 'styles/style3.css' %}"/>
+{#        <link rel="stylesheet" href="{% static 'styles/style3.css' %}"/>#}
         <script src="{% static 'js/jquery.min.js' %}"></script>
         <script src="{% static 'js/kendo.all.min.js' %}"></script>
     </head>
@@ -25,7 +25,8 @@
                     <select id="optimizer_combobox"></select>
                 </li>
                 <li><span class="k-d-inline-block">Activation Function</span>
-                    <select id="activation_combobox"></select></li>
+                    <select id="activation_combobox"></select>
+                </li>
                 <li>
                     <span class="k-d-inline-block">Loss Function</span>
                     <select id="loss_combobox"></select>
@@ -97,15 +98,15 @@
         margin: 0 5px 5px 0;
     }
 
-    .confirm {
+    #fieldlist .confirm {
         padding-top: 1em;
     }
 
-    .valid {
+    #fieldlist .valid {
         color: green;
     }
 
-    .invalid {
+    #fieldlist .invalid {
         color: red;
     }
 </style>

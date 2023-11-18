@@ -1,4 +1,5 @@
 import collections
+import shutil
 
 import requests
 import json
@@ -8,8 +9,18 @@ from itertools import islice
 import os, sys, subprocess
 import xmltodict
 from Bio import SeqIO
+from pymongo import MongoClient
 from pymongo.errors import ServerSelectionTimeoutError
-from webapp.view_helpers import get_mongo
+from config import MONGO_USER, MONGO_PASS, DATA_DIR
+
+
+def get_mongo(**kwargs):
+    # allows an instance of a mongo connection to allow for inserts, edits, and
+    # deletes into the mongo database
+    global _mongo_conn
+    _mongo_conn = MongoClient("mongodb+srv://adnet.khzkajw.mongodb.net/AdNet", username=MONGO_USER, password=MONGO_PASS)
+    return _mongo_conn
+
 
 
 class GeneDaemon:
@@ -49,37 +60,22 @@ class GeneDaemon:
                              'Glycosylation', 'Disulfide bond', 'Site', 'Helix', 'Turn', 'Beta strand',
                              'Region', 'Domain', 'Binding site', 'Active site', 'Motif']
 
-    def __init__(self, *args):
+    def __init__(self):
         """never init GeneDaemon without running SNP Daemon first to get list of genes"""
-        if len(args) > 1:
-            f = args[1]
-        relative_path = '../'
-        os.chdir(os.path.join(os.path.abspath(sys.path[0]), relative_path))
-        if args[0] == 's':
-            self.read_in_names()
-            self.convert_names_to_ids(10)
-            #default file name gene_id_list.txt
-            args = ('i', None)
-        if args[0] == 'i':
-            # this means that we are loading in the number id file
-            self.download_dataset('daemons/gene_id_list.txt')
-            self.get_syns_and_data(10)
-            args = ('j', '', 10)
-        if args[0] == 'j':
-            # this means we have json data hurrah
-            # third arg is num of processes
-            self.read_in_names()
-            self.get_syns_and_data(10)
-            self.get_gene_ids('daemons/gene_id_list.txt')
-            self.pull_gene_data_process(int(args[2]))
+        os.chdir(DATA_DIR)
+        self.read_in_names()
+        self.convert_names_to_ids(10)
+        self.download_dataset()
+        self.get_syns_and_data(10)
+        self.pull_gene_data_process(10)
+        self.clean_data_files()
 
-    def get_gene_ids(self, f):
-        f = open(f, 'r')
-        try:
-            self.genes = f.read().split("\n")
-            f.close()
-        except:
-            exit()
+
+    def clean_data_files(self):
+        shutil.rmtree(os.path.join(DATA_DIR, 'ncbi_dataset'))
+        os.remove(os.path.join(DATA_DIR, 'ncbi_dataset.zip'))
+        os.remove(os.path.join(DATA_DIR, 'gene_list.txt'))
+
 
     def read_in_names(self):
         conn = get_mongo()
@@ -90,43 +86,29 @@ class GeneDaemon:
         self.genes = genes
 
     def divide_data(self, n):
+        for i in range(0, len(self.gene_ids), n):
+            yield self.gene_ids[i:i+n]
+
+    def divide_name_data(self, n):
         for i in range(0, len(self.genes), n):
             yield self.genes[i:i+n]
 
-    def get_syns_and_data(self, n):
-        smaller = list(self.divide_data(n))
-        with Pool() as pool:
-            res = pool.map(self.pull_syn_data, smaller)
-        for item in res:
-            for syn in item.keys():
-                self.syns[syn] = item[syn]
-
-    def convert_names_to_ids(self, n):
-        smaller = list(self.divide_data(n))
-        start = timer()
-        with Pool() as pool:
-            res = pool.map(self.pull_id_data, smaller)
-        end = timer()
-        f = open('daemons/gene_id_list.txt', 'w')
-        for item in res:
-            for id in item:
-                f.write(str(id) + '\n')
-        f.close()
-
     def pull_syn_data(self, data):
         to_ret = {}
-        #| ./dataformat tsv gene --fields gene-id'
         for gene in data:
             command = ['./datasets', 'summary', 'gene', 'symbol', '{}'.format(gene), '--taxon', '9606', '--as-json-lines']
             ps = subprocess.Popen(command, stdout=subprocess.PIPE)
-            output = json.loads(ps.communicate()[0].decode('utf-8'))
+            a = ps.communicate()[0].decode('utf-8').strip().split('\n')[0]
+            output = {}
+            if a != '':
+                output = json.loads(a)
             try:
-                num = int(output['gene']['gene_id'])
-                if 'synonyms' in output['gene'].keys() and len(output['gene']['synonyms']) != 0:
-                    to_ret[num] = output['gene']['synonyms']
+                num = int(output['gene_id'])
+                if 'synonyms' in output.keys() and len(output['synonyms']) != 0:
+                    to_ret[num] = output['synonyms']
             except KeyError as e:
                 try:
-                    if output['warnings'][0]['gene_warning_code'] == 'UNRECOGNIZED_GENE_SYMBOL':
+                    if 'warnings' in output.keys() and output['warnings'][0]['gene_warning_code'] == 'UNRECOGNIZED_GENE_SYMBOL':
                         pass
                 except KeyError as e:
                     print(e)
@@ -134,28 +116,55 @@ class GeneDaemon:
                 print(e)
         return to_ret
 
+    def get_syns_and_data(self, n):
+        smaller = list(self.divide_name_data(n))
+        with Pool() as pool:
+            res = pool.map(self.pull_syn_data, smaller)
+        for item in res:
+            for syn in item.keys():
+                self.syns[syn] = item[syn]
+
+    def convert_names_to_ids(self, n):
+        smaller = list(self.divide_name_data(n))
+        with Pool() as pool:
+            res = pool.map(self.pull_id_data, smaller)
+        gene_ids = []
+        for l in res:
+            gene_ids.extend(l)
+        self.gene_ids = gene_ids
+
     def pull_id_data(self, data):
-        to_ret = []
-        #| ./dataformat tsv gene --fields gene-id'
+        gene_id_list = []
         for gene in data:
             command = ['./datasets', 'summary', 'gene', 'symbol', '{}'.format(gene), '--taxon', '9606', '--as-json-lines']
             ps = subprocess.Popen(command, stdout=subprocess.PIPE)
-            output = json.loads(ps.communicate()[0].decode('utf-8'))
+            process_output = ps.communicate()[0]
+            if process_output and process_output != '':
+                output = json.loads(process_output.decode('utf-8').strip().split('\n')[0])
             try:
-                num = int(output['gene']['gene_id'])
-                if 'synonyms' in output['gene'].keys() and len(output['gene']['synonyms']) != 0:
-                    self.syns[num] = output['gene']['synonyms']
-                to_ret.append(num)
+                num = int(output['gene_id'])
+                gene_id_list.append(num)
             except KeyError as e:
-                if output['warnings'][0]['gene_warning_code'] == 'UNRECOGNIZED_GENE_SYMBOL':
-                    pass
+                try:
+                    if 'warnings' in output:
+                        if output['warnings'][0]['gene_warning_code'] == 'UNRECOGNIZED_GENE_SYMBOL':
+                            print("ok")
+                except KeyError as e:
+                    print(e)
             except Exception as e:
                 print(e)
-        return to_ret
+        return gene_id_list
 
-    def download_dataset(self, f):
+
+    def download_dataset(self):
+        gene_str = ''
+        for gene in self.gene_ids:
+            gene_str += '{}\n'.format(gene)
+        f = open('gene_list.txt', 'w')
+        f.write(gene_str)
+        f.close()
         base_command = './datasets download gene gene-id --inputfile {} && unzip -o ncbi_dataset.zip'
-        command = base_command.format(f)
+        command = base_command.format('gene_list.txt')
         x = subprocess.Popen(command, shell=True)
         x.wait()
 
@@ -164,11 +173,8 @@ class GeneDaemon:
         self.gene_data = self.pull_json_data()
         self.rna_data = self.pull_rna_data()
         smaller = list(self.divide_data(n))
-        start = timer()
         with Pool() as pool:
-            res = pool.map(self.pull_gene_data, smaller)
-        end = timer()
-        print(f'elapsed time: {end - start}')
+            pool.map(self.pull_gene_data, smaller)
 
 
     def pull_json_data(self):
@@ -206,30 +212,22 @@ class GeneDaemon:
 
     def pull_gene_data(self, genes):
         docs = []
-        new_genes = []
-        for gene in genes:
-            if gene != '':
-                new_genes.append(gene)
-        genes = new_genes
         for gene in genes:
             doc = self.sample_gene_doc.copy()
             try:
-                g = self.gene_data[gene]
-            except KeyError:
-                pass
-            try:
+                g = self.gene_data[str(gene)]
                 type = g['type']
-            except KeyError:
+            except Exception as e:
                 type = ''
             try:
-                doc['id'] = int(gene)
+                doc['id'] = gene
                 doc['_id'] = g['symbol']
                 doc['description'] = g['description']
                 doc['chromosome'] = g['chromosomes'][0]
                 doc['expression'] = self.get_expression_vals(gene)
                 doc['type'] = type
             except Exception as e:
-                print("whatnow")
+                g = None
             try:
                 doc['authority'] = g['nomenclatureAuthority']['authority']
                 doc['identifier']= g['nomenclatureAuthority']['identifier']
@@ -242,19 +240,19 @@ class GeneDaemon:
             except:
                 doc['rna_sequences'] = []
             try:
-                doc['range']= g['genomicRanges'][0]['range'][0]
+                doc['range']= g['annotations'][0]['genomicLocations'][0]['genomicRange']
             except:
                 doc['range'] = {'begin': -1, 'end': -1, 'orientation': ""}
             if doc['type'] == 'PROTEIN_CODING':
                 doc = self.try_protein_info(doc)
             try:
                 doc = self.annotate_snp_data(doc)
+                if doc['mod_len'] == 0 and doc['nm_len'] == 0:
+                    g = None
             except Exception as e:
-                print("oh boy")
+                g = None
             if g:
                 self.update_mongo_doc(doc)
-                docs.append(doc)
-        return docs
 
     def get_expression_vals(self, gene):
         possible_bases = ['PRJEB4337', 'PRJEB2445', 'PRJNA270632', 'PRJNA280600']
@@ -345,12 +343,12 @@ class GeneDaemon:
     def annotate_snp_data(self, doc):
         doc['snp_list'] = {'modifying': [], 'non_modifying': []}
         doc['snp_effects'] = []
-        mc = get_mongo()
+        conn = get_mongo()
         total_genes = [doc['_id']]
         if doc['id'] in self.syns.keys():
             total_genes += self.syns[doc['id']]
         for gene in total_genes:
-            snps = mc.AdNet.SNPs.find({'genes': '{}'.format(gene)})
+            snps = conn.AdNet.SNPs.find({'genes': '{}'.format(gene)})
             for snp in snps:
                 if snp['risk_level'] == 'MODIFIER':
                     doc['snp_list']['modifying'].append(snp['_id'])
@@ -364,7 +362,6 @@ class GeneDaemon:
 
     def find_correct_consequence(self, cons, snp):
         parsed = []
-
         #remove consequences that don't match ncbi functional class of snp
         for item in cons:
             consequences_list = item['molecularConsequences']
@@ -375,7 +372,6 @@ class GeneDaemon:
             if add == 1:
                 parsed.append(item)
         if len(parsed) == 0:
-            print(snp['_id'])
             parsed = cons
 
         count_list = []
@@ -395,7 +391,6 @@ class GeneDaemon:
         except Exception as e:
             return 0
         return i
-
 
     def pull_amino_acid_index(self, snp, gene):
         url = 'https://www.alliancegenome.org/api/variant/{}'.format(snp['_id'])
@@ -469,16 +464,8 @@ class GeneDaemon:
                     'nm_len': new_data['nm_len']
                 }}, upsert=upsert
             )
-        except ServerSelectionTimeoutError as e:
-            print("What")
         except Exception as f:
-            print("confused")
-
-    def divide_gene_list(self, n):
-        it = iter(self.genes)
-        for i in range(0, len(self.genes), n):
-            yield {k: self.genes[k] for k in islice(it, n)}
-
+            print(f)
 
 
 
@@ -518,34 +505,19 @@ class SNPDaemon:
         'downstream_gene_variant': 'MODIFIER', None: None
     }
 
-    def __init__(self):
+    def __init__(self, num_proc):
+        # pull associations with AD from EBI GWAS database
         url = 'https://www.ebi.ac.uk/gwas/rest/api/efoTraits/{}'.format(self.trait_id)
         req = requests.get(url, headers=self.headers).json()
         url = req['_links']['associationsByTraitSummary']['href']
+        # pull GWAS SNP data for each snp associated with AD
         self.data = requests.get(url, headers=self.headers).json()
-        f = open('../gene_daemon/genes.json', 'w')
-        f.write(json.dumps(self.data))
-        f.close()
         self.get_snps()
+        self.pull_snp_data_proc(num_proc)
 
-    def __init__(self, f):
-
-        try:
-            f = open(f, 'r')
-            self.data = json.load(f)
-            f.close()
-        except:
-            url = 'https://www.ebi.ac.uk/gwas/rest/api/efoTraits/{}'.format(self.trait_id)
-            req = requests.get(url, headers=self.headers).json()
-            url = req['_links']['associationsByTraitSummary']['href']
-            self.data = requests.get(url, headers=self.headers).json()
-            f = open(f, 'w')
-            f.write(json.dumps(self.data))
-            f.close()
-        self.get_snps()
 
     def get_snps(self):
-        count = 0
+        # updates self.snp_data dictionary with GWAS values (risk allele and probability) if found
         associations = self.data['_embedded']['associations']
         for association in associations:
             for snp in association['snps']:
@@ -568,10 +540,7 @@ class SNPDaemon:
                     for item in doc['strongest_risk_alleles']:
                         if item not in self.snp_data[snp['rsId']]['strongest_risk_alleles']:
                             self.snp_data[snp['rsId']]['strongest_risk_alleles'] += doc['strongest_risk_alleles']
-
-                # if count < 20:
                 self.snp_data[snp['rsId']] = doc
-                # count += 1
 
     def update_mongo_doc(self, new_data):
         # update only if fields are new/different from mongo record
@@ -598,7 +567,8 @@ class SNPDaemon:
                      {'genes': {'$ne': new_data['genes']}},
                      {'is_intergenic': {'$ne': new_data['is_intergenic']}},
                      {'risk_level': {'$ne': new_data['risk_level']}},
-                     {'pvalue': {'$ne': new_data['pvalue']}}
+                     {'pvalue': {'$ne': new_data['pvalue']}},
+                     {'studies': {'$ne': new_data['studies']}}
                  ]},
                 {'$set': {
                     'chr': new_data['chr'],
@@ -614,7 +584,8 @@ class SNPDaemon:
                     'genes': new_data['genes'],
                     'is_intergenic': new_data['is_intergenic'],
                     'risk_level': new_data['risk_level'],
-                    'pvalue': new_data['pvalue']
+                    'pvalue': new_data['pvalue'],
+                    'studies': new_data['studies'],
                 }}, upsert=upsert
             )
         except ServerSelectionTimeoutError as e:
@@ -623,6 +594,8 @@ class SNPDaemon:
             print("confused")
 
     def pull_snp_data(self, data):
+        # creates snp document using Ensembl and EBI GWAS databases. Please reference
+        # sample document at the top of the class to see an example of document structure
         ret = []
         for snp in data:
             doc = data[snp]
@@ -644,52 +617,60 @@ class SNPDaemon:
                 doc['location'] = ensemble_data['mappings'][0]['location']
                 doc['values'] = ensemble_data['mappings'][0]['allele_string'].split('/')
                 doc['risk_level'] = self.risk_levels[doc['functional_class']]
+                doc['studies'] = snp_info['_links']['studies']
                 genes = self.find_genes_by_snp(snp_info)
                 doc['is_intergenic'] = True
                 if genes[0] == 0:
                     doc['is_intergenic'] = False
-
                 doc['genes'] = genes[1:]
                 self.update_mongo_doc(doc)
                 ret.append(doc)
             except Exception as e:
                 print(e)
-                pass
         return ret
 
     def find_closest_genes(self, snp_info):
+        # find all genes that are related to the intergenic snp passed in
         genes = [1]
         for item in snp_info['genomicContexts']:
-            if item['isIntergenic'] and item['source'] == 'Ensembl' and item['gene']['geneName'] not in genes:
+            if item['isIntergenic'] and item['gene']['geneName'] not in genes:
                 genes.append(item['gene']['geneName'])
         return genes
 
     def find_genes_by_snp(self, snp_info):
+        # returns a list of an int followed by string gene names
+        # if 0 is returned first, then it is not an intergenic snp
+        # if 1 is returned first, then it is an intergenic snp
         genes = [0]
         for item in snp_info['genomicContexts']:
-            if not item['isIntergenic'] and item['source'] == 'Ensembl' and item['gene']['geneName'] not in genes:
+            if not item['isIntergenic'] and item['isUpstream'] == False \
+                    and item['isDownstream'] == False and item['gene']['geneName'] not in genes:
+                # return gene(s)? (should just be one) where the non-intergenic SNP is located
                 genes.append(item['gene']['geneName'])
         if len(genes) == 1:
+            # function call to find all close genes and genomic contexts
             genes = self.find_closest_genes(snp_info)
         return genes
 
     def divide_snp_data(self, n):
+        # divide snp list for threading purposes
         it = iter(self.snp_data)
         for i in range(0, len(self.snp_data), n):
             yield {k: self.snp_data[k] for k in islice(it, n)}
 
     def write_gene_ids(self, gene_list):
-        upsert = True
+        # save list of related genes to mongo
         conn = get_mongo()
+        full_list = list(conn.AdNet.GeneIds.find({}))
+        for item in full_list:
+            if item['_id'] not in gene_list:
+                conn.AdNet.Genes.delete_one({'_id': item['_id']})
+        conn.AdNet.GeneIds.delete_many({})
         for gene in gene_list:
-            doc = conn.AdNet.GeneIds.find_one({'_id': gene})
-            if not doc:
-                upsert = False
-            conn.AdNet.GeneIds.insert_one(
-                {'_id': gene}
-            )
+            conn.AdNet.GeneIds.insert_one({'_id': gene})
 
     def pull_snp_data_proc(self, n):
+        # implement threading for pulling snp data quicker
         smaller = list(self.divide_snp_data(n))
         start = timer()
         with Pool() as pool:
@@ -704,14 +685,6 @@ class SNPDaemon:
         gene_list = set(gene_list)
         self.write_gene_ids(gene_list)
 
-# d = SNPDaemon()
-# d = SNPDaemon('new_genes.json')
-# d.pull_snp_data_proc(10)
-#
-d = GeneDaemon('j', '', 10)
-# d = GeneDaemon('gene_id_list.txt')
-# d.load_gene_data()
-# d.download_dataset('gene_id_list.txt')
-# d.get_gene_data_job(10)
-# d.pull_gene_ids(10)
-# d.download_dataset('gene_id_list.txt')
+# d = SNPDaemon(10)
+d2 = GeneDaemon()
+

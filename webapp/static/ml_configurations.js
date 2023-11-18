@@ -1,4 +1,3 @@
-
 $(document).ready(function () {
     var jobId = document.getElementById("job_id").textContent;
     var rowCounter = 0;
@@ -65,7 +64,7 @@ $(document).ready(function () {
                 width: 120,
                 editor: function (container, options) {
                     // Create an input element for editing "size"
-                    $('<input class="k-input k-textbox" name="size" type="number" min="0" required data-bind="value:' + options.field + '"/>')
+                    $('<input class="k-input k-textbox" name="size" type="number" min="1" max="200" required data-bind="value:' + options.field + '"/>')
                         .appendTo(container);
                 }
             },
@@ -98,7 +97,6 @@ $(document).ready(function () {
                 width: 150
             }
         ],
-        // editable: true,
         edit: function (e) {
             e.preventDefault();
             rowCounter = 0;
@@ -107,12 +105,18 @@ $(document).ready(function () {
         dataBound: function (e) {
             e.preventDefault();
             rowCounter = 0;
+            $("#layergrid tbody tr .k-grid-delete").each(function () {
+                var currentDataItem = $("#layergrid").data("kendoGrid").dataItem($(this).closest("tr"));
+                if (currentDataItem.id == 1 || currentDataItem.id == 2){
+                    $(this).remove();
+                }
+            });
         }
 
     });
 
 
-    $("#activation_combobox").kendoComboBox({
+    $("#activation_combobox").kendoDropDownList({
         dataTextField: "name",
         dataValueField: "Id",
         dataSource: activation_dataSource,
@@ -120,7 +124,7 @@ $(document).ready(function () {
         suggest: true,
     });
 
-    var culater = $("#activation_combobox").data("kendoComboBox");
+    var culater = $("#activation_combobox").data("kendoDropDownList");
     culater.value(response_data['final_activation']);
     culater.trigger("change");
 
@@ -131,45 +135,39 @@ $(document).ready(function () {
             {Id: "rmsprop", name: "RMSProp"},
             {Id: "adagrad", name: "Adagrad"},
             {Id: "adadelta", name: "Adadelta"},
-            {Id: "nadam", name: "Nadam"},
-            // {Id: "ftrl", name: "FTRL"},
-            // {Id: "proximaladagrad", name: "Proximal AdaGrad"}
+            {Id: "nadam", name: "Nadam"}
         ]
     });
 
-    $("#optimizer_combobox").kendoComboBox({
+    $("#optimizer_combobox").kendoDropDownList({
         dataTextField: "name",
         dataValueField: "Id",
         dataSource: optimizer_dataSource,
         filter: "contains",
         suggest: true,
     });
-    culater = $("#optimizer_combobox").data("kendoComboBox");
+    culater = $("#optimizer_combobox").data("kendoDropDownList");
     culater.value(response_data['optimizer']);
     culater.trigger("change");
+
 
     var loss_dataSource = new kendo.data.DataSource({
         data: [
             {Id: "binary_crossentropy", name: "Binary Cross-Entropy"},
             {Id: "categorical_crossentropy", name: "Categorical Cross-Entropy"},
             {Id: "sparse_categorical_crossentropy", name: "Sparse Categorical Cross-Entropy"},
-            // {Id: "mean_squared_error", name: "Mean Squared Error"},
-            // {Id: "mean_absolute_error", name: "Mean Absolute Error"},
-            // {Id: "huber_loss", name: "Huber"},
-            {Id: "hinge_loss", name: "Hinge"},
-            // {Id: "cosine_similarity", name: "Cosine Similarity"},
-            // {Id: "kl_divergence", name: "KL Divergence"},
+            {Id: "hinge_loss", name: "Hinge"}
         ]
     });
 
-    $("#loss_combobox").kendoComboBox({
+    $("#loss_combobox").kendoDropDownList({
         dataTextField: "name",
         dataValueField: "Id",
         dataSource: loss_dataSource,
         filter: "contains",
         suggest: true
     });
-    culater = $("#loss_combobox").data("kendoComboBox");
+    culater = $("#loss_combobox").data("kendoDropDownList");
     culater.value(response_data['loss']);
     culater.trigger("change");
 
@@ -193,15 +191,14 @@ $(document).ready(function () {
                 }
 
                 return min <= value && value <= max;
-            }
+            },
         },
         messages: {
             range: function (input) {
                 var min = parseFloat($(input).data("min"), 10);
                 var max = parseFloat($(input).data("max"), 10);
-
                 return kendo.format("Value should be between {0} and {1}!", min, max);
-            }
+            },
         }
     }).data("kendoValidator");
 
@@ -211,55 +208,51 @@ $(document).ready(function () {
         event.preventDefault();
         var grid = $("#layergrid").data("kendoGrid");
         grid.saveChanges();
-
-        var status = $(".status");
-
         if (validator.validate()) {
-            status.text(" ")
-                .removeClass("invalid")
-                .addClass("valid");
+            layers = $("#layergrid").data("kendoGrid").dataSource.data().toJSON();
+            var count = 0;
+            layers.forEach(function (dict) {
+                // Access dictionary keys and values
+                count++;
+                dict['number'] = count;
+            });
+            console.log(layers);
+            var final = {
+                'job_id': jobId,
+                'ml_configs': {
+                    'layers': layers,
+                    'final_activation': $("#activation_combobox").val(),
+                    'optimizer': $("#optimizer_combobox").val(),
+                    'loss': $("#loss_combobox").val(),
+                    'epochs': $("#epoch_size").val(),
+                    'batch_size': $("#batch_size").val()
+                }
+
+            }
+
+            $.ajax({
+                url: "/JobConfigurations/SetMLConfigs/",
+                type: "POST",
+                headers: {'X-CSRFToken': csrftoken},
+                dataType: 'json',
+                data: JSON.stringify(final),
+                async: false,
+                success: function (data) {
+                    console.log(data);
+                    if ('error' in data && (data.error) == 'invalid_configuration') {
+                        alert("Invalid configuration. Please try again valid form values.")
+                    } else {
+                        alert("Changes saved successfully");
+                        closeMLWindow();
+                    }
+                },
+                error: function (error) {
+                    console.log(`Error ${error}`);
+                }
+            });
+
         } else {
-            status.text("Oops! There is invalid data in the form.")
-                .removeClass("valid")
-                .addClass("invalid");
+            alert("There are errors in this configuration. Please correct the red-highlighted fields, then submit your changes again.");
         }
-
-        layers = $("#layergrid").data("kendoGrid").dataSource.data().toJSON();
-        var count = 0;
-        layers.forEach(function (dict) {
-            // Access dictionary keys and values
-            count ++;
-            dict['number'] = count;
-        });
-        console.log(layers);
-        var final = {
-            'job_id': jobId,
-            'ml_configs': {
-                'layers': layers,
-                'final_activation': $("#activation_combobox").val(),
-                'optimizer': $("#optimizer_combobox").val(),
-                'loss': $("#loss_combobox").val(),
-                'epochs': $("#epoch_size").val(),
-                'batch_size': $("#batch_size").val()
-            }
-
-        }
-        console.log(final);
-
-        $.ajax({
-            url: "/JobConfigurations/SetMLConfigs/",
-            type: "POST",
-            headers: {'X-CSRFToken': csrftoken},
-            dataType: 'json',
-            data: JSON.stringify(final),
-            async: false,
-            success: function (data) {
-                alert("Changes saved successfully");
-                closeMLWindow();
-            },
-            error: function (error) {
-                console.log(`Error ${error}`);
-            }
-        });
     });
 });

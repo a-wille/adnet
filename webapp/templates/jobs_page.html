@@ -13,24 +13,24 @@
 <script src="{% static 'job_page.js' %}"></script>
 {% csrf_token %}
 <style>
-    .k-grid .k-dirty {
+    #jobgrid .k-grid .k-dirty {
         display: none;
     }
-    .k-grid td
+    #jobgrid .k-grid td
     {
         padding-left: 15px;
         padding-right: 15px;
     }
 
-    .k-button {
+    #jobgrid .k-button {
         padding: 5px;
     }
-    .k-grid .k-edit-cell, .k-grid .k-command-cell, .k-grid .k-grid-edit-row td, .k-grid .k-grid-edit-row .k-table-td  {
+    #jobgrid .k-grid .k-edit-cell, .k-grid .k-command-cell, .k-grid .k-grid-edit-row td, .k-grid .k-grid-edit-row .k-table-td  {
         padding-left: 5px;
         padding-right: 0px;
     }
 
-    input.k-input-inner{
+    #jobgrid input.k-input-inner{
         padding-left: 12px !important;
         padding-right: 0px !important;
         font-size: 15px !important;
