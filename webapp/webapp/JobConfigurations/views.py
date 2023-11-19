@@ -210,5 +210,5 @@ def delete(request):
         if job['name'] != info['name']:
             updated_jobs.append(job)
     conn.AdNet.users.update_one({'id': request.user.email}, {"$set": {'jobs': updated_jobs}})
-    conn.AdNet.Results.delete({'user': request.user.email, 'job_id': info['name']})
+    conn.AdNet.Results.delete_one({'user': request.user.email, 'job_id': info['name']})
     return HttpResponse({'success': True})

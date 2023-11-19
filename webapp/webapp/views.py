@@ -16,7 +16,7 @@ from password_generator import PasswordGenerator
 
 from daemons.user_check_daemon import create_service
 from webapp.models import User
-from webapp.settings import BUILD_URL, TEST_CALL
+from webapp.settings import BUILD_URL
 from webapp.view_helpers import get_mongo, remove_substring_from_string
 
 os.environ['CUDA_VISIBLE_DEVICES'] = "0"
@@ -103,8 +103,6 @@ def create_account(request):
     except:
         pass
     doc = conn.AdNet.users.find_one({'id': request.POST.get('email')})
-    if os.getcwd() == TEST_CALL:
-        os.chdir('daemons/')
     try:
         user = User.objects.create(firstname=request.POST.get('first'),
                                    lastname=request.POST.get('last'),
@@ -378,8 +376,6 @@ def process_error(request):
     conn = get_mongo()
     all_jobs = conn.AdNet.users.find_one({'id': data['email']}, {'_id': 0, 'jobs': 1})['jobs']
     all_jobs, next_job = update_jobs(all_jobs, data['job_id'], 'draft')
-    if os.getcwd() == TEST_CALL:
-        os.chdir('daemons/')
     service = create_service()
     gmail_send_error_message(service, data['email'], data['job_id'])
     gmail_send_error_admin(service, data['email'], data['job_id'], data['error'])
@@ -411,8 +407,6 @@ def process_results(request):
     all_jobs = conn.AdNet.users.find_one({'id': data['email']}, {'_id': 0, 'jobs': 1})['jobs']
     all_jobs, next_job = update_jobs(all_jobs, data['job_id'], 'completed')
     conn.AdNet.users.update_one({'id': data['email']}, {"$set": {'jobs': all_jobs}})
-    if os.getcwd() == TEST_CALL:
-        os.chdir('daemons/')
     service = create_service()
     gmail_send_message(service, data['email'], data['job_id'])
     if next_job:

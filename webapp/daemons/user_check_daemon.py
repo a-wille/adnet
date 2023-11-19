@@ -8,6 +8,8 @@ from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
+
+from webapp.settings import EMAIL_DIR
 from webapp.view_helpers import get_mongo
 
 # If modifying these scopes, delete the file token.json.
@@ -59,7 +61,7 @@ def create_service():
     Lists the user's Gmail labels.
     """
     creds = None
-
+    os.chdir(EMAIL_DIR)
     if os.path.exists('token.json'):
         creds = Credentials.from_authorized_user_file('token.json', SCOPES)
     # If there are no (valid) credentials available, let the user log in.
@@ -86,7 +88,7 @@ def create_service():
 
 if __name__ == '__main__':
     service = create_service()
-    schedule.every().day.at("12:50").do(lambda: check_user_accounts(service))
+    schedule.every().day.at("14:29").do(lambda: check_user_accounts(service))
     while True:
         schedule.run_pending()
         time.sleep(1)
