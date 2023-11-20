@@ -138,7 +138,8 @@ $(document).ready(function () {
             'gene_search',
             'snp_search',
             'build',
-            'run'
+            'run',
+            'account_view'
         ],
     }).data("kendoTabStrip");
     tabStrip.select(parseInt(document.getElementById("tabthatisactive").textContent));

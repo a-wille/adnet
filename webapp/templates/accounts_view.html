@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Accounts View</title>
+    <!-- Include jQuery library -->
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        button {
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+<h2>Unverified Users</h2>
+<table id="userTable">
+    <thead>
+    <tr>
+        <th>Username</th>
+        <th>Email</th>
+        <th>Action</th>
+    </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+{% csrf_token %}
+<script>
+    // Function to fetch unverified users and populate the table
+    function getUnverifiedUsers() {
+        $.ajax({
+            url: 'get_unverified_users/',
+            method: 'GET',
+            headers: {'X-CSRFToken': csrftoken},
+            success: function (data) {
+                // Clear existing table rows
+                $('#userTable tbody').empty();
+
+                data = JSON.parse(data);
+                console.log("ok");
+
+                // Iterate through the users and create rows
+                data.forEach(function (user) {
+                    var row = '<tr>';
+                    row += '<td>' + user.firstname + ' ' + user.lastname + '</td>';
+                    row += '<td>' + user.id + '</td>';
+                    row += '<td>';
+                    row += '<button onclick="approveUser(\'' + user.id + '\')">Approve</button>';
+                    row += '<button onclick="deleteUser(\'' + user.id + '\')">Delete</button>';
+                    row += '</td>';
+                    row += '</tr>';
+                    $('#userTable tbody').append(row);
+                });
+            },
+            error: function (error) {
+                console.log('Error fetching unverified users:', error);
+            }
+        });
+    }
+
+    function approveUser(username) {
+        // Ask for confirmation
+        if (window.confirm('Are you sure you want to approve the user: ' + username + '?')) {
+            // Send AJAX request to approve user
+            $.ajax({
+                url: 'approve_user/', // Replace with your server endpoint for approving a user
+                method: 'POST',
+                data: {username: username},
+                headers: {'X-CSRFToken': csrftoken},
+                success: function () {
+                    // Reload the entire HTML page after successful approval
+                    getUnverifiedUsers();
+                },
+                error: function (error) {
+                    console.error('Error approving user:', error);
+                }
+            });
+        }
+    }
+
+    // Function to handle deleting a user
+    function deleteUser(username) {
+        // Ask for confirmation
+        if (window.confirm('Are you sure you want to delete the user: ' + username + '?')) {
+            // Send AJAX request to delete user
+            $.ajax({
+                url: 'delete_user/', // Replace with your server endpoint for deleting a user
+                method: 'POST',
+                headers: {'X-CSRFToken': csrftoken},
+                data: {username: username},
+                success: function () {
+                    // Reload the entire HTML page after successful deletion
+                    getUnverifiedUsers();
+                },
+                error: function (error) {
+                    console.error('Error deleting user:', error);
+                }
+            });
+        }
+    }
+
+
+    // Fetch unverified users when the page loads
+    $(document).ready(function () {
+        getUnverifiedUsers();
+    });
+</script>
+</body>
+</html>

@@ -14,7 +14,7 @@ from django.views.decorators.csrf import csrf_exempt
 from googleapiclient.errors import HttpError
 from password_generator import PasswordGenerator
 
-from daemons.user_check_daemon import create_service
+from daemons.user_check_daemon import create_service, check_user_accounts
 from webapp.models import User
 from webapp.settings import BUILD_URL
 from webapp.view_helpers import get_mongo, remove_substring_from_string
@@ -71,6 +71,10 @@ def login(request):
 def home(request):
     # returns home tab
     return render(request, 'home.html')
+
+
+def accounts_view(request):
+    return render(request, 'accounts_view.html')
 
 
 def account_view(request):
@@ -148,6 +152,28 @@ def create_account(request):
     conn.AdNet.users.insert_one(doc)
     service = create_service()
     gmail_verify(service, user.email, password)
+    return HttpResponse({'success': True})
+
+def get_unverified_users(request):
+    conn = get_mongo()
+    users = list(conn.AdNet.users.find({'status': 'unverified'}, {'_id': 0}))
+    return HttpResponse(json.dumps(users))
+
+def delete_user(request):
+    data = request.POST.dict()
+    conn = get_mongo()
+    conn.AdNet.users.delete_one({'id': data['username']})
+    user = User.objects.get(email=request.POST.get('email'))
+    if user:
+        user.delete()
+    return HttpResponse({'success': True})
+
+def approve_user(request):
+    data = request.POST.dict()
+    conn = get_mongo()
+    conn.AdNet.users.update_one({'id': data['username']}, {"$set": {'status': 'verified'}})
+    service = create_service()
+    check_user_accounts(service)
     return HttpResponse({'success': True})
 
 

@@ -17,6 +17,7 @@ urlpatterns = [
 	path('home', views.home),
 	path('gene_search', views.gene_search),
 	path('snp_search', views.snp_search),
+	path('account_view', views.accounts_view),
 	path('submit_job/', views.submit_job),
 	path('process_results/', views.process_results),
 	path('process_error/', views.process_error),
@@ -30,6 +31,9 @@ urlpatterns = [
 	path('create_account/', views.create_account),
 	path('logout/', views.my_logout),
 	path('check_admin/', views.check_admin),
+	path('get_unverified_users/', views.get_unverified_users),
+	path('delete_user/', views.delete_user),
+	path('approve_user/', views.approve_user)
 ]
 
 if settings.DEBUG:

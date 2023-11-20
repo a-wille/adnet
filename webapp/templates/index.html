@@ -59,6 +59,11 @@
                 Results
             </li>
         {% endif %}
+        {% if perms.auth.add_permission %}
+            <li>
+                Accounts
+            </li>
+        {% endif %}
     </ul>
 </div>
 <div id="login_window" style="display:none"></div>
