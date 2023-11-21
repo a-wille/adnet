@@ -154,7 +154,6 @@ $(document).ready(function () {
 });
 
 function showChangePasswordWindow(username) {
-    console.log(username);
     $("#changePasswordWindow").kendoWindow({
         content: {
             url: "change_pass_window/" + username,
@@ -169,6 +168,5 @@ function showChangePasswordWindow(username) {
 }
 
 function closeLoginWindow(){
-    console.log(loginWindow);
     loginWindow.close();
 }

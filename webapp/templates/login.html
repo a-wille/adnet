@@ -51,7 +51,6 @@
                             location.reload();
                         } else {
                             alert("Please change your password immediately so your account can be sent for admin approval!")
-                            console.log("response is");
                             response = JSON.parse(response);
                             username = response['username'];
                             showChangePasswordWindow(username);

@@ -53,7 +53,6 @@ $(document).ready(function () {
                         e.preventDefault();
                         var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
                         var results_id = dataItem.id;
-                        console.log(results_id);
                         var info = $("#results_window").data("kendoWindow");
                         if (!info) {
                             info = $("#results_window").kendoWindow({
@@ -63,8 +62,6 @@ $(document).ready(function () {
                             }).data("kendoWindow");
                         }
                         info.title('Results Configurations for ' + results_id);
-                        console.log(results_id);
-                        console.log('again');
                         info.refresh({
                             url: '/JobConfigurations/Results/' + results_id + '/'
                         })

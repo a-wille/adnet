@@ -2,7 +2,6 @@ $(document).ready(function () {
     $(function () {
         $("#select-type").kendoButtonGroup({
             select: function (e) {
-                console.log(e.indices);
                 var url = '/Glossary/GetAllTerms/'
                 if (e.indices == 1) {
                     url = '/Glossary/GetGTerms/'
@@ -52,7 +51,7 @@ $(document).ready(function () {
                 dataType: 'json',
                 data: {'name': text},
                 success: function (result) {
-                    console.log(result)
+
                     $('#searchDefinition').append(
                         '<h3 class="k-h6" style="font-size: 24px;">' + result['term'] + '</h3>\n<p style="padding-left: 40px; font-size: 20px;">' +
                         result['definition'] + '</p>'

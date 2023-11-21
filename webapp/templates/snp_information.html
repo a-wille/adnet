@@ -91,7 +91,6 @@
     $(document).ready(function () {
         make_grid();
         var snpId = JSON.parse(document.getElementById('hello-data').textContent)['_id']
-        console.log(snpId);
         $("#addsnptojobgrid").kendoGrid({
             dataSource: {
                 transport: {

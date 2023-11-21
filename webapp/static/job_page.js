@@ -84,14 +84,7 @@ function setUpGrid() {
                 },
                 destroy: {
                     url: "/JobConfigurations/Delete/",
-                    dataType: "jsonp",
-                    complete: function (e) {
-                        var grid = $("#jobgrid").data("kendoGrid");
-                        if (!grid) {
-                            setUpGrid();
-                        }
-                        $("#jobgrid").data("kendoGrid").dataSource.read();
-                    }
+                    dataType: "jsonp"
                 },
                 create: {
                     url: "/JobConfigurations/Create/",
@@ -107,7 +100,6 @@ function setUpGrid() {
                 parameterMap:
                     function (options, operation) {
                         if (operation == "update") {
-                            console.log(editedItem);
                             options['og_id'] = editedItem;
                         }
                         return options;
@@ -280,13 +272,11 @@ function setUpGrid() {
         dataBound: function (e) {
             var grid = this;
             grid.tbody.find("tr[role='row']").each(function () {
-                console.log("in databound");
                 var model = grid.dataItem(this);
                 if (model.isNew()) {
                     // Store a flag indicating that this row is new (being added)
                     model._isNewRow = true;
                 }
-                //
                 if (model.status != 'draft') {
                     $(this).find(".k-grid-edit").remove();
                 }
@@ -294,8 +284,6 @@ function setUpGrid() {
         },
         edit: function (e) {
             var dataItem = e.model;
-            console.log('editing now');
-
             if (dataItem.isNew()) {
                 // Store a flag indicating that this row is new (being added)
                 dataItem._isNewRow = true;
@@ -372,7 +360,6 @@ function setUpGrid() {
                         e.preventDefault();
                         var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
                         if (confirm("Are you sure you are ready to submit this job?")) {
-                            console.log(dataItem);
                             $.ajax({
                                 type: "POST",
                                 url: "/submit_job/",
@@ -431,7 +418,6 @@ $(document).ready(function () {
 });
 
 function closeMLWindow() {
-    console.log(mlWindow);
     mlWindow.close();
 }
 

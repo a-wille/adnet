@@ -7,9 +7,7 @@ function createSNPPanel(mod, nonmod) {
     };
 
     function customCollapse(e) {
-        console.log("expandcollapse hit");
         $("#snpbar").data("kendoPanelBar").collapse($("li.k-state-active"));
-
     }
 
 
@@ -25,7 +23,6 @@ function createSNPPanel(mod, nonmod) {
                 openSNPWindow(snp);
 
             } else if (snp != "Modifying SNPs" && snp != "Non-modifying SNPs") {
-                console.log("ope");
                 this.collapse(this.dataItem);
             } else if (snp == "Modifying SNPs") {
                 if (modlength == 0) {

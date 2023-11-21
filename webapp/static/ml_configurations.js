@@ -52,7 +52,6 @@ $(document).ready(function () {
                 title: "#",
                 template: function (dataItem) {
                     rowCounter++;
-                    console.log("rowCounter # " + rowCounter);
                     return rowCounter;
                 },
                 width: 50,
@@ -73,7 +72,7 @@ $(document).ready(function () {
                 title: "Activation Function",
                 width: 120,
                 template: function (dataItem) {
-                    console.log("okay");
+
                     var activationItem = activation_dataSource.data().find(function (item) {
                         return item.Id === dataItem.activation;
                     });
@@ -105,12 +104,6 @@ $(document).ready(function () {
         dataBound: function (e) {
             e.preventDefault();
             rowCounter = 0;
-            $("#layergrid tbody tr .k-grid-delete").each(function () {
-                var currentDataItem = $("#layergrid").data("kendoGrid").dataItem($(this).closest("tr"));
-                if (currentDataItem.id == 1 || currentDataItem.id == 2){
-                    $(this).remove();
-                }
-            });
         }
 
     });
@@ -216,7 +209,6 @@ $(document).ready(function () {
                 count++;
                 dict['number'] = count;
             });
-            console.log(layers);
             var final = {
                 'job_id': jobId,
                 'ml_configs': {
@@ -238,7 +230,6 @@ $(document).ready(function () {
                 data: JSON.stringify(final),
                 async: false,
                 success: function (data) {
-                    console.log(data);
                     if ('error' in data && (data.error) == 'invalid_configuration') {
                         alert("Invalid configuration. Please try again valid form values.")
                     } else {

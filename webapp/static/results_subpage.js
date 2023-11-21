@@ -25,11 +25,9 @@ $(document).ready(function () {
         type: "GET",
         async: false,
         success: function (data) {
-            console.log(data);
             const imageContainer = document.getElementById('image-container');
 
             data.images.forEach(imageInfo => {
-                console.log(imageInfo);
                 const image = document.createElement('img');
                 const imageBlob = b64toBlob(imageInfo.image_data, imageInfo.content_type);
                 const imageUrl = URL.createObjectURL(imageBlob);
@@ -107,7 +105,6 @@ $(document).ready(function () {
                 title: "#",
                 template: function (dataItem) {
                     rowCounter++;
-                    console.log("rowCounter # " + rowCounter);
                     return rowCounter;
                 },
                 width: 50,
@@ -161,22 +158,19 @@ $(document).ready(function () {
 
     r_optimizer_names.data().forEach(function (item) {
     if (item.Id == result_response_data['optimizer']) {
-            document.getElementById("r_optimizer").textContent = item.name;
-            console.log(item.name); // Exit the loop when the item is found
+            document.getElementById("r_optimizer").textContent = item.name;// Exit the loop when the item is found
         }
     });
 
     r_loss_names.data().forEach(function (item) {
     if (item.Id == result_response_data['loss']) {
             document.getElementById("r_loss").textContent = item.name;
-            console.log(item.name); // Exit the loop when the item is found
         }
     });
 
     r_activation_names.data().forEach(function (item) {
     if (item.Id == result_response_data['final_activation']) {
             document.getElementById("r_activation").textContent = item.name;
-            console.log(item.name); // Exit the loop when the item is found
         }
     });
     document.getElementById("r_epoch_size").textContent = result_response_data['epochs'];
