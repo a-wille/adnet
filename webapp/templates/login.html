@@ -13,59 +13,69 @@
     </form>
     {% csrf_token %}
     <script>
-        $("#login-form").kendoForm({
-            orientation: "vertical",
-            items: [{
-                type: "group",
-                label: "Login",
-                items: [
-                    {field: "username", label: "Email", validation: {required: true}},
-                    {
-                        field: "password", label: "Password", validation: {required: true},
-                        editor: function (container, options) {
-                            container.append($("<input type='password' class='k-textbox k-valid' id='password' name='Password' title='Password' required='required' autocomplete='off' aria-labelledby='Password-form-label' data-bind='value:password'>"));
-                        }
-                    }
-                ]
-            }],
-            validateField: function (e) {
-            },
-            submit: function (e) {
-                e.preventDefault();
-                var $user = $('#username');
-                var $pass = $('#password');
-                var vals = {
-                    'user': $user.val(),
-                    'pass': $pass.val()
-                };
-                $.ajax({
-                    type: "POST",
-                    url: "/check_login/",
-                    headers: {'X-CSRFToken': csrftoken},
-                    data: vals,
-                    contentType: "application/x-www-form-urlencoded",
-                    success: function (response) {
-                        if (response == 'error') {
-                            alert("Sorry, an account with this email and password does not exist.")
-                        } else if (response == 'success') {
-                            location.reload();
-                        } else {
-                            alert("Please change your password immediately so your account can be sent for admin approval!")
-                            response = JSON.parse(response);
-                            username = response['username'];
-                            showChangePasswordWindow(username);
-                            closeLoginWindow();
 
-                            {#$('.k-window-actions.k-hstack').hide();#}
-                        }
-                    }
 
-                });
-                return false;
-            },
-            clear: function (ev) {
-            }
+
+        $(document).ready(function () {
+
+
+            $("#login-form").kendoForm({
+                orientation: "vertical",
+                items: [{
+                    type: "group",
+                    label: "Login",
+                    items: [
+                        {field: "username", label: "Email", validation: {required: true}},
+                        {
+                            field: "password", label: "Password", validation: {required: true},
+                            editor: function (container, options) {
+                                container.append($("<input type='password' class='k-textbox k-valid' id='password' name='Password' title='Password' required='required' autocomplete='off' aria-labelledby='Password-form-label' data-bind='value:password'>"));
+                            }
+                        }
+                    ]
+                }],
+                validateField: function (e) {
+                },
+                submit: function (e) {
+                    e.preventDefault();
+                    var $user = $('#username');
+                    var $pass = $('#password');
+                    var vals = {
+                        'user': $user.val(),
+                        'pass': $pass.val()
+                    };
+                    $.ajax({
+                        type: "POST",
+                        url: "/check_login/",
+                        headers: {'X-CSRFToken': csrftoken},
+                        data: vals,
+                        contentType: "application/x-www-form-urlencoded",
+                        success: function (response) {
+                            if (response == 'error') {
+                                alert("Sorry, an account with this email and password does not exist.")
+                            } else if (response == 'success') {
+                                location.reload();
+                            } else {
+                                alert("Please change your password immediately so your account can be sent for admin approval!")
+                                response = JSON.parse(response);
+                                username = response['username'];
+                                showChangePasswordWindow(username);
+                                closeLoginWindow();
+
+                                {#$('.k-window-actions.k-hstack').hide();#}
+                            }
+                        }
+
+                    });
+                    return false;
+                },
+                clear: function (ev) {
+                }
+            });
+
         });
+        //sets up buttons for particular actions on click events
+
     </script>
 
 </div>
