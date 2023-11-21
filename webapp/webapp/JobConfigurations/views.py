@@ -43,7 +43,6 @@ def get_completed_jobs(request):
 def create(request):
     info = request.GET.dict()
     conn = get_mongo()
-    print("ok")
     user_doc = conn.AdNet.users.find_one({'id': request.user.email})
     new_config = {'name': info['name'], 'one': info['one'], 'two': info['two'],
                   'three': info['three'], 'four': info['four'], 'five': info['five'],
@@ -163,7 +162,16 @@ def get_ml_for_job(request):
                 }
                 conn.AdNet.users.update_one({'id': request.user.email}, {"$set": {'jobs': jobs}})
             ml_configs = job['ml_configs']
-
+    if not ml_configs:
+        ml_configs = {
+            'layers': [{'number': 1, 'size': 64, 'activation': 'relu'},
+                       {'number': 2, 'size': 64, 'activation': 'relu'}],
+            'final_activation': 'sigmoid',
+            'optimizer': 'adam',
+            'loss': 'binary_crossentropy',
+            'epochs': 10,
+            'batch_size': 32
+        }
     return HttpResponse(json.dumps(ml_configs))
 
 

@@ -273,6 +273,7 @@ function setUpGrid() {
             var grid = this;
             grid.tbody.find("tr[role='row']").each(function () {
                 var model = grid.dataItem(this);
+                console.log(model);
                 if (model.isNew()) {
                     // Store a flag indicating that this row is new (being added)
                     model._isNewRow = true;
@@ -328,21 +329,30 @@ function setUpGrid() {
                     click: function (e) {
                         e.preventDefault();
                         var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
-                        var job_id = dataItem.id;
-                        mlWindow = $("#ml_window").data("kendoWindow");
-                        if (!mlWindow) {
-                            mlWindow = $("#ml_window").kendoWindow({
-                                modal: false,
-                                visible: false,
-                                width: 700,
-                                height: 750,
-                            }).data("kendoWindow");
+                        job_id = dataItem.id;
+                        if (dataItem.isNew()) {
+                            alert("Please create a job row and click the update button prior to configuring your machine learning settings. ")
+
+                        } else {
+
+                            mlWindow = $("#ml_window").data("kendoWindow");
+                            if (!mlWindow) {
+                                mlWindow = $("#ml_window").kendoWindow({
+                                    modal: false,
+                                    visible: false,
+                                    width: 700,
+                                    height: 750,
+                                }).data("kendoWindow");
+                            }
+                            mlWindow.title('ML Configurations for ' + job_id);
+                            mlWindow.refresh({
+                                url: '/JobConfigurations/GetMLConfigurations/' + job_id + '/'
+                            })
+                            mlWindow.center().open();
                         }
-                        mlWindow.title('ML Configurations for ' + job_id);
-                        mlWindow.refresh({
-                            url: '/JobConfigurations/GetMLConfigurations/' + job_id + '/'
-                        })
-                        mlWindow.center().open();
+
+
+
                     }
                 }],
                 title: "ML Configurations",
@@ -372,7 +382,7 @@ function setUpGrid() {
                                         setUpGrid();
                                     }
                                     $("#jobgrid").data("kendoGrid").dataSource.read();
-                                }, error: function(response) {
+                                }, error: function (response) {
                                     alert("Error submitting job. Please try again later.");
                                 }
                             });
