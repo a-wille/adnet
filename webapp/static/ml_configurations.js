@@ -148,8 +148,6 @@ $(document).ready(function () {
         data: [
             {Id: "binary_crossentropy", name: "Binary Cross-Entropy"},
             {Id: "categorical_crossentropy", name: "Categorical Cross-Entropy"},
-            {Id: "sparse_categorical_crossentropy", name: "Sparse Categorical Cross-Entropy"},
-            {Id: "hinge_loss", name: "Hinge"}
         ]
     });
 

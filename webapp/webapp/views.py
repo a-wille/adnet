@@ -140,7 +140,7 @@ def create_account(request):
             conn.AdNet.users.insert_one(doc)
             service = create_service()
             gmail_verify(service, user.email, password)
-            return HttpResponse({'success': True})
+            return HttpResponse(json.dumps({'success': True}))
         else:
             return HttpResponse({'duplicate_email'})
 
@@ -152,7 +152,7 @@ def create_account(request):
     conn.AdNet.users.insert_one(doc)
     service = create_service()
     gmail_verify(service, user.email, password)
-    return HttpResponse({'success': True})
+    return HttpResponse(json.dumps({'success': True}))
 
 def get_unverified_users(request):
     conn = get_mongo()
@@ -222,6 +222,8 @@ def submit_job(request):
     data = json.loads(request.POST.dict()['obj'])
     conn = get_mongo()
     all_jobs = conn.AdNet.users.find_one({'id': request.user.email}, {'_id': 0, 'jobs': 1})['jobs']
+    if data['one'] == '' and data['two'] == '' and data['three'] == '' and data['four'] == '' and data['five'] == '':
+        return HttpResponse(json.dumps({'error': 'no_snps'}))
     pending = False
     pending_count = 1
     for job in all_jobs:
@@ -243,7 +245,7 @@ def submit_job(request):
     if not pending:
         requests.post(url, json=data, headers=headers)
     conn.AdNet.users.update_one({'id': request.user.email}, {"$set": {'jobs': all_jobs}})
-    return HttpResponse({'success': True})
+    return HttpResponse(json.dumps({'success': True}))
 
 
 def gmail_send_message(service, email, job_id):
@@ -371,7 +373,7 @@ def change_password(request):
     else:
         u.set_password(new_password)
         u.save()
-        return HttpResponse({'success': True})
+        return HttpResponse(json.dumps({'success': True}))
 
 def update_jobs(all_jobs, job_id, status):
     next_job = None
@@ -415,7 +417,8 @@ def process_error(request):
             'Accept': 'application/json'
         }
         requests.post(url, json=new_data, headers=headers)
-    return HttpResponse({'success': True})
+    return HttpResponse(json.dumps({'success': True}))
+
 
 @csrf_exempt
 def process_results(request):
@@ -444,4 +447,5 @@ def process_results(request):
             'Accept': 'application/json'
         }
         requests.post(url, json=new_data, headers=headers)
-    return HttpResponse({'success': True})
+    return HttpResponse(json.dumps({'success': True}))
+

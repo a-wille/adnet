@@ -84,17 +84,20 @@ function setUpGrid() {
                 },
                 destroy: {
                     url: "/JobConfigurations/Delete/",
-                    dataType: "jsonp"
+                    dataType: "jsonp",
+                    complete: function(e) {
+                        $("#jobgrid").data("kendoGrid").refresh();
+                    }
                 },
                 create: {
                     url: "/JobConfigurations/Create/",
                     dataType: "jsonp",
                     complete: function (e) {
                         var grid = $("#jobgrid").data("kendoGrid");
-                        if (!grid) {
-                            setUpGrid();
-                        }
-                        $("#jobgrid").data("kendoGrid").dataSource.read();
+                                        if (!grid) {
+                                            setUpGrid();
+                                        }
+                                        $("#jobgrid").data("kendoGrid").dataSource.read();
                     }
                 },
                 parameterMap:
@@ -269,20 +272,22 @@ function setUpGrid() {
             mode: "inline",
             confirmDelete: "Yes"
         },
-        dataBound: function (e) {
-            var grid = this;
-            grid.tbody.find("tr[role='row']").each(function () {
-                var model = grid.dataItem(this);
-                console.log(model);
-                if (model.isNew()) {
-                    // Store a flag indicating that this row is new (being added)
-                    model._isNewRow = true;
-                }
-                if (model.status != 'draft') {
-                    $(this).find(".k-grid-edit").remove();
-                }
-            });
-        },
+        // dataBound: function (e) {
+        //     e.preventDefault();
+        //     console.log('hit databound');
+        //     var grid = this;
+        //     grid.tbody.find("tr[role='row']").each(function () {
+        //         var model = grid.dataItem(this);
+        //         // console.log(model);
+        //         if (model.isNew()) {
+        //             // Store a flag indicating that this row is new (being added)
+        //             model._isNewRow = true;
+        //         }
+        //         if (model.status != 'draft') {
+        //             $(this).find(".k-grid-edit").remove();
+        //         }
+        //     });
+        // },
         edit: function (e) {
             var dataItem = e.model;
             if (dataItem.isNew()) {
@@ -330,18 +335,20 @@ function setUpGrid() {
                         e.preventDefault();
                         var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
                         job_id = dataItem.id;
+
                         if (dataItem.isNew()) {
                             alert("Please create a job row and click the update button prior to configuring your machine learning settings. ")
 
                         } else {
+
 
                             mlWindow = $("#ml_window").data("kendoWindow");
                             if (!mlWindow) {
                                 mlWindow = $("#ml_window").kendoWindow({
                                     modal: false,
                                     visible: false,
-                                    width: 700,
-                                    height: 750,
+                                    width: 800,
+                                    height: 850,
                                 }).data("kendoWindow");
                             }
                             mlWindow.title('ML Configurations for ' + job_id);
@@ -350,7 +357,6 @@ function setUpGrid() {
                             })
                             mlWindow.center().open();
                         }
-
 
 
                     }
@@ -377,11 +383,19 @@ function setUpGrid() {
                                 headers: {'X-CSRFToken': csrftoken},
                                 contentType: "application/x-www-form-urlencoded",
                                 success: function (response) {
-                                    var grid = $("#jobgrid").data("kendoGrid");
-                                    if (!grid) {
-                                        setUpGrid();
+                                    console.log(JSON.parse(response));
+                                    response = JSON.parse(response);
+                                    if ('error' in response && response.error == 'no_snps') {
+                                        alert("There are no SNPs in this configuration. Please add at least one SNP to your job configuration before submitting again.")
+                                    } else {
+                                        alert("Job submitted successfully");
+                                        var grid = $("#jobgrid").data("kendoGrid");
+                                        if (!grid) {
+                                            setUpGrid();
+                                        }
+                                        $("#jobgrid").data("kendoGrid").dataSource.read();
                                     }
-                                    $("#jobgrid").data("kendoGrid").dataSource.read();
+
                                 }, error: function (response) {
                                     alert("Error submitting job. Please try again later.");
                                 }
@@ -429,5 +443,10 @@ $(document).ready(function () {
 
 function closeMLWindow() {
     mlWindow.close();
+    var grid = $("#jobgrid").data("kendoGrid");
+                                        if (!grid) {
+                                            setUpGrid();
+                                        }
+                                        $("#jobgrid").data("kendoGrid").dataSource.read();
 }
 
