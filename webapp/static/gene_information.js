@@ -200,11 +200,6 @@ $(document).ready(function () {
         type: "GET",
         success: function (data) {
             data = JSON.parse(data)
-            document.getElementById("description").innerHTML = data.description;
-            document.getElementById("chr").innerHTML = data.chromosome;
-            document.getElementById("range").innerHTML = data.range.begin + '-' + data.range.end;
-            document.getElementById("orientation").innerHTML = data.range.orientation
-            document.getElementById("type").innerHTML = data.type
             document.getElementById("authority").innerHTML = "<a href='https://www.genenames.org/data/gene-symbol-report/#!/hgnc_id/" + data.identifier + "'>" + data.authority + "</a>"
             createSNPPanel(data.mod, data.nonmod)
             if (data.expression) {

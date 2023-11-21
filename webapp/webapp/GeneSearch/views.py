@@ -15,7 +15,11 @@ def gene_page(request):
 
 def get_gene_details(request):
 	gene_id = remove_substring_from_string(request.path, '/GeneSearch/get_information/')
-	return render(request, 'gene_information.html', {'content': gene_id})
+	conn = get_mongo()
+	doc = conn.AdNet.Genes.find_one({'_id': gene_id})
+	doc['name'] = doc['_id']
+	print("df")
+	return render(request, 'gene_information.html', {'content': doc})
 
 
 def get_all_genes(request):

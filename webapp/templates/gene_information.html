@@ -8,7 +8,7 @@
 </head>
 <body>
 {% block content %}
-    <p hidden id="gene">{{ content }}</p>
+    <p hidden id="gene">{{ content.name }}</p>
 {% endblock %}
 <div class="k-content">
 
@@ -17,23 +17,23 @@
         <table id="gentable">
             <tr style="background: rgba(147,211,255,0.14);">
                 <th>Description</th>
-                <td id="description"></td>
+                <td id="description">{{ content.description }}</td>
             </tr>
             <tr style="background: rgba(221,240,255,0.14);">
                 <th>Type</th>
-                <td id="type"></td>
+                <td id="type">{{ content.type }}</td>
             </tr>
             <tr style="background: rgba(147,211,255,0.14);">
                 <th>Chromosome</th>
-                <td id="chr"></td>
+                <td id="chr">{{ content.chromosome }}</td>
             </tr>
             <tr style="background: rgba(221,240,255,0.14);">
                 <th>Nucleotide Range</th>
-                <td id="range"></td>
+                <td id="range">{{ content.range.begin }} + '-' + {{ content.range.end }}</td>
             </tr>
             <tr style="background: rgba(147,211,255,0.14);">
                 <th>Orientation</th>
-                <td id="orientation"></td>
+                <td id="orientation">{{ content.range.orientation }}</td>
             </tr>
             <tr style="background: rgba(221,240,255,0.14);">
                 <th>Authority</th>

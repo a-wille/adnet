@@ -72,6 +72,7 @@ $(document).ready(function () {
                     }
                 }
             },
+            pageSize: 15,
             resizable: true,
             serverSorting: false,
         },
@@ -79,13 +80,6 @@ $(document).ready(function () {
         filterable: true,
         sortable: true,
         resizable: true,
-        pageable: {
-            numeric: false,
-            previousNext: false,
-            messages: {
-                display: "Showing {2} data items"
-            }
-        },
         scrollable: {
             endless: true
         },
