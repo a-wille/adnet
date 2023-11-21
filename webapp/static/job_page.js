@@ -272,22 +272,21 @@ function setUpGrid() {
             mode: "inline",
             confirmDelete: "Yes"
         },
-        // dataBound: function (e) {
-        //     e.preventDefault();
-        //     console.log('hit databound');
-        //     var grid = this;
-        //     grid.tbody.find("tr[role='row']").each(function () {
-        //         var model = grid.dataItem(this);
-        //         // console.log(model);
-        //         if (model.isNew()) {
-        //             // Store a flag indicating that this row is new (being added)
-        //             model._isNewRow = true;
-        //         }
-        //         if (model.status != 'draft') {
-        //             $(this).find(".k-grid-edit").remove();
-        //         }
-        //     });
-        // },
+        dataBound: function (e) {
+            e.preventDefault();
+            var grid = this;
+            grid.tbody.find("tr[role='row']").each(function () {
+                var model = grid.dataItem(this);
+                // console.log(model);
+                if (model.isNew()) {
+                    // Store a flag indicating that this row is new (being added)
+                    model._isNewRow = true;
+                }
+                if (model.status != 'draft') {
+                    $(this).find(".k-grid-edit").remove();
+                }
+            });
+        },
         edit: function (e) {
             var dataItem = e.model;
             if (dataItem.isNew()) {
